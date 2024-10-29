@@ -7,26 +7,22 @@ function Root() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='welcomeWrapper'>
+      <div className='title'>
+        <h1>STUDY BUDDY</h1>
       </div>
-      <h1>Study Buddy</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+      <div className='description'>
+        <p>Study smarter, together</p>
       </div>
-      <p>
-        Using Vite and React
-      </p>
-    </>
+      <div className='signUpButtonDiv'>
+        <SignUpButton />
+      </div>
+    </div>
   )
+}
+
+function SignUpButton(){
+  return <button className='signUpButton'>SIGN UP</button>
 }
 
 export default Root

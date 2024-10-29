@@ -1,9 +1,4 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+
 
 .logo {
   height: 6em;
@@ -39,4 +34,39 @@
 
 .read-the-docs {
   color: #888;
+}
+
+body{
+  background: linear-gradient(45deg, gray, white);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.welcomeWrapper{
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  flex-wrap: wrap
+}
+
+.title{
+  width: 100%;
+  font-size: 40px;
+  justify-content: center;
+  text-align: center;
+}
+
+.description{
+  width: 100%;
+  text-align: center;
+  font-size: 40px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  margin-bottom: 0.4em;
+}
+
+.signUpButton{
+  background-color: rgba(53, 250, 53, 0.733);
+  padding: 1em;
+  border-radius: 8px;
+  font-size: 18px;
 }

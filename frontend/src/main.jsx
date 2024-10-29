@@ -7,6 +7,7 @@ import {
 import Root from'./routes/Root'
 import './index.css'
 import ErrorPage from './ErrorPage'
+import Register from './routes/Register'
 import Login from './routes/Login'
 
 const router = createBrowserRouter([
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/register',
+    element: <Register />,
     errorElement: <ErrorPage />,
   }
 ]);

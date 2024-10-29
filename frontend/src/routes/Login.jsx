@@ -1,18 +1,33 @@
 import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
-import '../styles/Root.css'
+import '../styles/Login.css'
 
 function Root() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        Login
-      </div>
+      <LoginForm />
     </>
   )
 }
 
+function LoginForm(){
+    return (
+        <>
+        <div className='loginFormDiv'>
+            <form className='loginForm'>
+                <div>
+                    <h1 className='helloText'>Hello!</h1>
+                    <input className='usernameInput' placeholder='Username'/>
+                    <input className='passwordInput' placeholder='Password'/>
+                    <button className='signInButton'>Sign In</button>
+                    <p>Dont have account?</p>
+                    <a href='/register'>Register!</a>
+                </div>
+                
+            </form>
+        </div>
+        </>
+    )
+}
 export default Root

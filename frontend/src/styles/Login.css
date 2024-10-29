@@ -1,0 +1,21 @@
+.loginFormDiv{
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginForm{
+    width: 30%;
+    background-color: antiquewhite;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 16px;
+    margin-left: 10%;
+    margin-right: 10%
+}
+
+.helloText{
+    width: 100%;
+    text-align: left;
+}
