@@ -1,0 +1,117 @@
+body{
+    background: radial-gradient(circle,rgba(164, 231, 184, 0.7), rgba(190, 140, 231, 0.7));
+}
+
+.formDiv{
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-self: left;
+    
+  }
+  
+  .registerForm{
+    display: flex;
+    width: 20%;
+    justify-self: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-radius: 16px;
+    background-color: aquamarine;
+    
+  }
+  
+  .registerFormDiv{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+  
+  .helloText{
+    font-size: 3em;
+    font-weight: bold;
+    justify-self: center;
+    text-align: left;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    margin-top: 1em;
+  }
+  
+  .createNewText{
+    font-size: 2em;
+    width: 100%;
+    margin-bottom: 0.5em;
+    text-align: left;
+  }
+
+  .registerInput{
+    font-size: 1em;
+    width: 100%;
+    padding: 1em;
+    border-radius: 16px;
+    margin-top: 1em;
+
+  }
+
+  .registerInputDiv{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .passwordDiv{
+    width: 100%;
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
+
+  }
+  
+  .registerInputPass{
+    font-size: 1em;
+    width: 100%;
+    border-radius: 16px;
+    margin-top: 1em;
+    padding: 1em;
+  }
+  
+  .buttonDiv{
+    margin-top: 2em;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+  }
+  
+  .registerInputButton{
+    font-size: 1em;
+    background-color: greenyellow;
+    width: 50%;
+    padding: 1em;
+    margin-bottom: 1em;
+  }
+
+  .redirect{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1em;
+  }
+  .hasAccount{
+    margin: 0;
+    font-size: 20px;
+  }
+  .redirectToSignIn{
+    font-size: 20px;
+  }
+
