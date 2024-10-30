@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
 import '../styles/Root.css'
+import { useNavigate } from 'react-router-dom'
 
 function Root() {
   const [count, setCount] = useState(0)
@@ -9,7 +8,7 @@ function Root() {
   return (
     <div className='welcomeWrapper'>
       <div className='title'>
-        <h1>STUDY BUDDY</h1>
+        <h1 className='text'>STUDY BUDDY</h1>
       </div>
       <div className='description'>
         <p>Study smarter, together</p>
@@ -22,7 +21,13 @@ function Root() {
 }
 
 function SignUpButton(){
-  return <button className='signUpButton'>SIGN UP</button>
+	
+	const navigate = useNavigate()
+
+	const handleClick = () => {
+		navigate('/register')
+	}
+  return <button className='signUpButton' onClick={handleClick}>SIGN UP</button>
 }
 
 export default Root

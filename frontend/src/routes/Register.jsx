@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import '../styles/Register.css'
+import '../styles/Login.css'
 
 function Root() {
   const [count, setCount] = useState(0)
@@ -14,26 +14,26 @@ function Root() {
 function RegisterForm(){
 
   return (
-    <div className='formDiv'>
-      <form className="registerForm">
-        <div className='registerFormDiv'>
+    <div className='formWrapper'>
+      <form className="forms">
+        <div className='formDiv'>
           <h1 className='helloText'>Hello!</h1>
           <h2 className='createNewText'>Create new account</h2>
-          <div className='registerInputDiv'>
-            <input className='registerInput' type='tex' placeholder='Username'/>
-            <input className='registerInput' type="text" placeholder='Email'/>
+          <div className='inputDiv'>
+            <input className='infoInput' type='tex' placeholder='Username'/>
+            <input className='infoInput' type="text" placeholder='Email'/>
           </div>
           <div className='passwordDiv'>
-            <input className='registerInputPass' type='text' placeholder='Password'/>
-            <input className='registerInputPass' type='text' placeholder='Confirm password'/>
+            <input className='passwordInput' type='text' placeholder='Password'/>
+            <input className='passwordInput' type='text' placeholder='Confirm password'/>
           </div>
           <div className='buttonDiv'>
-            <button className='registerInputButton' type='button'>Create new account!</button>
+            <button className='inputButton' type='button'>Create new account!</button>
           </div>
         </div>
         <div className='redirect'>
-          <p className='hasAccount'>Already have account?</p>
-          <a className='redirectToSignIn' href='/login'>Sing in</a>
+          <p className='account'>Already have account?</p>
+          <a className='link' href='/login'>Sing in</a>
       </div>
       </form>
       

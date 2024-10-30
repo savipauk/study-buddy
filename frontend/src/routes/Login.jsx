@@ -14,18 +14,24 @@ function Root() {
 function LoginForm(){
     return (
         <>
-        <div className='loginFormDiv'>
-            <form className='loginForm'>
-                <div>
-                    <h1 className='helloText'>Hello!</h1>
-                    <input className='usernameInput' placeholder='Username'/>
-                    <input className='passwordInput' placeholder='Password'/>
-                    <button className='signInButton'>Sign In</button>
-                    <p>Dont have account?</p>
-                    <a href='/register'>Register!</a>
-                </div>
-                
-            </form>
+        <div className='formWrapper'>
+          <form className='forms'>
+            <div className='formDiv'> 
+              <h1 className='helloText'>Hello!</h1>
+              <div className='inputDiv'>
+                  <input className='infoInput' placeholder='Username'/>
+                  <input className='passwordInput' placeholder='Password'/>
+              </div>
+              <div className='buttonDiv'>
+                <button className='inputButton'>Sign In</button>
+              </div> 
+              <div className='redirect'>
+                <p className='account'>Dont have account?</p>
+                <a href='/register' className='link'>Register here</a>
+              </div>
+              
+            </div>
+          </form>
         </div>
         </>
     )

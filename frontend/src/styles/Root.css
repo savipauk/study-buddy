@@ -54,19 +54,31 @@ body{
   font-size: 40px;
   justify-content: center;
   text-align: center;
+	color: white;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.text{
+	font-size: 105px;
 }
 
 .description{
   width: 100%;
   text-align: center;
-  font-size: 40px;
+  font-size: 50px;
+	font-weight: bold;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   margin-bottom: 0.4em;
+	color: white;
 }
 
 .signUpButton{
-  background-color: rgba(53, 250, 53, 0.733);
+  background: linear-gradient(360deg, #8e9eab, #eef2f3);
   padding: 1em;
+	padding-left: 2em;
+	padding-right: 2em;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 25px;
+	border: 0px;
 }

@@ -1,21 +1,121 @@
-.loginFormDiv{
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body{
+  /* background: linear-gradient(#c31431cb, #240b36e1); */
+	background: linear-gradient(#355C7D, #6C5B7B, #C06C84);
+
 }
 
-.loginForm{
-    width: 30%;
-    background-color: antiquewhite;
-    display: flex;
-    flex-wrap: wrap;
-    border-radius: 16px;
-    margin-left: 10%;
-    margin-right: 10%
+.formWrapper{
+  display: flex;
+  width: 100vw;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-self: left; 
 }
 
+.forms{
+  display: flex;
+  width: 20%;
+  justify-self: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  border-radius: 16px;
+	border: 4px solid white;
+  background: linear-gradient(#233e55e8, #6c5b7be7, #804656d8);
+}
+  
+.formDiv{   
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+  
 .helloText{
-    width: 100%;
-    text-align: left;
+  font-size: 48px;
+  font-weight: bold;
+  justify-self: center;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: 1em;
+	color: white;
 }
+  
+.createNewText{
+  font-size: 2em;
+  width: 100%;
+  margin-bottom: 0.5em;
+  text-align: left;
+	color: white;
+}
+
+.infoInput{
+  font-size: 20px;
+  width: 100%;
+  padding: 1em;
+  border-radius: 16px;
+  margin-top: 1em;
+}
+
+.inputDiv{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+  
+.passwordDiv{
+  width: 100%;
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: center;
+}
+  
+.passwordInput{
+  font-size: 20px;
+  width: 100%;
+  border-radius: 16px;
+  margin-top: 1em;
+  padding: 1em;
+}
+  
+.buttonDiv{
+  margin-top: 2em;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+  
+  
+.inputButton{
+  font-size: 20px;
+  background: linear-gradient(90deg, rgb(45, 240, 19), rgb(17, 168, 25));
+	/* background: linear-gradient(360deg, #8e9eab, #eef2f3); */
+  width: 70%;
+  padding: 1em;
+  margin-bottom: 1em;
+	border: 0px;
+}
+
+.redirect{
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1em;
+}
+.account{
+  margin: 0;
+  font-size: 20px;
+	color: white;
+  }
+.link{
+  font-size: 20px;
+}
+
