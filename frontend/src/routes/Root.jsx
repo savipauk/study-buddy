@@ -3,7 +3,6 @@ import "../styles/Root.css";
 import { useNavigate } from "react-router-dom";
 
 function Root() {
-  const [count, setCount] = useState(0);
 
   return (
     <div className="welcomeWrapper">
