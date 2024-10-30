@@ -1,32 +1,35 @@
-import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
-import '../styles/Root.css'
+import { useState } from "react";
+import "../styles/Root.css";
+import { useNavigate } from "react-router-dom";
 
 function Root() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="welcomeWrapper">
+      <div className="title">
+        <h1 className="text">STUDY BUDDY</h1>
       </div>
-      <h1>Study Buddy</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+      <div className="description">
+        <p>Study smarter, together</p>
       </div>
-      <p>
-        Using Vite and React
-      </p>
-    </>
-  )
+      <div className="signUpButtonDiv">
+        <SignUpButton />
+      </div>
+    </div>
+  );
 }
 
-export default Root
+function SignUpButton() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/users/login");
+  };
+  return (
+    <button className="signUpButton" onClick={handleClick}>
+      SIGN UP
+    </button>
+  );
+}
+
+export default Root;
