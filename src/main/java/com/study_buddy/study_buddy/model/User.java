@@ -14,7 +14,8 @@ public class User {
     private String description;
 
     // Other fields, constructors, getters, setters
-    public User() {}
+    public User() {
+    }
 
     public User(String description) {
         this.description = description;
@@ -37,4 +38,3 @@ public class User {
         this.description = description;
     }
 }
-
