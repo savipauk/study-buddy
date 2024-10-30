@@ -25,7 +25,7 @@ function SignUpButton(){
 	const navigate = useNavigate()
 
 	const handleClick = () => {
-		navigate('/register')
+		navigate('/users/login')
 	}
   return <button className='signUpButton' onClick={handleClick}>SIGN UP</button>
 }

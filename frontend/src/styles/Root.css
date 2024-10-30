@@ -82,3 +82,14 @@ body{
   font-size: 25px;
 	border: 0px;
 }
+
+#error-page{
+	display: flex;
+	justify-content: center;
+	width: 100vw;
+	flex-wrap: wrap;
+}
+.er{
+	width: 100%;
+	text-align: center;
+}
