@@ -1,31 +1,32 @@
-import { StrictMode } from 'react'
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { createRoot } from 'react-dom/client'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom"
-import Root from './routes/Root'
-import './index.css'
-import ErrorPage from './ErrorPage'
-import Signup from './routes/Signup'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Root from "./routes/Root";
+import "./index.css";
+import ErrorPage from "./ErrorPage";
+import Register from "./routes/Register";
+import Login from "./routes/Login";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
+        {
+                path: "/",
+                element: <Root />,
+                errorElement: <ErrorPage />,
+        },
+        {
+                path: "/users/login",
+                element: <Login />,
+                errorElement: <ErrorPage />,
+        },
+        {
+                path: "/users/register",
+                element: <Register />,
+                errorElement: <ErrorPage />,
+        },
 ]);
 
-createRoot(document.getElementById('root')).render(
-  <GoogleOAuthProvider clientId='4143611273-h8v79jdefdqr65l0n23efpg84r5vospr.apps.googleusercontent.com'>
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>
-  </GoogleOAuthProvider>
-)
+createRoot(document.getElementById("root")).render(
+        <StrictMode>
+                <RouterProvider router={router} />
+        </StrictMode>,
+);
