@@ -1,18 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { GoogleLogin } from '@react-oauth/google';
 import "../styles/Login.css";
-
-function Root() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <LoginForm />
-    </>
-  );
-}
+import useAuth from "../hooks/useAuth";
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
+  const { signIn, signInWithGoogle } = useAuth()
 
   function onChange(event) {
     const { name, value } = event.target;
@@ -34,8 +29,22 @@ function LoginForm() {
       },
       body: JSON.stringify(data),
     };
+    fetch("/login/login", options);
+  }
 
-    fetch("/users/login", options);
+  function loginWithGoogle(response) {
+    const { credential } = response;
+    // TODO: If user already exists, redirect to home page. Elsewhere, redirect
+    // to profile to set up profile.
+
+    // TODO: Save: user Google id, email address, name, profile picture url,
+    // access token / refresh token, login method = google, created at
+    // This data can be retrieved from the google access token
+
+    // Send data to /login/login for login, /login/register for register
+
+    signInWithGoogle(credential);
+    navigate("/");
   }
 
   return (
@@ -73,13 +82,13 @@ function LoginForm() {
               </a>
             </div>
             <div className="oauth">
-              <p className="or">OR</p>
-              <button className="oauthButton">
-                <i className="fab fa-google icon"></i> Use google account
-              </button>
-              <button className="oauthButton">
-                <i className="fab fa-github icon"></i> Use github account
-              </button>
+              <p> Or sign up with... </p>
+              <GoogleLogin
+                onSuccess={loginWithGoogle}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+              />
             </div>
           </div>
         </form>
@@ -87,4 +96,4 @@ function LoginForm() {
     </>
   );
 }
-export default Root;
+export default LoginForm;
