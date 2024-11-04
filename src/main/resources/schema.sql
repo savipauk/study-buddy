@@ -22,7 +22,7 @@ CREATE TABLE Users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
-    UNIQUE (email, oauth_provider, oauth_id)
+    UNIQUE (email, oauth_id)
 );
 
 CREATE TABLE Students (
