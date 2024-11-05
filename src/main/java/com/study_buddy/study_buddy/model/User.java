@@ -139,4 +139,3 @@ public class User {
         STUDENT, PROFESSOR, ADMIN
     }
 }
-
