@@ -23,7 +23,6 @@ public class StudyGroup {
     private String location;
 
     @Column(name = "date")
-    @Temporal(TemporalType.DATE)
     private LocalDate date;
 
     @Column(name = "max_members", nullable = false)
@@ -33,12 +32,13 @@ public class StudyGroup {
     private String description;
 
     @Column(name = "expiration_date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate expirationDate;
 
-    public StudyGroup () {}
+    public StudyGroup() {
+    }
 
-    public StudyGroup(Long id, Student creator, String groupName, String location, LocalDate date, int maxMembers, String description, LocalDate expirationDate) {
+    public StudyGroup(Long id, Student creator, String groupName, String location, LocalDate date, int maxMembers,
+            String description, LocalDate expirationDate) {
         this.id = id;
         this.creator = creator;
         this.groupName = groupName;

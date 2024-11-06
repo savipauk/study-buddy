@@ -22,33 +22,29 @@ public class Student {
     @Column(name = "profile_picture", length = 255)
     private String profilePicture;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
-    private Gender gender;
-
-    @Column(name = "profile_picture", length = 100)
+    @Column(name = "city", length = 100)
     private String city;
 
     @Column(name = "description", length = 255)
     private String description;
 
-    public enum Gender {
-        M, F, OTHER
+    // public enum Gender {
+    // M, F, OTHER
+    // }
+
+    public Student() {
     }
 
-    public Student () {}
-
-    public Student(Long id, User user, String username, String profilePicture, LocalDate dateOfBirth, Gender gender, String city, String description) {
+    public Student(Long id, User user, String username, String profilePicture, LocalDate dateOfBirth, 
+            String city, String description) {
         this.id = id;
         this.user = user;
         this.username = username;
         this.profilePicture = profilePicture;
         this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
         this.city = city;
         this.description = description;
     }
@@ -93,13 +89,6 @@ public class Student {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
 
     public String getCity() {
         return city;
