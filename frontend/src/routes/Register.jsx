@@ -136,13 +136,15 @@ function RegisterForm() {
               Create new account!
             </button>
           </div>
-          <p> Or sign up with... </p>
-          <GoogleLogin
-            onSuccess={loginWithGoogle}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-          />
+					<div className="oauth">
+						<p className="signUpText"> Or sign up with... </p>
+          	<GoogleLogin
+            	onSuccess={loginWithGoogle}
+            	nError={() => {
+              	console.log('Login Failed');
+            	}}
+          	/>
+					</div>
         </div>
         <div className="redirect">
           <p className="account">Already have account?</p>

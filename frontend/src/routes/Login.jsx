@@ -82,11 +82,11 @@ function LoginForm() {
               </a>
             </div>
             <div className="oauth">
-              <p> Or sign up with... </p>
-              <GoogleLogin
+            	<p className="signUpText"> Or sign up with... </p>
+							<GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {
-                  console.log('Login Failed');
+                	console.log('Login Failed');
                 }}
               />
             </div>
