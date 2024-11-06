@@ -35,11 +35,9 @@ public class User {
     private Role role;
 
     @Column(name = "created_at", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDateTime updatedAt;
 
     public User () {}

@@ -40,7 +40,6 @@ public class Lesson {
     private int minParticipants;
 
     @Column(name = "registration_deadline", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate registrationDeadline;
 
     public enum LessonType {

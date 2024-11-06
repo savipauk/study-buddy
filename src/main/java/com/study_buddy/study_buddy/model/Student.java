@@ -22,12 +22,10 @@ public class Student {
     @Column(name = "profile_picture", length = 255)
     private String profilePicture;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-
-    @Column(name = "profile_picture", length = 100)
+    @Column(name = "city", length = 100)
     private String city;
 
     @Column(name = "description", length = 255)
