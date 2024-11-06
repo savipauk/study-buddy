@@ -1,24 +1,42 @@
 package com.study_buddy.study_buddy.controller;
 
-import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.dto.Register;
 import com.study_buddy.study_buddy.dto.StudyRole;
-
-import java.util.Map;
+import com.study_buddy.study_buddy.model.User;
+import com.study_buddy.study_buddy.service.OAuthService;
 
 @RestController
 @RequestMapping("/login")
 public class LoginController {
 
-    @PostMapping("/oauth")
-    public Map<String, String> oauth() {
-        // TODO: Save: user Google id, email address, name, profile picture url,
-        // access token / refresh token, login method = google, created at
-        // This data can be retrieved from the google access token
+    @Autowired
+    private OAuthService oAuthService;
 
-        return Map.of("test", "test");
+    @PostMapping("/oauth")
+    public Map<String, String> oauth(GoogleTokenResponse tokenResponse) {
+        // GoogleTokenResponse is not naturally mapped from HTTP request bodies by
+        // Spring Boot!!!
+        // TODO: check if token needs to be handled as a JSON string or manually parsed
+        // within OAuthService
+        try {
+            // verifying the token
+            // parsing user information from the Google token payload
+            // creating or updating the User in the database
+            User user = oAuthService.processGoogleTokenResponse(tokenResponse);
+            return Map.of("status", "success", "message", "User " + user.getEmail() + " processed successfully");
+        } catch (Exception e) {
+            return Map.of("status", "error", "message", e.getMessage());
+        }
     }
 
     @PostMapping(value = "/register", produces = "application/json")
