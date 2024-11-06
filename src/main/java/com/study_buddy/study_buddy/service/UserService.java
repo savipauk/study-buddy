@@ -37,7 +37,7 @@ public class UserService {
         Optional<User> existingUserOpt = userRepository.findById(id);
         if (existingUserOpt.isPresent()) {
             User existingUser = existingUserOpt.get();
-            existingUser.setDescription(updatedUser.getDescription());
+            existingUser.setUserId(updatedUser.getUserId());
             // Update other fields as needed
             return userRepository.save(existingUser);
         } else {

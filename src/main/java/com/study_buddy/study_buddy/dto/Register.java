@@ -1,10 +1,10 @@
 package com.study_buddy.study_buddy.dto;
 
-public class Signup {
+public class Register {
 	private String email;
-	private String password;
 	private String firstName;
 	private String lastName;
+	private String hashedPassword;
 	private StudyRole studyRole;
 
 	public String getEmail() {
@@ -13,14 +13,6 @@ public class Signup {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getFirstName() {
@@ -37,6 +29,14 @@ public class Signup {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getHashedPassword() {
+		return hashedPassword;
+	}
+
+	public void setHashedPassword(String hash) {
+		this.hashedPassword = hash;
 	}
 
 	public StudyRole getStudyRole() {

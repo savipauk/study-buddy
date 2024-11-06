@@ -1,3 +1,9 @@
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 body {
   /* background: linear-gradient(#c31431cb, #240b36e1); */
   background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
