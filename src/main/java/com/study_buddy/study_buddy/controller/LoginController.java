@@ -1,21 +1,19 @@
 package com.study_buddy.study_buddy.controller;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.auth.oauth2.IdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import java.util.Map;
 
-import com.study_buddy.study_buddy.repository.UserRepository;
-import com.study_buddy.study_buddy.service.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.dto.Register;
 import com.study_buddy.study_buddy.dto.StudyRole;
 import com.study_buddy.study_buddy.model.User;
-
-import java.util.Map;
+import com.study_buddy.study_buddy.service.OAuthService;
 
 @RestController
 @RequestMapping("/login")
@@ -26,8 +24,10 @@ public class LoginController {
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(GoogleTokenResponse tokenResponse) {
-        // GoogleTokenResponse is not naturally mapped from HTTP request bodies by Spring Boot!!!
-        // TODO: check if token needs to be handled as a JSON string or manually parsed within OAuthService
+        // GoogleTokenResponse is not naturally mapped from HTTP request bodies by
+        // Spring Boot!!!
+        // TODO: check if token needs to be handled as a JSON string or manually parsed
+        // within OAuthService
         try {
             // verifying the token
             // parsing user information from the Google token payload
@@ -38,12 +38,6 @@ public class LoginController {
             return Map.of("status", "error", "message", e.getMessage());
         }
     }
-
-//    @PostMapping("/oauth")
-//    public Map<String, String> oauth() {
-//        String accessToken = tokenResponse.getAccessToken();
-//        return Map.of("test", "test");
-//    }
 
     @PostMapping(value = "/register", produces = "application/json")
     public Map<String, String> register(@RequestBody Register data) {
