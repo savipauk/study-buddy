@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "GroupMembers")
 public class GroupMembers {
     @EmbeddedId
     private GroupMemberID id;
@@ -21,16 +22,31 @@ public class GroupMembers {
     @Column(name = "join_date")
     private LocalDateTime joinDate;
 
-    // Getters and setters
-    public GroupMemberID getId() { return id; }
-    public void setId(GroupMemberID id) { this.id = id; }
+    public GroupMemberID getId() {
+        return id;
+    }
+    public void setId(GroupMemberID id) {
+        this.id = id;
+    }
 
-    public User getMember() { return member; }
-    public void setMember(User member) { this.member = member; }
+    public User getMember() {
+        return member;
+    }
+    public void setMember(User member) {
+        this.member = member;
+    }
 
-    public StudyGroup getGroup() { return group; }
-    public void setGroup(StudyGroup group) { this.group = group; }
+    public StudyGroup getGroup() {
+        return group;
+    }
+    public void setGroup(StudyGroup group) {
+        this.group = group;
+    }
 
-    public LocalDateTime getJoinDate() { return joinDate; }
-    public void setJoinDate(LocalDateTime joinDate) { this.joinDate = joinDate; }
+    public LocalDateTime getJoinDate() {
+        return joinDate;
+    }
+    public void setJoinDate(LocalDateTime joinDate) {
+        this.joinDate = joinDate;
+    }
 }

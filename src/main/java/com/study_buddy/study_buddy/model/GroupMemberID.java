@@ -9,7 +9,6 @@ public class GroupMemberID implements Serializable {
     private Long memberId;
     private Long groupId;
 
-    // Constructors
     public GroupMemberID() {}
 
     public GroupMemberID(Long memberId, Long groupId) {
@@ -17,14 +16,20 @@ public class GroupMemberID implements Serializable {
         this.groupId = groupId;
     }
 
-    // Getters and Setters
-    public Long getMemberId() { return memberId; }
-    public void setMemberId(Long memberId) { this.memberId = memberId; }
+    public Long getMemberId() {
+        return memberId;
+    }
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
 
-    public Long getGroupId() { return groupId; }
-    public void setGroupId(Long groupId) { this.groupId = groupId; }
+    public Long getGroupId() {
+        return groupId;
+    }
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
 
-    // hashCode and equals for composite key
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

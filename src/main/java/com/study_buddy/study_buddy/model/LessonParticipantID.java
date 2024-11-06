@@ -9,7 +9,6 @@ public class LessonParticipantID implements Serializable {
     private Long userId;
     private Long lessonId;
 
-    // Constructors
     public LessonParticipantID() {}
 
     public LessonParticipantID(Long userId, Long lessonId) {
@@ -17,14 +16,18 @@ public class LessonParticipantID implements Serializable {
         this.lessonId = lessonId;
     }
 
-    // Getters and Setters
-    public Long getUserId() { return userId; }
+    public Long getUserId() {
+        return userId;
+    }
     public void setUserId(Long userId) { this.userId = userId; }
 
-    public Long getLessonId() { return lessonId; }
-    public void setLessonId(Long lessonId) { this.lessonId = lessonId; }
+    public Long getLessonId() {
+        return lessonId;
+    }
+    public void setLessonId(Long lessonId) {
+        this.lessonId = lessonId;
+    }
 
-    // hashCode and equals for composite key
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
