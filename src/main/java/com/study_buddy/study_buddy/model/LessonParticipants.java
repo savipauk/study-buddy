@@ -1,15 +1,12 @@
+package com.study_buddy.study_buddy.model;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import com.study_buddy.study_buddy.model.User;
-import com.study_buddy.study_buddy.model.Group;
-import com.study_buddy.study_buddy.model.Lesson;
-import com.study_buddy.study_buddy.model.LessonParticipantsId;
 
 @Entity
 public class LessonParticipants {
     @EmbeddedId
-    private LessonParticipantId id;
+    private LessonParticipantID id;
 
     @MapsId("userId")
     @ManyToOne
@@ -24,26 +21,31 @@ public class LessonParticipants {
     @Column(name = "participation_date")
     private LocalDateTime participationDate;
 
-    // Getters and setters
-    public LessonParticipantId getId() {
+    public LessonParticipantID getId() {
         return id;
     }
-    public void setId(LessonParticipantId id) {
+    public void setId(LessonParticipantID id) {
         this.id = id;
     }
 
-    public User getUser() { return user; }
+    public User getUser() {
+        return user;
+    }
     public void setUser(User user) {
         this.user = user;
     }
 
-    public Lesson getLesson() { return lesson; }
+    public Lesson getLesson() {
+        return lesson;
+    }
     public void setLesson(Lesson lesson) {
         this.lesson = lesson;
-        }
+    }
 
-    public LocalDateTime getParticipationDate() { return participationDate; }
+    public LocalDateTime getParticipationDate() {
+        return participationDate;
+    }
     public void setParticipationDate(LocalDateTime participationDate) {
         this.participationDate = participationDate;
-        }
+    }
 }
