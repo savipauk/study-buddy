@@ -1,10 +1,19 @@
 package com.study_buddy.study_buddy.controller;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.IdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+
+import com.study_buddy.study_buddy.repository.UserRepository;
+import com.study_buddy.study_buddy.service.OAuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.dto.Register;
 import com.study_buddy.study_buddy.dto.StudyRole;
+import com.study_buddy.study_buddy.model.User;
 
 import java.util.Map;
 
@@ -12,14 +21,29 @@ import java.util.Map;
 @RequestMapping("/login")
 public class LoginController {
 
-    @PostMapping("/oauth")
-    public Map<String, String> oauth() {
-        // TODO: Save: user Google id, email address, name, profile picture url,
-        // access token / refresh token, login method = google, created at
-        // This data can be retrieved from the google access token
+    @Autowired
+    private OAuthService oAuthService;
 
-        return Map.of("test", "test");
+    @PostMapping("/oauth")
+    public Map<String, String> oauth(GoogleTokenResponse tokenResponse) {
+        // GoogleTokenResponse is not naturally mapped from HTTP request bodies by Spring Boot!!!
+        // TODO: check if token needs to be handled as a JSON string or manually parsed within OAuthService
+        try {
+            // verifying the token
+            // parsing user information from the Google token payload
+            // creating or updating the User in the database
+            User user = oAuthService.processGoogleTokenResponse(tokenResponse);
+            return Map.of("status", "success", "message", "User " + user.getEmail() + " processed successfully");
+        } catch (Exception e) {
+            return Map.of("status", "error", "message", e.getMessage());
+        }
     }
+
+//    @PostMapping("/oauth")
+//    public Map<String, String> oauth() {
+//        String accessToken = tokenResponse.getAccessToken();
+//        return Map.of("test", "test");
+//    }
 
     @PostMapping(value = "/register", produces = "application/json")
     public Map<String, String> register(@RequestBody Register data) {
