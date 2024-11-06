@@ -1,7 +1,8 @@
 package com.study_buddy.study_buddy.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Lessons")
@@ -27,7 +28,6 @@ public class Lesson {
     private Float price;
 
     @Column(name = "date", nullable = false)
-    @Temporal(TemporalType.DATE)
     private LocalDate date;
 
     @Column(name = "duration", nullable = false)
@@ -44,12 +44,26 @@ public class Lesson {
     private LocalDate registrationDeadline;
 
     public enum LessonType {
-        MASS, ONE_ON_ONE
+        MASS("Mass"),
+        ONE_ON_ONE("One on one");
+
+        private final String value;
+
+        LessonType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
-    public Lesson () {}
+    public Lesson() {
+    }
 
-    public Lesson(Long id, Professor professor, LessonType lessonType, String location, Float price, LocalDate date, int duration, int maxParticipants, int minParticipants, LocalDate registrationDeadline) {
+    public Lesson(Long id, Professor professor, LessonType lessonType, String location, Float price,
+            LocalDate date, int duration,
+            int maxParticipants, int minParticipants, LocalDate registrationDeadline) {
         this.id = id;
         this.professor = professor;
         this.lessonType = lessonType;

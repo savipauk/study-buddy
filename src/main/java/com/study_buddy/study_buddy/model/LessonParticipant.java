@@ -6,34 +6,32 @@ import jakarta.persistence.*;
 @Table(name = "LessonParticipants")
 public class LessonParticipant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "lesson_id")
-    private Long id;
+    @EmbeddedId
+    private LessonParticipantId id = new LessonParticipantId();
 
-    @ManyToOne
-    @MapsId("lesson_id")
+    @MapsId("lessonId")
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
     @ManyToOne
-    @MapsId("participant_id")
+    @MapsId("participantId")
     @JoinColumn(name = "participant_id")
     private Student participant;
 
-    public LessonParticipant () {}
+    public LessonParticipant() {
+    }
 
-    public LessonParticipant(Long id, Lesson lesson, Student participant) {
+    public LessonParticipant(LessonParticipantId id, Lesson lesson, Student participant) {
         this.id = id;
         this.lesson = lesson;
         this.participant = participant;
     }
 
-    public Long getId() {
+    public LessonParticipantId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(LessonParticipantId id) {
         this.id = id;
     }
 

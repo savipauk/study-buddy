@@ -31,7 +31,7 @@ CREATE TABLE Students (
     username VARCHAR(100) NOT NULL,
     profile_picture VARCHAR(255),
     date_of_birth DATE,
-    gender ENUM('M', 'F', 'Other'),
+    -- gender ENUM('M', 'F', 'Other'),
     city VARCHAR(100),
     description TEXT,
     PRIMARY KEY (student_id),
@@ -78,11 +78,17 @@ CREATE TABLE StudyGroups (
 );
 
 CREATE TABLE GroupMembers (
-    group_id INT NOT NULL, -- foreign key prema StudyGroups
-    member_id INT NOT NULL, -- foreign key prema Students
+    group_id BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
     PRIMARY KEY (group_id, member_id),
-    FOREIGN KEY (group_id) REFERENCES StudyGroups(group_id) ON DELETE CASCADE,
-    FOREIGN KEY (member_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    CONSTRAINT fk_group
+        FOREIGN KEY (group_id)
+        REFERENCES StudyGroups(group_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_member
+        FOREIGN KEY (member_id)
+        REFERENCES Students(student_id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Lessons (
@@ -143,4 +149,5 @@ CREATE TABLE Materials (
     FOREIGN KEY (group_id) REFERENCES StudyGroups(group_id) ON DELETE SET NULL,
     FOREIGN KEY (lesson_id) REFERENCES Lessons(lesson_id) ON DELETE SET NULL
 );
+
 

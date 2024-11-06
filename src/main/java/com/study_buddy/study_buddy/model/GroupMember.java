@@ -6,35 +6,35 @@ import jakarta.persistence.*;
 @Table(name = "GroupMembers")
 public class GroupMember {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
-    private Long groupMemberId;
+    @EmbeddedId
+    private GroupMemberId id = new GroupMemberId();
 
     @ManyToOne
-    @MapsId("group_id")
+    @MapsId("groupId")
     @JoinColumn(name = "group_id")
     private StudyGroup studyGroup;
 
     @ManyToOne
-    @MapsId("member_id")
+    @MapsId("memberId")
     @JoinColumn(name = "member_id")
     private Student student;
 
-    public GroupMember() {}
+    public GroupMember() {
+    }
 
-    public GroupMember(Long groupMemberId, StudyGroup studyGroup, Student student) {
-        this.groupMemberId = groupMemberId;
+    public GroupMember(StudyGroup studyGroup, Student student) {
         this.studyGroup = studyGroup;
         this.student = student;
+        this.id = new GroupMemberId(studyGroup.getId(), student.getId());
     }
 
-    public Long getGroupMemberId() {
-        return groupMemberId;
+    // Getters and setters
+    public GroupMemberId getId() {
+        return id;
     }
 
-    public void setGroupMemberId(Long groupMemberId) {
-        this.groupMemberId = groupMemberId;
+    public void setId(GroupMemberId id) {
+        this.id = id;
     }
 
     public StudyGroup getStudyGroup() {
@@ -53,4 +53,3 @@ public class GroupMember {
         this.student = student;
     }
 }
-
