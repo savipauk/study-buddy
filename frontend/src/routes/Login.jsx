@@ -19,7 +19,7 @@ function LoginForm() {
   async function loginUser(hash) {
     const data = {
       username: loginForm.username,
-      hash: hash
+      hashedPassword: hash
     };
 
     const endpoint = '/login/login';

@@ -50,7 +50,7 @@ function RegisterForm() {
       email: registerForm.email,
       firstName: '',
       lastName: '',
-      hash: hash,
+      hashedPassword: hash,
       studyRole: 'STUDENT'
     };
 
