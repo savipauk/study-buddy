@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import "../styles/Login.css";
-import useAuth from "../hooks/useAuth";
-import { serverFetch } from "../hooks/serverUtils";
-import bcrypt from "bcryptjs";
+import '../styles/Login.css';
+import useAuth from '../hooks/useAuth';
+import { serverFetch } from '../hooks/serverUtils';
+import bcrypt from 'bcryptjs';
 
 function RegisterForm() {
   // TODO: If already signed in, redirect to home page
@@ -13,11 +13,11 @@ function RegisterForm() {
   const navigate = useNavigate();
 
   const [registerForm, setRegisterForm] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
   function onChange(event) {
     const { name, value } = event.target;
@@ -26,6 +26,12 @@ function RegisterForm() {
 
   function loginWithGoogle(response) {
     const { credential } = response;
+    const userInfo = jwtDecode(credential);
+    const userName = userInfo.name;
+    const userEmail = userInfo.email;
+    const userProfilePicture = userInfo.picture;
+    const userGoogleId = userInfo.sub;
+
     // TODO: If user already exists, redirect to home page. Elsewhere, redirect
     // to profile to set up profile.
 
@@ -36,37 +42,36 @@ function RegisterForm() {
     // Send data to /login/login for login, /login/register for register
 
     signInWithGoogle(credential);
-    navigate("/");
+    navigate('/');
   }
 
   async function storeUserToDatabase(hash) {
-
     const data = {
       email: registerForm.email,
-      firstName: "",
-      lastName: "",
+      firstName: '',
+      lastName: '',
       hash: hash,
-      studyRole: "STUDENT",
-    }
+      studyRole: 'STUDENT'
+    };
 
-    const endpoint = "/login/register"
+    const endpoint = '/login/register';
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     };
 
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
-        signIn()
+        console.log(data);
+        signIn();
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
@@ -78,21 +83,21 @@ function RegisterForm() {
     }
 
     try {
-      const saltRounds = 10
-      const salt = await bcrypt.genSalt(saltRounds)
-      const hash = await bcrypt.hash(registerForm.password, salt)
-      await storeUserToDatabase(hash)
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const hash = await bcrypt.hash(registerForm.password, salt);
+      await storeUserToDatabase(hash);
     } catch (err) {
-      console.error("Error processing password:", err)
+      console.error('Error processing password:', err);
     }
   }
 
   function isValid() {
     if (registerForm.password !== registerForm.confirmPassword) {
-      setErrorMessage("Passwords do not match!");
+      setErrorMessage('Passwords do not match!');
       return false;
     }
-    setErrorMessage("");
+    setErrorMessage('');
     return true;
   }
 
@@ -136,15 +141,15 @@ function RegisterForm() {
               Create new account!
             </button>
           </div>
-					<div className="oauth">
-						<p className="signUpText"> Or sign up with... </p>
-          	<GoogleLogin
-            	onSuccess={loginWithGoogle}
-            	nError={() => {
-              	console.log('Login Failed');
-            	}}
-          	/>
-					</div>
+          <div className="oauth">
+            <p className="signUpText"> Or sign up with... </p>
+            <GoogleLogin
+              onSuccess={loginWithGoogle}
+              nError={() => {
+                console.log('Login Failed');
+              }}
+            />
+          </div>
         </div>
         <div className="redirect">
           <p className="account">Already have account?</p>
