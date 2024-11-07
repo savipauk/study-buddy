@@ -1,39 +1,75 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import "../styles/Login.css";
-import useAuth from "../hooks/useAuth";
+import '../styles/Login.css';
+import useAuth from '../hooks/useAuth';
+import { jwtDecode } from 'jwt-decode';
+import { serverFetch } from '../hooks/serverUtils';
 
 function LoginForm() {
-  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signIn, signInWithGoogle } = useAuth();
 
   function onChange(event) {
     const { name, value } = event.target;
     setLoginForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
 
-  function onSubmit(e) {
-    e.preventDefault();
-
+  async function loginUser(hash) {
     const data = {
       username: loginForm.username,
-      password: loginForm.password,
+      hash: hash
     };
 
+    const endpoint = '/login/login';
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     };
-    fetch("/login/login", options);
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        signIn();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const saltRounds = 10;
+      const salt = await bcrypt.genSalt(saltRounds);
+      const hash = await bcrypt.hash(loginForm.password, salt);
+      await loginUser(hash);
+    } catch (err) {
+      console.error('Error processing password:', err);
+    }
   }
 
   function loginWithGoogle(response) {
     const { credential } = response;
+
+    const userInfo = jwtDecode(credential);
+    const userName = userInfo.name;
+    const userEmail = userInfo.email;
+    const userProfilePicture = userInfo.picture;
+    const userGoogleId = userInfo.sub;
+    console.log('User Info:', {
+      userName,
+      userEmail,
+      userProfilePicture,
+      userGoogleId
+    });
+
     // TODO: If user already exists, redirect to home page. Elsewhere, redirect
     // to profile to set up profile.
 
@@ -44,7 +80,7 @@ function LoginForm() {
     // Send data to /login/login for login, /login/register for register
 
     signInWithGoogle(credential);
-    navigate("/");
+    navigate('/users/home');
   }
 
   return (
@@ -82,11 +118,11 @@ function LoginForm() {
               </a>
             </div>
             <div className="oauth">
-            	<p className="signUpText"> Or sign up with... </p>
-							<GoogleLogin
+              <p className="signUpText"> Or sign up with... </p>
+              <GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {
-                	console.log('Login Failed');
+                  console.log('Login Failed');
                 }}
               />
             </div>
