@@ -1,5 +1,5 @@
-const server = "http://127.0.0.1"
-const port = 8080
+const server = 'http://127.0.0.1';
+const port = 8080;
 
 /**
   * Fetches data from a REST API server endpoint.
@@ -11,10 +11,10 @@ const port = 8080
   */
 export async function serverFetch(endpoint, options = {}) {
   try {
-    const url = `${server}:${port}${endpoint}`
-    return await fetch(url, options)
+    const url = `${server}:${port}${endpoint}`;
+    return await fetch(url, options);
   } catch (error) {
-    console.error("Fetch error: ", error)
-    throw error
+    console.error('Fetch error: ', error);
+    throw error;
   }
 }

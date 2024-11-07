@@ -1,13 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import "../styles/Login.css";
-import useAuth from "../hooks/useAuth";
+import '../styles/Login.css';
+import useAuth from '../hooks/useAuth';
 
 function LoginForm() {
-  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signInWithGoogle } = useAuth();
 
   function onChange(event) {
     const { name, value } = event.target;
@@ -19,17 +19,17 @@ function LoginForm() {
 
     const data = {
       username: loginForm.username,
-      password: loginForm.password,
+      password: loginForm.password
     };
 
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     };
-    fetch("/login/login", options);
+    fetch('/login/login', options);
   }
 
   function loginWithGoogle(response) {
@@ -44,44 +44,44 @@ function LoginForm() {
     // Send data to /login/login for login, /login/register for register
 
     signInWithGoogle(credential);
-    navigate("/");
+    navigate('/');
   }
 
   return (
     <>
-      <div className="formWrapper">
-        <form className="forms" onSubmit={onSubmit}>
-          <div className="formDiv">
-            <h1 className="helloText">Hello!</h1>
-            <div className="inputDiv">
+      <div className='formWrapper'>
+        <form className='forms' onSubmit={onSubmit}>
+          <div className='formDiv'>
+            <h1 className='helloText'>Hello!</h1>
+            <div className='inputDiv'>
               <input
-                className="infoInput"
-                placeholder="Username"
-                name="username"
+                className='infoInput'
+                placeholder='Username'
+                name='username'
                 onChange={onChange}
                 value={loginForm.username}
               />
               <input
-                className="passwordInput"
-                placeholder="Password"
-                name="password"
+                className='passwordInput'
+                placeholder='Password'
+                name='password'
                 onChange={onChange}
-                type="password"
+                type='password'
                 value={loginForm.password}
               />
             </div>
-            <div className="buttonDiv">
-              <button className="inputButton" type="submit">
+            <div className='buttonDiv'>
+              <button className='inputButton' type='submit'>
                 Sign In
               </button>
             </div>
-            <div className="redirect">
-              <p className="account">Dont have account?</p>
-              <a href="/users/register" className="link">
+            <div className='redirect'>
+              <p className='account'>Dont have account?</p>
+              <a href='/users/register' className='link'>
                 Register here
               </a>
             </div>
-            <div className="oauth">
+            <div className='oauth'>
               <p> Or sign up with... </p>
               <GoogleLogin
                 onSuccess={loginWithGoogle}
