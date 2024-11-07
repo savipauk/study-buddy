@@ -9,6 +9,7 @@ import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.study_buddy.study_buddy.dto.StudyRole;
 
 import java.time.LocalDateTime;
 
@@ -44,7 +45,7 @@ public class OAuthService {
             user.setLastName(lastName);
             user.setAccessToken(accessToken);
             user.setRefreshToken(refreshToken);
-            user.setRole(User.Role.STUDENT);  // Default
+            user.setRole(StudyRole.STUDENT);  // Default
             user.setCreatedAt(createdAt);
             user.setUpdatedAt(createdAt);
 

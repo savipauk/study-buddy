@@ -2,6 +2,8 @@ package com.study_buddy.study_buddy.controller;
 
 import java.util.Map;
 
+import com.study_buddy.study_buddy.repository.UserRepository;
+import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,9 @@ public class LoginController {
 
     @Autowired
     private OAuthService oAuthService;
+
+    @Autowired
+    private UserService userRepository;
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(GoogleTokenResponse tokenResponse) {
@@ -47,10 +52,13 @@ public class LoginController {
         String hashedPassword = data.getHashedPassword();
         StudyRole studyRole = data.getStudyRole();
         Map<String, String> returnData = Map.of("firstName", firstName, "lastName", lastName, "email", email,
-                "hashedPassword", hashedPassword, "studyRole", studyRole.toString());
+                "hashedPassword", hashedPassword.toString(), "studyRole", studyRole.toString());
 
         // TODO: Save this user to the database
+       /* User user = new User(email, hashedPassword, firstName, lastName, studyRole);
 
+        userRepository.createUser(user);
+*/
         return returnData;
     }
 
