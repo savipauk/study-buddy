@@ -7,8 +7,6 @@ import { serverFetch } from '../hooks/serverUtils';
 import { getHash } from '../hooks/serverUtils';
 
 function RegisterForm() {
-  // TODO: If already signed in, redirect to home page
-
   const { isSignedIn, signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
@@ -22,27 +20,6 @@ function RegisterForm() {
   function onChange(event) {
     const { name, value } = event.target;
     setRegisterForm((oldForm) => ({ ...oldForm, [name]: value }));
-  }
-
-  function loginWithGoogle(response) {
-    const { credential } = response;
-    const userInfo = jwtDecode(credential);
-    const userName = userInfo.name;
-    const userEmail = userInfo.email;
-    const userProfilePicture = userInfo.picture;
-    const userGoogleId = userInfo.sub;
-
-    // TODO: If user already exists, redirect to home page. Elsewhere, redirect
-    // to profile to set up profile.
-
-    // TODO: Save: user Google id, email address, name, profile picture url,
-    // access token / refresh token, login method = google, created at
-    // This data can be retrieved from the google access token
-
-    // Send data to /login/login for login, /login/register for register
-
-    signInWithGoogle(credential);
-    navigate('/users/home');
   }
 
   async function storeUserToDatabase(hash) {
@@ -72,6 +49,33 @@ function RegisterForm() {
       }
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async function loginWithGoogle(response) {
+    const { credential } = response;
+
+    const endpoint = '/login/oauth';
+    const data = {
+      credential: credential
+    };
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        signInWithGoogle(credential);
+        navigate('/users/home');
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

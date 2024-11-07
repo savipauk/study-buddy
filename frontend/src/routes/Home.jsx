@@ -1,7 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { serverFetch } from '../hooks/serverUtils';
 import { SignOutButton } from './Root';
 import '../styles/HomePage.css';
 
@@ -32,7 +29,7 @@ function ProfileButton() {
 
   return (
     <button onClick={handleClick} className="profileButton">
-      <i class="fa-solid fa-user"></i>
+      <i className="fa-solid fa-user"></i>
     </button>
   );
 }
