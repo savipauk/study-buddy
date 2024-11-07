@@ -1,7 +1,5 @@
 package com.study_buddy.study_buddy.service;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.auth.oauth2.IdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 
@@ -9,7 +7,7 @@ import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.study_buddy.study_buddy.dto.StudyRole;
+import com.study_buddy.study_buddy.model.StudyRole;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,5 @@
 package com.study_buddy.study_buddy.model;
 
-import com.study_buddy.study_buddy.dto.StudyRole;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

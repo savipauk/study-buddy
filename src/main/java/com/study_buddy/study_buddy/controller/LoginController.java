@@ -2,7 +2,6 @@ package com.study_buddy.study_buddy.controller;
 
 import java.util.Map;
 
-import com.study_buddy.study_buddy.repository.UserRepository;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.dto.Register;
-import com.study_buddy.study_buddy.dto.StudyRole;
+import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.service.OAuthService;
 
