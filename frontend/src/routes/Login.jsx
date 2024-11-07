@@ -55,26 +55,34 @@ function LoginForm() {
     }
   }
 
-  function loginWithGoogle(response) {
+  async function loginWithGoogle(response) {
     const { credential } = response;
 
+    //Not used but might be useful at some point
     const userInfo = jwtDecode(credential);
-    const userName = userInfo.name;
-    const userEmail = userInfo.email;
-    const userProfilePicture = userInfo.picture;
-    const userGoogleId = userInfo.sub;
 
-    // TODO: If user already exists, redirect to home page. Elsewhere, redirect
-    // to profile to set up profile.
+    const endpoint = '/login/oauth';
+    const data = {
+      credential: credential
+    };
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
 
-    // TODO: Save: user Google id, email address, name, profile picture url,
-    // access token / refresh token, login method = google, created at
-    // This data can be retrieved from the google access token
-
-    // Send data to /login/login for login, /login/register for register
-
-    signInWithGoogle(credential);
-    navigate('/users/home');
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        signInWithGoogle(credential);
+        navigate('/users/home');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
