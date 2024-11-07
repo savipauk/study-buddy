@@ -30,6 +30,12 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
+    @Column(name = "access_token", length = 255)
+    private String accessToken;
+
+    @Column(name = "refresh_token", length = 255)
+    private String refreshToken;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
@@ -49,6 +55,8 @@ public class User {
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.role = role;
     }
 
@@ -107,6 +115,14 @@ public class User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
+
+    public String getAccessToken() { return accessToken; }
+
+    public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
+
+    public String getRefreshToken() { return refreshToken; }
 
     public Role getRole() {
         return role;
