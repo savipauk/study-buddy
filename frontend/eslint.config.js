@@ -34,6 +34,11 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      // This aligns esling to rules in .prettierrc
+      'comma-dangle': ['error', 'never'],
+      'quotes': ['error', 'single'],
+      'semi': ['error', 'always'],
+      'jsx-quotes': ['error', 'prefer-single'],
     },
   },
 ]
