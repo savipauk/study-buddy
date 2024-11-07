@@ -42,7 +42,7 @@ function RegisterForm() {
     // Send data to /login/login for login, /login/register for register
 
     signInWithGoogle(credential);
-    navigate('/');
+    navigate('/users/home');
   }
 
   async function storeUserToDatabase(hash) {

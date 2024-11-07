@@ -63,12 +63,6 @@ function LoginForm() {
     const userEmail = userInfo.email;
     const userProfilePicture = userInfo.picture;
     const userGoogleId = userInfo.sub;
-    console.log('User Info:', {
-      userName,
-      userEmail,
-      userProfilePicture,
-      userGoogleId
-    });
 
     // TODO: If user already exists, redirect to home page. Elsewhere, redirect
     // to profile to set up profile.
