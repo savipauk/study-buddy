@@ -9,7 +9,7 @@ import bcrypt from "bcryptjs";
 function RegisterForm() {
   // TODO: If already signed in, redirect to home page
 
-  const { isSignedIn, signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const [registerForm, setRegisterForm] = useState({

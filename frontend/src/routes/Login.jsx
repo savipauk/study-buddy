@@ -7,7 +7,7 @@ import useAuth from "../hooks/useAuth";
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signInWithGoogle } = useAuth()
 
   function onChange(event) {
     const { name, value } = event.target;
