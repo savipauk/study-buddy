@@ -3,8 +3,7 @@ import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
-import { jwtDecode } from 'jwt-decode';
-import { serverFetch } from '../hooks/serverUtils';
+import { getHash, serverFetch } from '../hooks/serverUtils';
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
@@ -46,9 +45,7 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const saltRounds = 10;
-      const salt = await bcrypt.genSalt(saltRounds);
-      const hash = await bcrypt.hash(loginForm.password, salt);
+      const hash = getHash(loginForm.password);
       await loginUser(hash);
     } catch (err) {
       console.error('Error processing password:', err);
@@ -57,9 +54,6 @@ function LoginForm() {
 
   async function loginWithGoogle(response) {
     const { credential } = response;
-
-    //Not used but might be useful at some point
-    const userInfo = jwtDecode(credential);
 
     const endpoint = '/login/oauth';
     const data = {

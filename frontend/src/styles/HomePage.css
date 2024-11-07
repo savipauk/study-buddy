@@ -1,0 +1,19 @@
+
+.header{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding-top: 1em;
+}
+
+.homePageWrapper{
+	width: 100vw;
+}
+
+/* Will delete this later on */
+.someText{
+	text-align: center;
+}

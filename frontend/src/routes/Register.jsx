@@ -4,7 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
 import { serverFetch } from '../hooks/serverUtils';
-import bcrypt from 'bcryptjs';
+import { getHash } from '../hooks/serverUtils';
 
 function RegisterForm() {
   // TODO: If already signed in, redirect to home page
@@ -83,9 +83,7 @@ function RegisterForm() {
     }
 
     try {
-      const saltRounds = 10;
-      const salt = await bcrypt.genSalt(saltRounds);
-      const hash = await bcrypt.hash(registerForm.password, salt);
+      const hash = getHash(registerForm.password);
       await storeUserToDatabase(hash);
     } catch (err) {
       console.error('Error processing password:', err);
@@ -145,7 +143,7 @@ function RegisterForm() {
             <p className="signUpText"> Or sign up with... </p>
             <GoogleLogin
               onSuccess={loginWithGoogle}
-              nError={() => {
+              onError={() => {
                 console.log('Login Failed');
               }}
             />
@@ -161,4 +159,5 @@ function RegisterForm() {
     </div>
   );
 }
+
 export default RegisterForm;

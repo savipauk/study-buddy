@@ -136,23 +136,6 @@ body {
   justify-content: center;
 }
 
-/* .or {
-  margin-top: 0;
-  width: 100%;
-  font-size: 500px;
-  text-align: center;
-  color: white;
-  font-weight: bold;
-} */
-
-/* .oauthButton {
-  width: 60%;
-  padding: 1.3em;
-  margin-bottom: 1em;
-  display: flex;
-  justify-content: space-between;
-} */
-
 .errorMessage {
   width: 100%;
   text-align: center;
