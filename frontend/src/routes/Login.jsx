@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
@@ -26,7 +24,6 @@ function LoginForm() {
     const endpoint = '/login/login';
     const options = {
       method: 'POST',
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -36,7 +33,6 @@ function LoginForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        const data = await response.json();
         signIn();
       }
     } catch (error) {
@@ -73,7 +69,6 @@ function LoginForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        const data = await response.json();
         signInWithGoogle(credential);
         navigate('/users/home');
       }
@@ -84,40 +79,40 @@ function LoginForm() {
 
   return (
     <>
-      <div className="formWrapper">
-        <form className="forms" onSubmit={onSubmit}>
-          <div className="formDiv">
-            <h1 className="helloText">Hello!</h1>
-            <div className="inputDiv">
+      <div className='formWrapper'>
+        <form className='forms' onSubmit={onSubmit}>
+          <div className='formDiv'>
+            <h1 className='helloText'>Hello!</h1>
+            <div className='inputDiv'>
               <input
-                className="infoInput"
-                placeholder="Username"
-                name="username"
+                className='infoInput'
+                placeholder='Username'
+                name='username'
                 onChange={onChange}
                 value={loginForm.username}
               />
               <input
-                className="passwordInput"
-                placeholder="Password"
-                name="password"
+                className='passwordInput'
+                placeholder='Password'
+                name='password'
                 onChange={onChange}
-                type="password"
+                type='password'
                 value={loginForm.password}
               />
             </div>
-            <div className="buttonDiv">
-              <button className="inputButton" type="submit">
+            <div className='buttonDiv'>
+              <button className='inputButton' type='submit'>
                 Sign In
               </button>
             </div>
-            <div className="redirect">
-              <p className="account">Dont have account?</p>
-              <a href="/users/register" className="link">
+            <div className='redirect'>
+              <p className='account'>Dont have account?</p>
+              <a href='/users/register' className='link'>
                 Register here
               </a>
             </div>
-            <div className="oauth">
-              <p className="signUpText"> Or sign up with... </p>
+            <div className='oauth'>
+              <p className='signUpText'> Or sign up with... </p>
               <GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {

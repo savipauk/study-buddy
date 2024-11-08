@@ -4,16 +4,16 @@ import '../styles/HomePage.css';
 
 function HomePage() {
   return (
-    <div className="homePageWrapper">
+    <div className='homePageWrapper'>
       <Header></Header>
-      <h1 className="someText">HOMEPAGE</h1>
+      <h1 className='someText'>HOMEPAGE</h1>
     </div>
   );
 }
 
 function Header() {
   return (
-    <div className="header">
+    <div className='header'>
       <ProfileButton></ProfileButton>
       <SignOutButton></SignOutButton>
     </div>
@@ -28,8 +28,8 @@ function ProfileButton() {
   };
 
   return (
-    <button onClick={handleClick} className="profileButton">
-      <i className="fa-solid fa-user"></i>
+    <button onClick={handleClick} className='profileButton'>
+      <i className='fa-solid fa-user'></i>
     </button>
   );
 }
