@@ -134,7 +134,7 @@ body {
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
-	margin-bottom: 1em
+	margin-bottom: 1em;
 }
 
 .errorMessage {
