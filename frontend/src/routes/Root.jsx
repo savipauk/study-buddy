@@ -7,11 +7,11 @@ function Root() {
   const { isSignedIn } = useAuth();
 
   return (
-    <div className='welcomeWrapper'>
-      <div className='title'>
-        <h1 className='text'>STUDY BUDDY</h1>
+    <div className="welcomeWrapper">
+      <div className="title">
+        <h1 className="text">STUDY BUDDY</h1>
       </div>
-      <div className='description'>
+      <div className="description">
         <p>Study smarter, together</p>
       </div>
       {isSignedIn ? (
@@ -20,7 +20,7 @@ function Root() {
           <SignOutButton />
         </>
       ) : (
-        <div className='signUpButtonDiv'>
+        <div className="signUpButtonDiv">
           <SignUpButton />
         </div>
       )}
@@ -43,12 +43,7 @@ function SignOutButton() {
     signOut();
   };
 
-  return (
-    <button onClick={handleClick}>
-      sign out
-    </button>
-  );
-
+  return <button onClick={handleClick}>sign out</button>;
 }
 
 function SignUpButton() {
@@ -58,7 +53,7 @@ function SignUpButton() {
     navigate('/users/login');
   };
   return (
-    <button className='signUpButton' onClick={handleClick}>
+    <button className="signUpButton" onClick={handleClick}>
       SIGN UP
     </button>
   );

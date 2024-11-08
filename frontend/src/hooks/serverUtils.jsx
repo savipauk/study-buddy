@@ -2,13 +2,13 @@ const server = 'http://127.0.0.1';
 const port = 8080;
 
 /**
-  * Fetches data from a REST API server endpoint.
-  *
-  * @param {string} endpoint - REST API endpoint. Example: `/users/login`.
+ * Fetches data from a REST API server endpoint.
+ *
+ * @param {string} endpoint - REST API endpoint. Example: `/users/login`.
  * @param {Object} [options={}] - Optional fetch options - method, headers, and body.
-  * @returns {Promise<Object>} The server response.
-  * @throws {Error} If the request fails.
-  */
+ * @returns {Promise<Object>} The server response.
+ * @throws {Error} If the request fails.
+ */
 export async function serverFetch(endpoint, options = {}) {
   try {
     const url = `${server}:${port}${endpoint}`;
