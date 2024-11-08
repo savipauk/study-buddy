@@ -28,7 +28,7 @@ const router = createBrowserRouter([
 ]);
 
 const a = 'b';
-console.log(a)
+console.log(a);
 
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId='4143611273-h8v79jdefdqr65l0n23efpg84r5vospr.apps.googleusercontent.com'>
