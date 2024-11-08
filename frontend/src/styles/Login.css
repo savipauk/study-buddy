@@ -156,40 +156,40 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-	.forms{
+	.forms {
 		width: 90%;
 	}
-	.inputButton{
+	.inputButton {
 		white-space: wrap;
 	}
 }
 
 @media screen and (min-width: 600px) {
-	.forms{
+	.forms {
 		width: 70%;
 	}
 }
 
 @media screen and (min-width: 768px) {
-	.forms{
+	.forms {
 		width: 60%;
 	}
 }
 
-@media screen and (min-width: 768px){
-	.forms{
+@media screen and (min-width: 768px) {
+	.forms {
 		width: 40%;
 	}
 }
 
-@media screen and (min-width: 1200px){
-	.forms{
+@media screen and (min-width: 1200px) {
+	.forms {
 		width: 30%;
 	}
 }
 
-@media screen and (min-width: 1440px){
-	.forms{
+@media screen and (min-width: 1440px) {
+	.forms {
 		width: 20%;
 	}
 }
