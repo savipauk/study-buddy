@@ -28,7 +28,7 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
-      'indent': ['error', 2],
+      indent: ['error', 2],
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
@@ -36,8 +36,8 @@ export default [
       ],
       // This aligns eslint to rules in .prettierrc
       'comma-dangle': ['error', 'never'],
-      'quotes': ['error', 'single'],
-      'semi': ['error', 'always'],
+      quotes: ['error', 'single'],
+      semi: ['error', 'always'],
       'jsx-quotes': ['error', 'prefer-single']
     }
   }

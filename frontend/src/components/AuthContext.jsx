@@ -23,17 +23,19 @@ export const AuthProvider = ({ children }) => {
     signIn();
   };
 
-  const signIn = () => { 
+  const signIn = () => {
     // Maybe track this in the database
     setIsSignedIn(true);
   };
-  const signOut = () => { 
+  const signOut = () => {
     // Maybe track this in the database
     setIsSignedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isSignedIn, signInWithGoogle, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ isSignedIn, signInWithGoogle, signIn, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
