@@ -48,7 +48,6 @@ export function SignOutButton() {
     }
 
     localStorage.removeItem('access_token');
-
     signOut();
     navigate('/');
   };

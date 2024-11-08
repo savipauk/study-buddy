@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
@@ -61,6 +63,7 @@ function RegisterForm() {
     };
     const options = {
       method: 'POST',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -91,14 +94,17 @@ function RegisterForm() {
       await storeUserToDatabase(hash);
     } catch (err) {
       console.error('Error processing password:', err);
+      console.error('Error processing password:', err);
     }
   }
 
   function isValid() {
     if (registerForm.password !== registerForm.confirmPassword) {
       setErrorMessage('Passwords do not match!');
+      setErrorMessage('Passwords do not match!');
       return false;
     }
+    setErrorMessage('');
     setErrorMessage('');
     return true;
   }

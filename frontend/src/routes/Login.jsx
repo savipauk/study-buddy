@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
@@ -23,6 +25,7 @@ function LoginForm() {
 
     const endpoint = '/login/login';
     const options = {
+      method: 'POST',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
