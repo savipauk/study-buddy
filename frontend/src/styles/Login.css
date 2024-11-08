@@ -72,7 +72,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-	margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .passwordDiv {
@@ -95,7 +95,7 @@ body {
   display: flex;
   width: 100%;
   justify-content: center;
-	margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .inputButton {
@@ -111,22 +111,22 @@ body {
 .redirect {
   width: 100%;
   display: flex;
-  flex-wrap:nowrap;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 10px;
-	margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .account {
   margin: 0;
   font-size: 0.9em;
   color: white;
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 .link {
   font-size: 0.9em;
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 .oauth {
@@ -134,7 +134,7 @@ body {
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
-	margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .errorMessage {
@@ -146,51 +146,51 @@ body {
 }
 
 .signUpText {
-	width: 100%;
-	text-align: center;
-	font-size: 1.1em;
-	margin-bottom: 1em;
-	margin-top: 0em;
-	color: rgb(255, 255, 255);
-	margin-bottom: 1em;
-	margin-top: 1.5em;
+  width: 100%;
+  text-align: center;
+  font-size: 1.1em;
+  margin-bottom: 1em;
+  margin-top: 0em;
+  color: rgb(255, 255, 255);
+  margin-bottom: 1em;
+  margin-top: 1.5em;
 }
 
 @media screen and (max-width: 600px) {
-	.forms {
-		width: 90%;
-	}
-	.inputButton {
-		white-space: wrap;
-	}
+  .forms {
+    width: 90%;
+  }
+  .inputButton {
+    white-space: wrap;
+  }
 }
 
 @media screen and (min-width: 600px) {
-	.forms {
-		width: 70%;
-	}
+  .forms {
+    width: 70%;
+  }
 }
 
 @media screen and (min-width: 768px) {
-	.forms {
-		width: 60%;
-	}
+  .forms {
+    width: 60%;
+  }
 }
 
 @media screen and (min-width: 768px) {
-	.forms {
-		width: 40%;
-	}
+  .forms {
+    width: 40%;
+  }
 }
 
 @media screen and (min-width: 1200px) {
-	.forms {
-		width: 30%;
-	}
+  .forms {
+    width: 30%;
+  }
 }
 
 @media screen and (min-width: 1440px) {
-	.forms {
-		width: 20%;
-	}
+  .forms {
+    width: 20%;
+  }
 }
