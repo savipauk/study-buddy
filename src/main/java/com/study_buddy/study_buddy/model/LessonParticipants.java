@@ -9,10 +9,10 @@ public class LessonParticipants {
     @EmbeddedId
     private LessonParticipantID id;
 
-    @MapsId("userId")
+    @MapsId("studentId")
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User userId;
+    @JoinColumn(name = "participant_id", nullable = false)
+    private Student participantId;
 
     @MapsId("lessonId")
     @ManyToOne
@@ -22,6 +22,15 @@ public class LessonParticipants {
     @Column(name = "participation_date", nullable = false)
     private LocalDateTime participationDate;
 
+    public LessonParticipants() {}
+
+    public LessonParticipants(Student participantId, Lesson lessonId, LocalDateTime participationDate) {
+        this.participantId = participantId;
+        this.lessonId = lessonId;
+        this.participationDate = participationDate;
+    }
+
+
     public LessonParticipantID getId() {
         return id;
     }
@@ -30,12 +39,12 @@ public class LessonParticipants {
         this.id = id;
     }
 
-    public User getUser() {
-        return userId;
+    public Student getParticipant() {
+        return participantId;
     }
 
-    public void setUser(User userId) {
-        this.userId = userId;
+    public void setParticipant(Student participantId) {
+        this.participantId = participantId;
     }
 
     public Lesson getLesson() {
