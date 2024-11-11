@@ -11,41 +11,44 @@ public class LessonParticipants {
 
     @MapsId("userId")
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
 
     @MapsId("lessonId")
     @ManyToOne
-    @JoinColumn(name = "lesson_id")
-    private Lesson lesson;
+    @JoinColumn(name = "lesson_id", nullable = false)
+    private Lesson lessonId;
 
-    @Column(name = "participation_date")
+    @Column(name = "participation_date", nullable = false)
     private LocalDateTime participationDate;
 
     public LessonParticipantID getId() {
         return id;
     }
+
     public void setId(LessonParticipantID id) {
         this.id = id;
     }
 
     public User getUser() {
-        return user;
+        return userId;
     }
-    public void setUser(User user) {
-        this.user = user;
+
+    public void setUser(User userId) {
+        this.userId = userId;
     }
 
     public Lesson getLesson() {
-        return lesson;
+        return lessonId;
     }
-    public void setLesson(Lesson lesson) {
-        this.lesson = lesson;
+    public void setLesson(Lesson lessonId) {
+        this.lessonId = lessonId;
     }
 
     public LocalDateTime getParticipationDate() {
         return participationDate;
     }
+
     public void setParticipationDate(LocalDateTime participationDate) {
         this.participationDate = participationDate;
     }

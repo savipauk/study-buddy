@@ -11,41 +11,45 @@ public class GroupMembers {
 
     @MapsId("memberId")
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private User member;
+    @JoinColumn(name = "member_id", nullable = false)
+    private User memberId;
 
     @MapsId("groupId")
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    private StudyGroup group;
+    @JoinColumn(name = "group_id", nullable = false)
+    private StudyGroup groupId;
 
-    @Column(name = "join_date")
+    @Column(name = "join_date", nullable = false)
     private LocalDateTime joinDate;
 
     public GroupMemberID getId() {
         return id;
     }
+
     public void setId(GroupMemberID id) {
         this.id = id;
     }
 
     public User getMember() {
-        return member;
+        return memberId;
     }
-    public void setMember(User member) {
-        this.member = member;
+
+    public void setMember(User memberId) {
+        this.memberId = memberId;
     }
 
     public StudyGroup getGroup() {
-        return group;
+        return groupId;
     }
-    public void setGroup(StudyGroup group) {
-        this.group = group;
+
+    public void setGroup(StudyGroup groupId) {
+        this.groupId = groupId;
     }
 
     public LocalDateTime getJoinDate() {
         return joinDate;
     }
+
     public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
     }

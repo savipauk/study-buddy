@@ -1,13 +1,19 @@
 package com.study_buddy.study_buddy.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 public class LessonParticipantID implements Serializable {
-    private Long userId;
+    
+    @Column(name = "lesson_id", nullable = false)
     private Long lessonId;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     public LessonParticipantID() {}
 
@@ -19,25 +25,17 @@ public class LessonParticipantID implements Serializable {
     public Long getUserId() {
         return userId;
     }
-    public void setUserId(Long userId) { this.userId = userId; }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getLessonId() {
         return lessonId;
     }
+
     public void setLessonId(Long lessonId) {
         this.lessonId = lessonId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LessonParticipantID that = (LessonParticipantID) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(lessonId, that.lessonId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, lessonId);
-    }
 }
