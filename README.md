@@ -9,51 +9,51 @@ Prethodno navedeni problemi pridonose povećanju stresa i anksioznosti zbog akad
 
 Aplikacija je osmišljena s ciljem brzog povezivanja i koordinacije vršnjaka kojima je namjera zajedničkim učenjem lakše svladati akademske izazove. Želimo da aplikacija služi kao digitalni prostor koji okuplja učenike sličnih ciljeva, promovirajući razvijanje socijalnih vještina kroz interakciju s vršnjacima, te da za profesore predstavlja platformu za širenje dosega svog utjecaja, čime mogu pomoći većem broju učenika koji traže dodatne poduke i objašnjenja.
 
+# Funkcijski zahtjevi
+
+- Platforma ima početnu web-stranicu koja korisnicima omogućuje jednostavan pristup opcijama za registraciju i prijavu.
+- Neregistrirani korisnici vide samo početnu stranicu i stranicu za prijavu i registraciju.  
+- Korisnicima je omogućena prijava preko njihovog Google računa, ali i upisivanje maila nekog drugog pružatelja mail usluge.   
+- Prilikom kreiranja novog računa, korisnici odabiru rade li registraciju kao učenici, studenti ili profesori.  
+- Prijavljeni korisnici imaju javne profile koji sadrže osnovne podatke o korisniku, a ti se profili mogu uređivati.   
+- Profesori na platformi imaju mogućnost objavljivanja poziva na „masovne instrukcije“ te definiraju detalje vezane uz određeni termin.  
+- Učenici i studenti mogu objavljivati termine grupa za učenje te također određuju detalje vezane uz događaj. Oni pretražuju ponuđene oglase te se prijavljuju za pohađanje instrukcija ili za sudjelovanje u grupama za učenje. Također imaju opciju objave recenzija na profilima profesora.  
+- Administrator sustava nadzire aktivnost svih korisnika i pregledava pristigle prijave i zahtjeve.   
+- Korisnik može privremeno deaktivirati svoj račun pa se tijekom neaktivnosti s tim računom ne može komunicirati. Administrator također može deaktivirati i blokirati neki račun ako je sam uočio neprimjereno ponašanje ili je primio prijavu poslanu od nekog drugog korisnika.  
+- Svaki korisnik ima mogućnost komunikacije s ostalim korisnicima razmjenom poruka (čavrljanje).  
+- Svi se novi podaci i izmjene postojećih podataka o korisnicima, instrukcijama, grupama, recenzijama i prijavama spremaju u bazu podataka.  
+
 
 # Tehnologije
 
 ## Spring Boot + Maven
 
-This template provides a minimal setup to get a Spring Boot project up and running using Maven. 
-It includes a simple configuration to run the project with some basic dependencies.
-
-### Prerequisites
-
+### Preduvjeti
 #### 1. Java Development Kit (JDK)
+Potrebno je JDK imati instaliran na svom računalu. Možete ga preuzeti sa stranice: [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) ili koristite OpenJDK s [ove poveznice](https://jdk.java.net/). 
 
-Make sure you have JDK installed on your system. You can download it from [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) 
-or use OpenJDK from [here](https://jdk.java.net/).
+#### 2. Instalacija Mavena
+Ako već nemate Maven instaliran globalno, možete ga instalirati preuzimanjem najnovije verzije s [Apache Maven web stranice](https://maven.apache.org/download.cgi). Nakon preuzimanja, raspakirajte arhivu i slijedite [upute za instalaciju](https://maven.apache.org/install.html) kako biste dodali Maven u `PATH` sustava.
+Alternativno, ovaj projekt pruža **Maven Wrapper** (`mvnw`), pa nije potrebno ručno instalirati Maven. 
+Možete koristiti tu skriptu za pokretanje Maven naredbi bez globalne instalacije.
 
-#### 2. Maven Installation
-
-If you don't already have Maven installed globally, you can install it by downloading the 
-latest version from the [Apache Maven website](https://maven.apache.org/download.cgi).
-After downloading, extract the archive and follow the [installation guide](https://maven.apache.org/install.html)
-to add Maven to your system's `PATH`.
-  
-Alternatively, this project provides a **Maven Wrapper** (`mvnw`), so you don't need to install Maven manually. 
-You can use the wrapper scripts to run Maven commands without installing it globally.
-
-### Build the Project
-
-To compile and package the project as a JAR, run the following command in the project's root directory:
+### Izgradnja projekta
+Za kompilaciju i pakiranje projekta kao JAR, porenite sljedeću naredbu u glavnom direktoriju projekta:
 ```
 ./mvnw clean install
 ```
-
-After building the project, you can start the Spring Boot application using the Maven Wrapper:
+Nakon izgradnje projekta, možete pokrenuti Spring Boot aplikaciju koristeći Maven Wrapper:
 ```
 ./mvnw spring-boot:run
 ```
-
-The application will be accessible at http://localhost:8080 by default
+Aplikacija će biti dostupna na http://localhost:8080/ prema zadanim postavkama.
 
 
 # Članovi tima
-Erik Kranjec  
-Ella Grković  
-Karlo Mezdić  
-Anamarija Kic  
-Tena Osredečki  
-Darian Begović  
-Mila Podrug  
+> Erik Kranjec  
+> Ella Grković  
+> Karlo Mezdić  
+> Anamarija Kic  
+> Tena Osredečki  
+> Darian Begović  
+> Mila Podrug  
