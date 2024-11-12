@@ -62,9 +62,9 @@ public class LoginController {
         String hashedPassword = data.getHashedPassword();
         StudyRole studyRole = data.getStudyRole();
         System.out.println(hashedPassword.toString());
-        // Example logic for generating a JWT after registering a user
+
         JwtService jwtService = new JwtService();
-        String token = jwtService.generateToken(data.getEmail());  // Implement JWT generation
+        String token = jwtService.generateToken(data.getEmail());
 
         // Save this user to the database
         User user = new User(token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
@@ -90,48 +90,11 @@ public class LoginController {
                 "message", "Registration successful"
         );
 
-        // Send the token back to the client
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)  // Optional: set in header
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .body(returnData).getBody();
     }
-
-    /*@PostMapping(value = "/login/register", produces = "application/json")
-    public Map<String, String> register(@RequestBody Register data) {
-        System.out.println(data.getEmail());
-        String email = data.getEmail();
-        String firstName = data.getFirstName();
-        String lastName = data.getLastName();
-        String hashedPassword = data.getHashedPassword();
-        String studyRole = data.getStudyRole();
-
-        // Example logic for generating a JWT after registering a user
-        JwtService jwtService = new JwtService();
-        String token = jwtService.generateToken(data.getEmail());  // Implement JWT generation
-
-
-        // TODO: Save this user to the database
-        //User user = new User();
-        User user = new User(token,LocalDateTime.now(),email,firstName,lastName,"","",hashedPassword,"",studyRole,LocalDateTime.now());
-        System.out.println(user);
-        System.out.println(user.getEmail());
-        //User user = new User("",LocalDateTime.now(),email,firstName,lastName,"","",hashedPassword,"",studyRole,LocalDateTime.now());
-        userRepository.createUser(user);
-        Map<String, String> returnData = Map.of("firstName", firstName, "lastName", lastName, "email", email,
-                "hashedPassword", hashedPassword.toString(), "studyRole", studyRole, "token",token, "message", "Registration successful");
-
-
-
-       *//* Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        response.put("message", "Registration successful");*//*
-
-        // Send the token back to the client
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)  // Optional: set in header
-                .body(returnData).getBody();
-
-    }*/
 
     @PostMapping(value = "/login", produces = "application/json")
     public Map<String, String> login(@RequestBody Login data) {

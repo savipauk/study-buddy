@@ -10,10 +10,8 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    //@Value("${jwt.secret}")  // Load the secret from application properties
     private String secret = "yourSecretKeyHere";
 
-    //@Value("${jwt.expiration}")  // Load expiration time from properties (in seconds)
     private Long expiration = 3600L;
 
     public JwtService() {
