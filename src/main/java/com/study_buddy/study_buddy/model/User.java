@@ -18,10 +18,10 @@ public class User {
     @Column(name="password", length = 255)
     private String password;
 
-    @Column(name = "oauth_provider", nullable = false, length = 50)
+    @Column(name = "oauth_provider", length = 50)
     private String oauthProvider;
 
-    @Column(name = "oauth_id", nullable = false, unique = true, length = 255)
+    @Column(name = "oauth_id", unique = true, length = 255)
     private String oauthId;
 
     @Column(name = "first_name", nullable = false, length = 100)
@@ -38,7 +38,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private StudyRole role;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -48,7 +48,7 @@ public class User {
 
     public User () {}
 
-    public User(String email, String password, String oauthProvider, String oauthId, String firstName, String lastName, Role role) {
+    public User(String email, String password, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole role) {
         this.email = email;
         this.password = password;
         this.oauthProvider = oauthProvider;
@@ -58,6 +58,16 @@ public class User {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.role = role;
+    }
+
+    public User(String email, String password, String firstName, String lastName, StudyRole role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public Long getUserId() {
@@ -124,11 +134,11 @@ public class User {
 
     public String getRefreshToken() { return refreshToken; }
 
-    public Role getRole() {
+    public StudyRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(StudyRole role) {
         this.role = role;
     }
 
@@ -149,7 +159,7 @@ public class User {
     }
 
 
-    public enum Role {
+    /*public enum Role {
         STUDENT, PROFESSOR, ADMIN
-    }
+    }*/
 }

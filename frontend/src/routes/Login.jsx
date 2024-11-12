@@ -1,50 +1,80 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import "../styles/Login.css";
-import useAuth from "../hooks/useAuth";
+import '../styles/Login.css';
+import useAuth from '../hooks/useAuth';
+import { getHash, serverFetch } from '../hooks/serverUtils';
 
 function LoginForm() {
-  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signIn, signInWithGoogle } = useAuth();
 
   function onChange(event) {
     const { name, value } = event.target;
     setLoginForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
 
-  function onSubmit(e) {
-    e.preventDefault();
-
+  async function loginUser(hash) {
     const data = {
       username: loginForm.username,
-      password: loginForm.password,
+      hashedPassword: hash
     };
 
+    const endpoint = '/login/login';
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     };
-    fetch("/login/login", options);
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        signIn();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function loginWithGoogle(response) {
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const hash = getHash(loginForm.password);
+      await loginUser(hash);
+    } catch (err) {
+      console.error('Error processing password:', err);
+    }
+  }
+
+  async function loginWithGoogle(response) {
     const { credential } = response;
-    // TODO: If user already exists, redirect to home page. Elsewhere, redirect
-    // to profile to set up profile.
 
-    // TODO: Save: user Google id, email address, name, profile picture url,
-    // access token / refresh token, login method = google, created at
-    // This data can be retrieved from the google access token
+    const endpoint = '/login/oauth';
+    const data = {
+      credential: credential
+    };
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
 
-    // Send data to /login/login for login, /login/register for register
-
-    signInWithGoogle(credential);
-    navigate("/");
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        signInWithGoogle(credential);
+        navigate('/users/home');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -82,7 +112,7 @@ function LoginForm() {
               </a>
             </div>
             <div className="oauth">
-              <p> Or sign up with... </p>
+              <p className="signUpText"> Or sign up with... </p>
               <GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {

@@ -1,0 +1,1 @@
+echo "Linting..." && cd frontend/ && npm run lint -- --fix && npx prettier . --write
