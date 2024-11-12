@@ -9,6 +9,6 @@ public class ExampleController {
 
     @GetMapping(produces = "application/json")
     public Map<String, String> getExample() {
-        return Map.of("test_hello", "world");
+        return Map.of("hello", "world");
     }
 }
