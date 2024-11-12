@@ -23,11 +23,12 @@ function RegisterForm() {
   }
 
   async function storeUserToDatabase(hash) {
+    let hashed = await getHash(registerForm.password);
     const data = {
-      email: registerForm.email,
+      email: JSON.stringify(registerForm.email),
       firstName: '',
       lastName: '',
-      hashedPassword: hash,
+      hashedPassword: hashed,
       studyRole: 'STUDENT'
     };
 
