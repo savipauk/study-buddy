@@ -25,18 +25,15 @@ public class LoginController {
 
     @Autowired
     private UserService userRepository;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(GoogleTokenResponse tokenResponse) {
-        // GoogleTokenResponse is not naturally mapped from HTTP request bodies by
-        // Spring Boot!!!
-        // TODO: check if token needs to be handled as a JSON string or manually parsed
-        // within OAuthService
+
         try {
-            // verifying the token
-            // parsing user information from the Google token payload
-            // creating or updating the User in the database
             User user = oAuthService.processGoogleTokenResponse(tokenResponse);
+            userService.saveOrUpdateUser(user); // NOVO
             return Map.of("status", "success", "message", "User " + user.getEmail() + " processed successfully");
         } catch (Exception e) {
             return Map.of("status", "error", "message", e.getMessage());
@@ -50,15 +47,22 @@ public class LoginController {
         String lastName = data.getLastName();
         String hashedPassword = data.getHashedPassword();
         StudyRole studyRole = data.getStudyRole();
-        Map<String, String> returnData = Map.of("firstName", firstName, "lastName", lastName, "email", email,
-                "hashedPassword", hashedPassword.toString(), "studyRole", studyRole.toString());
 
-        // TODO: Save this user to the database
-       /* User user = new User(email, hashedPassword, firstName, lastName, studyRole);
+        if (userService.userExistsByEmail(email)) {
+            return Map.of("status", "error", "message", "User already exists with email: " + email);
+        }
 
-        userRepository.createUser(user);
-*/
-        return returnData;
+        // Create a new User and save it to the database
+        User user = new User(email, hashedPassword, firstName, lastName, studyRole);
+        userService.createUser(user);
+
+        return Map.of(
+                "status", "success",
+                "message", "User registered successfully",
+                "firstName", firstName,
+                "lastName", lastName,
+                "email", email
+        );
     }
 
     @PostMapping(value = "/login", produces = "application/json")
@@ -66,8 +70,16 @@ public class LoginController {
         String email = data.getEmail();
         String hashedPassword = data.getHashedPassword();
 
-        // TODO: Check in database if user exists and send a response
+        User user = userService.getUserByEmail(email);
 
-        return Map.of("email", email, "hashedPassword", hashedPassword);
+        // TODO: after creating passwordEncoder
+//        if (user != null && userService.verifyPassword(user, hashedPassword)) {
+//            return Map.of("status", "success", "message", "Login successful");
+//        } else {
+//            return Map.of("status", "error", "message", "Invalid email or password");
+//        }
+
+        return Map.of("status", "success", "message", "Login successful");
+
     }
 }

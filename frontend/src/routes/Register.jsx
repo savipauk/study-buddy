@@ -105,47 +105,47 @@ function RegisterForm() {
   }
 
   return (
-    <div className="formWrapper">
-      <form className="forms" onSubmit={onSubmit}>
-        <div className="formDiv">
-          <h1 className="helloText">Hello!</h1>
-          <h2 className="createNewText">Create new account</h2>
-          <div className="inputDiv">
+    <div className='formWrapper'>
+      <form className='forms' onSubmit={onSubmit}>
+        <div className='formDiv'>
+          <h1 className='helloText'>Hello!</h1>
+          <h2 className='createNewText'>Create new account</h2>
+          <div className='inputDiv'>
             <input
-              className="infoInput"
-              type="text"
-              placeholder="Email"
+              className='infoInput'
+              type='text'
+              placeholder='Email'
               onChange={onChange}
               value={registerForm.email}
-              name="email"
+              name='email'
             />
           </div>
-          <div className="passwordDiv">
+          <div className='passwordDiv'>
             <input
-              className="passwordInput"
-              type="password"
-              placeholder="Password"
+              className='passwordInput'
+              type='password'
+              placeholder='Password'
               onChange={onChange}
               value={registerForm.password}
-              name="password"
+              name='password'
             />
             <input
-              className="passwordInput"
-              type="password"
-              placeholder="Confirm password"
+              className='passwordInput'
+              type='password'
+              placeholder='Confirm password'
               onChange={onChange}
               value={registerForm.confirmPassword}
-              name="confirmPassword"
+              name='confirmPassword'
             />
           </div>
-          <p className="errorMessage">{errorMessage}</p>
-          <div className="buttonDiv">
-            <button className="inputButton" type="submit">
+          <p className='errorMessage'>{errorMessage}</p>
+          <div className='buttonDiv'>
+            <button className='inputButton' type='submit'>
               Create new account!
             </button>
           </div>
-          <div className="oauth">
-            <p className="signUpText"> Or sign up with... </p>
+          <div className='oauth'>
+            <p className='signUpText'> Or sign up with... </p>
             <GoogleLogin
               onSuccess={loginWithGoogle}
               onError={() => {
@@ -154,9 +154,9 @@ function RegisterForm() {
             />
           </div>
         </div>
-        <div className="redirect">
-          <p className="account">Already have account?</p>
-          <a className="link" href="/users/login">
+        <div className='redirect'>
+          <p className='account'>Already have account?</p>
+          <a className='link' href='/users/login'>
             Sign in
           </a>
         </div>
