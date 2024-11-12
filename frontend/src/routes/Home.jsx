@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { SignOutButton } from './Root';
 import '../styles/HomePage.css';
 
-// Test Test
+// Test 
 
 function HomePage() {
   return (

@@ -7,3 +7,4 @@ if (changedFiles.includes('frontend/')) {
 } else {
   console.log('No frontend changes detected. Skipping linting.');
 }
+"
