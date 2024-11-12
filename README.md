@@ -1,9 +1,16 @@
-# study-buddy
+# StudyBuddy
 
-## React/Spring Boot web application
+# Opis projekta
 
-An app made to connect students looking for study partners and 
-allow mentors to share their teaching topics and expertise.
+Ovaj projekt je rezultat timskog rada u sklopu projektnog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
+
+Širenje ovisnosti o digitalnim uređajima dovodi do problema s koncentracijom i smanjene sposobnosti dubokog razmišljanja. To je samo jedan od uzroka otežane organizacije vremena i zadataka, no s njime se susreće velik broj učenika i studenata. Što se tiče akademskih zahtjeva, određena gradiva i predmeti učenicima mogu djelovati odbojno i pretjerano složeno, zbog čega se gubi interes za redovitim radom i svladavanjem gradiva. Također, ne pružaju sve obrazovne ustanove adekvatan način podučavanja, niti podršku svojih nastavnika, što učenicima otežava rješavanje problema na vrijeme i s razumijevanjem.  
+Prethodno navedeni problemi pridonose povećanju stresa i anksioznosti zbog akademskih izazova, pritisaka u vezi ispita te društvenih očekivanja i neizvjesnosti u budućnosti. Zbog takvih je problema i nedostataka osmišljena platforma StudyBuddy.
+
+Aplikacija je osmišljena s ciljem brzog povezivanja i koordinacije vršnjaka kojima je namjera zajedničkim učenjem lakše svladati akademske izazove. Želimo da aplikacija služi kao digitalni prostor koji okuplja učenike sličnih ciljeva, promovirajući razvijanje socijalnih vještina kroz interakciju s vršnjacima, te da za profesore predstavlja platformu za širenje dosega svog utjecaja, čime mogu pomoći većem broju učenika koji traže dodatne poduke i objašnjenja.
+
+
+# Tehnologije
 
 ## Spring Boot + Maven
 
@@ -41,11 +48,12 @@ After building the project, you can start the Spring Boot application using the 
 
 The application will be accessible at http://localhost:8080 by default
 
-Made by:
-Erik Kranjec
-Ella Grković
-Karlo Mezdić
-Anamarija Kic
-Tena Osredečki
-Darian Begović
-Mila Podrug
+
+# Članovi tima
+Erik Kranjec  
+Ella Grković  
+Karlo Mezdić  
+Anamarija Kic  
+Tena Osredečki  
+Darian Begović  
+Mila Podrug  
