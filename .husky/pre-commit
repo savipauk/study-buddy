@@ -1,7 +1,3 @@
-echo "tests"
-
-. "$(dirname "$0")/_/husky.sh"
-
 node -e "
 console.log('Trying to lint')
 const { execSync } = require('child_process');
