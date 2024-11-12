@@ -4,7 +4,6 @@ import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
 import { getHash, serverFetch } from '../hooks/serverUtils';
-import RegisterForm from './Register';
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
@@ -17,10 +16,9 @@ function LoginForm() {
   }
 
   async function loginUser(hash) {
-    let hashed = await getHash(loginForm.password);
     const data = {
       username: loginForm.username,
-      hashedPassword: hashed
+      hashedPassword: hash
     };
 
     const endpoint = '/login/login';
@@ -46,7 +44,7 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const hash = getHash(loginForm.password);
+      const hash = await getHash(loginForm.password);
       await loginUser(hash);
     } catch (err) {
       console.error('Error processing password:', err);
