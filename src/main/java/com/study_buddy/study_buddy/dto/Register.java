@@ -1,5 +1,6 @@
 package com.study_buddy.study_buddy.dto;
 
+
 import com.study_buddy.study_buddy.model.StudyRole;
 
 public class Register {

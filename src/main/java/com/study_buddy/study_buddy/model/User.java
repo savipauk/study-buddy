@@ -31,12 +31,12 @@ public class User {
     private String lastName;
 
     @Column(name = "access_token", length = 255)
-    private String accessToken;
+    private String access_Token;
 
     @Column(name = "refresh_token", length = 255)
-    private String refreshToken;
+    private String refresh_Token;
 
-    @Enumerated(EnumType.STRING)
+
     @Column(name = "role", nullable = false)
     private StudyRole role;
 
@@ -55,8 +55,8 @@ public class User {
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this.access_Token = access_Token;
+        this.refresh_Token = refresh_Token;
         this.role = role;
     }
 
@@ -68,6 +68,20 @@ public class User {
         this.role = role;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public User(String accessToken, LocalDateTime createdAt, String email, String firstName, String lastName, String oauthProvider, String oauthId, String hashedPassword, String refreshed_Token, StudyRole studyRole, LocalDateTime updatedAt) {
+        this.access_Token = accessToken;
+        this.createdAt = createdAt;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.oauthProvider = oauthProvider;
+        this.oauthId = oauthId;
+        this.password = hashedPassword;
+        this.refresh_Token = refreshed_Token;
+        this.role = studyRole;
+        this.updatedAt = updatedAt;
     }
 
     public Long getUserId() {
@@ -126,13 +140,13 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
+    public void setAccess_Token(String access_Token) { this.access_Token = access_Token; }
 
-    public String getAccessToken() { return accessToken; }
+    public String getAccess_Token() { return access_Token; }
 
-    public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
+    public void setRefresh_Token(String refresh_Token) { this.refresh_Token = refresh_Token; }
 
-    public String getRefreshToken() { return refreshToken; }
+    public String getRefresh_Token() { return refresh_Token; }
 
     public StudyRole getRole() {
         return role;

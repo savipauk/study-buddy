@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { SignOutButton } from './Root';
 import '../styles/HomePage.css';
 
+// Test 
+
 function HomePage() {
   return (
     <div className='homePageWrapper'>
