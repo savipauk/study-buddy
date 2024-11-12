@@ -1,6 +1,8 @@
 package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -9,10 +11,10 @@ public class GroupMembers {
     @EmbeddedId
     private GroupMemberID id;
 
-    @MapsId("memberId")
+    @MapsId("studentId")
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    private User memberId;
+    private Student memberId;
 
     @MapsId("groupId")
     @ManyToOne
@@ -22,6 +24,14 @@ public class GroupMembers {
     @Column(name = "join_date", nullable = false)
     private LocalDateTime joinDate;
 
+    public GroupMembers() {}
+
+    public GroupMembers(Student memberId, StudyGroup groupId, LocalDateTime joinDate) {
+        this.memberId = memberId;
+        this.groupId = groupId;
+        this.joinDate = joinDate;
+    }
+
     public GroupMemberID getId() {
         return id;
     }
@@ -30,11 +40,11 @@ public class GroupMembers {
         this.id = id;
     }
 
-    public User getMember() {
+    public Student getMember() {
         return memberId;
     }
 
-    public void setMember(User memberId) {
+    public void setMember(Student memberId) {
         this.memberId = memberId;
     }
 

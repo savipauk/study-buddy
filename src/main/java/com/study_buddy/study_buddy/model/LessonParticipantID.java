@@ -12,22 +12,22 @@ public class LessonParticipantID implements Serializable {
     @Column(name = "lesson_id", nullable = false)
     private Long lessonId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "student_id", nullable = false)
+    private Long studentId;
 
     public LessonParticipantID() {}
 
-    public LessonParticipantID(Long userId, Long lessonId) {
-        this.userId = userId;
+    public LessonParticipantID(Long studentId, Long lessonId) {
+        this.studentId = studentId;
         this.lessonId = lessonId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getStudentId() {
+        return studentId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
     }
 
     public Long getLessonId() {
