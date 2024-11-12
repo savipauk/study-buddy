@@ -1,4 +1,5 @@
 node -e "
+console.log('Trying to lint')
 const { execSync } = require('child_process');
 const changedFiles = execSync('git diff --cached --name-only').toString();
 if (changedFiles.includes('frontend/')) {
