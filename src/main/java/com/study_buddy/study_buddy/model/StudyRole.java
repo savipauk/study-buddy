@@ -1,8 +1,8 @@
 package com.study_buddy.study_buddy.model;
 
 public enum StudyRole {
-	STUDENT("Student"),
-	PROFESSOR("Professor");
+	STUDENT("STUDENT"),
+	PROFESSOR("PROFESSOR");
 
 	private final String value;
 

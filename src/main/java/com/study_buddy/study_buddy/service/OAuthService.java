@@ -3,11 +3,12 @@ package com.study_buddy.study_buddy.service;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 
+import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.study_buddy.study_buddy.model.StudyRole;
+
 
 import java.time.LocalDateTime;
 
@@ -41,8 +42,8 @@ public class OAuthService {
             user.setOauthProvider("google");
             user.setFirstName(firstName);
             user.setLastName(lastName);
-            user.setAccessToken(accessToken);
-            user.setRefreshToken(refreshToken);
+            user.setAccess_Token(accessToken);
+            user.setRefresh_Token(refreshToken);
             user.setRole(StudyRole.STUDENT);  // Default
             user.setCreatedAt(createdAt);
             user.setUpdatedAt(createdAt);
@@ -50,8 +51,8 @@ public class OAuthService {
             userRepository.save(user);
         } else {
             // Update the access token and refresh token if user already exists
-            user.setAccessToken(accessToken);
-            user.setRefreshToken(refreshToken);
+            user.setAccess_Token(accessToken);
+            user.setRefresh_Token(refreshToken);
             user.setUpdatedAt(LocalDateTime.now());
 
             userRepository.save(user);
