@@ -36,7 +36,6 @@ public class User {
     @Column(name = "refresh_token", length = 255)
     private String refresh_Token;
 
-
     @Column(name = "role", nullable = false)
     private StudyRole role;
 
@@ -48,16 +47,19 @@ public class User {
 
     public User () {}
 
-    public User(String email, String password, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole role) {
+    // Constructor for Oauth
+    public User(String email, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole unnasigned) {
         this.email = email;
-        this.password = password;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.access_Token = access_Token;
-        this.refresh_Token = refresh_Token;
-        this.role = role;
+        this.role = unnasigned;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.access_Token = "";
+        this.refresh_Token = "";
+
     }
 
     public User(String email, String password, String firstName, String lastName, StudyRole role) {
