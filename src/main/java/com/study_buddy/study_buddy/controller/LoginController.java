@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.JwtService;
@@ -69,6 +70,7 @@ public class LoginController {
         String lastName = data.getLastName();
         String hashedPassword = data.getHashedPassword();
         StudyRole studyRole = data.getStudyRole();
+        System.out.println(hashedPassword);
 
         JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(data.getEmail());
@@ -105,11 +107,31 @@ public class LoginController {
 
     @PostMapping(value = "/login", produces = "application/json")
     public Map<String, String> login(@RequestBody Login data) {
-        String email = data.getEmail();
-        String hashedPassword = data.getHashedPassword();
+        String email = data.getUsername();
+        String hashedPassword = data.getHashedPassword().toString();
 
         // TODO: Check in database if user exists and send a response
 
-        return Map.of("email", email, "hashedPassword", hashedPassword.toString());
+        if (userRepository.userExistsByEmail(email)){
+            User user = userRepository.getUserByEmail(email);
+            if(!userRepository.verifyPassword(user,hashedPassword)){
+                Map<String,String> response = Map.of("email", email, "passwordCheck", "NOT_OK", "message","Wrong password");
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
+                        .body(response).getBody();
+            }
+            else{
+                Map<String,String> response = Map.of("email", email, "passwordCheck", "OK", "message","Succesful login");
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
+                        .body(response).getBody();
+            }
+
+
+        }
+
+        Map<String,String> response = Map.of("email", email, "passwordCheck", "DOESNT_EXIST", "message","User doesn't exist");
+        return ResponseEntity.ok()
+                .body(response).getBody();
     }
 }

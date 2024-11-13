@@ -3,8 +3,10 @@ package com.study_buddy.study_buddy.service;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +15,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     // TODO: Add password encoder
-    // private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -32,14 +35,14 @@ public class UserService {
     }
 
     // Fetch a user by email
+    //@Transactional
     public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+        String quotedEmail = "\"" + email + "\"";
+        return userRepository.findByEmail(quotedEmail);
     }
 
     // Check if user exists by email
-    public boolean userExistsByEmail(String email) {
-        return getUserByEmail(email) != null;
-    }
+    public boolean userExistsByEmail(String email) { return getUserByEmail(email) != null; }
 
     // Save or update a user
     public User saveOrUpdateUser(User user) {
@@ -55,11 +58,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // TODO: password verification
+
     // Verify the provided password with the stored hashed password
-//    public boolean verifyPassword(User user, String rawPassword) {
-//        return passwordEncoder.matches(rawPassword, user.getPassword());
-//    }
+    public boolean verifyPassword(User user, String rawPassword) {
+        System.out.println("OVO JE U VERIFY PASSWORD");
+        System.out.println(rawPassword);
+        System.out.println(user.getPassword());
+        boolean result = passwordEncoder.matches(rawPassword, user.getPassword());
+        System.out.println(result);
+        
+
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
 
     // Update an existing user
     public User updateUser(Long id, User updatedUser) {
