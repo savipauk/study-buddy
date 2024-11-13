@@ -30,12 +30,14 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
+    @Column(name = "description", length = 255)
+    private String description;
+
     @Column(name = "access_token", length = 255)
     private String access_Token;
 
     @Column(name = "refresh_token", length = 255)
     private String refresh_Token;
-
 
     @Column(name = "role", nullable = false)
     private StudyRole role;
@@ -55,6 +57,7 @@ public class User {
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.description = description;
         this.access_Token = access_Token;
         this.refresh_Token = refresh_Token;
         this.role = role;
@@ -65,6 +68,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.description = description;
         this.role = role;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -76,6 +80,7 @@ public class User {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.description = description;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.password = hashedPassword;
@@ -140,6 +145,10 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
     public void setAccess_Token(String access_Token) { this.access_Token = access_Token; }
 
     public String getAccess_Token() { return access_Token; }
@@ -171,9 +180,4 @@ public class User {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-
-    /*public enum Role {
-        STUDENT, PROFESSOR, ADMIN
-    }*/
 }

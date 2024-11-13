@@ -18,6 +18,7 @@ CREATE TABLE Users (
     oauth_id VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
+    description TEXT,
     access_token VARCHAR(255) NOT NULL,
     refresh_token VARCHAR(255) NOT NULL,
     role ENUM('Student', 'Professor', 'Admin') NOT NULL,
