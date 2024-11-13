@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "LessonParticipants")
 public class LessonParticipants {
+
     @EmbeddedId
     private LessonParticipantID id;
 
