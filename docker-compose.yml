@@ -10,11 +10,11 @@ services:
         SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
         SPRING_DATASOURCE_USERNAME: admin
         SPRING_DATASOURCE_PASSWORD: admin
-
-  react-app:
+                                                                                                                                                     react-app:
       build:
         context: ./frontend
         dockerfile: Dockerfile
       ports:
-        - "5173:80"
-
+        - "80:80"
+      volumes:
+        - ./frontend/.docker/nginx.conf:/etc/nginx/nginx.conf
