@@ -30,7 +30,7 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/login/**", "/example", "/oauth2/**",
-                                    "/h2-console/**", "/favicon.ico").permitAll()
+                                    "/h2-console/**", "/favicon.ico", "/users/profile").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Allow OPTIONS
                     auth.anyRequest().authenticated();
                 })
