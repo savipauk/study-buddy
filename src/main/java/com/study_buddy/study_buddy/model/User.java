@@ -30,13 +30,15 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
+    @Column(name = "description", length = 255)
+    private String description;
+
     @Column(name = "access_token", length = 255)
-    private String accessToken;
+    private String access_Token;
 
     @Column(name = "refresh_token", length = 255)
-    private String refreshToken;
+    private String refresh_Token;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private StudyRole role;
 
@@ -48,26 +50,47 @@ public class User {
 
     public User () {}
 
-    public User(String email, String password, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole role) {
+    // Constructor for Oauth
+    public User(String email, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole unnasigned) {
         this.email = email;
-        this.password = password;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.role = role;
+        this.description = description;
+        this.role = unnasigned;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.access_Token = "";
+        this.refresh_Token = "";
     }
 
+    // Constructor for log/reg without OAuth
     public User(String email, String password, String firstName, String lastName, StudyRole role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.description = description;
         this.role = role;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // Constructor for existing User
+    public User(String accessToken, LocalDateTime createdAt, String email, String firstName, String lastName, String oauthProvider, String oauthId, String hashedPassword, String refreshed_Token, StudyRole studyRole, LocalDateTime updatedAt) {
+        this.access_Token = accessToken;
+        this.createdAt = createdAt;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.description = description;
+        this.oauthProvider = oauthProvider;
+        this.oauthId = oauthId;
+        this.password = hashedPassword;
+        this.refresh_Token = refreshed_Token;
+        this.role = studyRole;
+        this.updatedAt = updatedAt;
     }
 
     public Long getUserId() {
@@ -126,13 +149,17 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
+    public String getDescription() { return description; }
 
-    public String getAccessToken() { return accessToken; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setRefreshToken(String refreshToken) { this.refreshToken = refreshToken; }
+    public void setAccess_Token(String access_Token) { this.access_Token = access_Token; }
 
-    public String getRefreshToken() { return refreshToken; }
+    public String getAccess_Token() { return access_Token; }
+
+    public void setRefresh_Token(String refresh_Token) { this.refresh_Token = refresh_Token; }
+
+    public String getRefresh_Token() { return refresh_Token; }
 
     public StudyRole getRole() {
         return role;
@@ -157,9 +184,4 @@ public class User {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-
-    /*public enum Role {
-        STUDENT, PROFESSOR, ADMIN
-    }*/
 }

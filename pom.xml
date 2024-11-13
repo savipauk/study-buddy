@@ -131,6 +131,12 @@
 			<artifactId>google-api-client</artifactId>
 			<version>1.34.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.2.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -141,5 +147,6 @@
 			</plugin>
 		</plugins>
 	</build>
+
 
 </project>

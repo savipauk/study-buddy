@@ -1,1 +1,11 @@
-echo "Linting..." && cd frontend/ && npm run lint -- --fix && npx prettier . --write
+node -e "
+console.log('Trying to lint')
+const { execSync } = require('child_process');
+const changedFiles = execSync('git diff --cached --name-only').toString();
+if (changedFiles.includes('frontend/')) {
+  console.log('Linting frontend files...');
+  execSync('cd frontend && npm run lint -- --fix && npx prettier . --write', { stdio: 'inherit' });
+} else {
+  console.log('No frontend changes detected. Skipping linting.');
+}
+"

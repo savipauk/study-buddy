@@ -44,7 +44,7 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const hash = getHash(loginForm.password);
+      const hash = await getHash(loginForm.password);
       await loginUser(hash);
     } catch (err) {
       console.error('Error processing password:', err);
@@ -79,40 +79,40 @@ function LoginForm() {
 
   return (
     <>
-      <div className="formWrapper">
-        <form className="forms" onSubmit={onSubmit}>
-          <div className="formDiv">
-            <h1 className="helloText">Hello!</h1>
-            <div className="inputDiv">
+      <div className='formWrapper'>
+        <form className='forms' onSubmit={onSubmit}>
+          <div className='formDiv'>
+            <h1 className='helloText'>Hello!</h1>
+            <div className='inputDiv'>
               <input
-                className="infoInput"
-                placeholder="Username"
-                name="username"
+                className='infoInput'
+                placeholder='Username'
+                name='username'
                 onChange={onChange}
                 value={loginForm.username}
               />
               <input
-                className="passwordInput"
-                placeholder="Password"
-                name="password"
+                className='passwordInput'
+                placeholder='Password'
+                name='password'
                 onChange={onChange}
-                type="password"
+                type='password'
                 value={loginForm.password}
               />
             </div>
-            <div className="buttonDiv">
-              <button className="inputButton" type="submit">
+            <div className='buttonDiv'>
+              <button className='inputButton' type='submit'>
                 Sign In
               </button>
             </div>
-            <div className="redirect">
-              <p className="account">Dont have account?</p>
-              <a href="/users/register" className="link">
+            <div className='redirect'>
+              <p className='account'>Dont have account?</p>
+              <a href='/users/register' className='link'>
                 Register here
               </a>
             </div>
-            <div className="oauth">
-              <p className="signUpText"> Or sign up with... </p>
+            <div className='oauth'>
+              <p className='signUpText'> Or sign up with... </p>
               <GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {
