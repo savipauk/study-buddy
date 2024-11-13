@@ -2,12 +2,11 @@ package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "GroupMembers")
-public class GroupMembers {
+public class GroupMember {
 
     @EmbeddedId
     private GroupMemberID id;
@@ -25,9 +24,9 @@ public class GroupMembers {
     @Column(name = "join_date", nullable = false)
     private LocalDateTime joinDate;
 
-    public GroupMembers() {}
+    public GroupMember() {}
 
-    public GroupMembers(Student memberId, StudyGroup groupId, LocalDateTime joinDate) {
+    public GroupMember(Student memberId, StudyGroup groupId, LocalDateTime joinDate) {
         this.memberId = memberId;
         this.groupId = groupId;
         this.joinDate = joinDate;

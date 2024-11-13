@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "LessonParticipants")
-public class LessonParticipants {
+public class LessonParticipant {
 
     @EmbeddedId
     private LessonParticipantID id;
@@ -23,9 +23,9 @@ public class LessonParticipants {
     @Column(name = "participation_date", nullable = false)
     private LocalDateTime participationDate;
 
-    public LessonParticipants() {}
+    public LessonParticipant() {}
 
-    public LessonParticipants(Student participantId, Lesson lessonId, LocalDateTime participationDate) {
+    public LessonParticipant(Student participantId, Lesson lessonId, LocalDateTime participationDate) {
         this.participantId = participantId;
         this.lessonId = lessonId;
         this.participationDate = participationDate;
