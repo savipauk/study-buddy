@@ -24,7 +24,7 @@ function RegisterForm() {
 
   async function storeUserToDatabase(hash) {
     const data = {
-      email: registerForm.email,
+      email: JSON.stringify(registerForm.email),
       firstName: '',
       lastName: '',
       hashedPassword: hash,
@@ -85,7 +85,7 @@ function RegisterForm() {
     }
 
     try {
-      const hash = getHash(registerForm.password);
+      const hash = await getHash(registerForm.password);
       await storeUserToDatabase(hash);
     } catch (err) {
       console.error('Error processing password:', err);
