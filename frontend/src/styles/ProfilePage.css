@@ -1,0 +1,181 @@
+.image {
+  width: 50%;
+  border-radius: 500px;
+  margin-bottom: 1em;
+}
+
+.profile {
+  width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 5em;
+}
+
+.profilePictureWrapper {
+  border-radius: 10px;
+  width: 50%;
+  display: flex;
+  justify-content: right;
+  text-align: center;
+  margin-right: 5%;
+}
+
+.profilePicture {
+  padding: 0.2em;
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: end;
+}
+
+.uploadButton {
+	margin: 0.2em;
+  font-size: 1.5em;
+	padding: 0;
+	background:transparent;
+	border: 0px;
+	transition: transform 0.2s ease;
+}
+
+.uploadButton:hover{
+	transform: scale(1.3);
+}
+
+.infoformWrapper {
+  width: 50%;
+  display: flex;
+  justify-content: left;
+  align-content: end;
+  margin-left: 5%;
+}
+
+.personalInfo {
+  font-size: 2em;
+	color: aliceblue;
+	text-align: center;
+}
+
+.personalInfoWrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: space-between;
+}
+
+.categoryText {
+  font-size: 1em;
+  margin-left: 1em;
+  padding: 0;
+  margin-bottom: 0;
+	color:aliceblue;
+}
+
+.input {
+  margin-left: 1em;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 0px;
+  padding: 0.5em;
+  cursor: pointer;
+}
+
+.aboutText {
+  font-size: 1em;
+  padding: 0;
+  margin-bottom: 0;
+  text-align: center;
+	color: aliceblue;
+}
+
+.aboutInput {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 0px;
+  height: 10em;
+  padding: 0.5em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  resize: none;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.changePassword{
+	width: 100%;
+	margin-top: 1.5em;
+	padding: 0.5em;
+	margin-left: 1em;
+}
+
+.editWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.editButton {
+  font-size: 1em;
+}
+
+.allInfoWrapper {
+  width: 95%;
+  padding-top: 5em;
+  padding-bottom: 5em;
+  display: flex;
+  flex-wrap: nowrap;
+  background: rgba(53, 92, 125, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px white solid;
+  border-radius: 8px;
+}
+
+/*MODAL*/
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
+  padding: 2em;
+  border-radius: 5px;
+  border: 2px white solid;
+  width: 20%;
+  text-align: center;
+}
+
+.inputEdit {
+  margin-left: 1em;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 0px;
+  padding: 0.5em;
+}
+
+.EditWindowButton {
+  margin: 2em;
+  width: 30%;
+  background-color: #355c7d;
+}
+
+.editProfileText {
+  font-size: 2.5em;
+}

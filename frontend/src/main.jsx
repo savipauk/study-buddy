@@ -8,6 +8,7 @@ import ErrorPage from './ErrorPage';
 import Register from './routes/Register';
 import Login from './routes/Login';
 import HomePage from './routes/Home';
+import Profile from './routes/Profile';
 import { AuthProvider } from './components/AuthContext';
 
 const router = createBrowserRouter([
@@ -29,6 +30,11 @@ const router = createBrowserRouter([
   {
     path: 'users/home',
     element: <HomePage />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: 'users/profile',
+    element: <Profile />,
     errorElement: <ErrorPage />
   }
 ]);
