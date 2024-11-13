@@ -46,7 +46,23 @@ Nakon izgradnje projekta, možete pokrenuti Spring Boot aplikaciju koristeći Ma
 ```
 ./mvnw spring-boot:run
 ```
-Aplikacija će biti dostupna na http://localhost:8080/ prema zadanim postavkama.
+
+Za frontend specifične upute pogledajte na [README](frontend/README.md).
+
+## Docker
+Aplikacija se može jednostavno postaviti i pokrenuti korištenjem Docker Compose-a. Prije svega, provjerite imate li instalirane sljedeće alate: - [Docker](https://www.docker.com/get-started) i [Docker Compose](https://docs.docker.com/compose/install/).
+U terminalu je potrebno izvršiti naredbu:
+```
+docker-compose up –build
+```
+Backend (REST API) je dostupan na: http://localhost:8080.  
+Frontend je dostupan na: http://localhost.   
+
+Zaustavljanje aplikacije:  
+```
+docker-compose down
+```
+
 
 
 # Članovi tima
