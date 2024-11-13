@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "GroupMembers")
 public class GroupMembers {
+
     @EmbeddedId
     private GroupMemberID id;
 
