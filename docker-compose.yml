@@ -16,5 +16,7 @@ services:
         context: ./frontend
         dockerfile: Dockerfile
       ports:
-        - "5173:80"
+        - "80:80"
+      volumes:
+        - ./frontend/.docker/nginx.conf:/etc/nginx/nginx.conf
 
