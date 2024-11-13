@@ -1,2 +1,18 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Enforce LF for all text files
+* text eol=lf
+
+# Explicitly set line endings for certain files
+*.sh text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Exclude binary files from conversion
+*.png binary
+*.jpg binary
+*.gif binary
+
