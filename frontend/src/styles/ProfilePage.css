@@ -31,16 +31,16 @@
 }
 
 .uploadButton {
-	margin: 0.2em;
+  margin: 0.2em;
   font-size: 1.5em;
-	padding: 0;
-	background:transparent;
-	border: 0px;
-	transition: transform 0.2s ease;
+  padding: 0;
+  background: transparent;
+  border: 0px;
+  transition: transform 0.2s ease;
 }
 
-.uploadButton:hover{
-	transform: scale(1.3);
+.uploadButton:hover {
+  transform: scale(1.3);
 }
 
 .infoformWrapper {
@@ -53,8 +53,8 @@
 
 .personalInfo {
   font-size: 2em;
-	color: aliceblue;
-	text-align: center;
+  color: aliceblue;
+  text-align: center;
 }
 
 .personalInfoWrapper {
@@ -71,7 +71,7 @@
   margin-left: 1em;
   padding: 0;
   margin-bottom: 0;
-	color:aliceblue;
+  color: aliceblue;
 }
 
 .input {
@@ -88,7 +88,7 @@
   padding: 0;
   margin-bottom: 0;
   text-align: center;
-	color: aliceblue;
+  color: aliceblue;
 }
 
 .aboutInput {
@@ -108,11 +108,11 @@
   width: 100%;
 }
 
-.changePassword{
-	width: 100%;
-	margin-top: 1.5em;
-	padding: 0.5em;
-	margin-left: 1em;
+.changePassword {
+  width: 100%;
+  margin-top: 1.5em;
+  padding: 0.5em;
+  margin-left: 1em;
 }
 
 .editWrapper {

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/ProfilePage.css';
 import Header from '../components/Header';
 import { serverFetch } from '../hooks/serverUtils';
 import { getHash } from '../hooks/serverUtils';
+import PropTypes from 'prop-types';
 
 function Profile() {
   return (
@@ -13,6 +14,7 @@ function Profile() {
 }
 
 function UserForm() {
+  //Route needs to be modified when it's implemented od backend
   async function getUserData(userId) {
     const endpoint = `/users/${userId}`;
     const options = {
@@ -45,8 +47,7 @@ function UserForm() {
     Bio: ''
   });
 
-  const [userHash, setUserHash] = useState(null);
-  const [isLocked, setIsLocked] = useState(true);
+  const [userHash, setUserHash] = useState('');
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
 
@@ -75,53 +76,52 @@ function UserForm() {
     e.preventDefault();
     setIsChanged(false);
 
-    //UNCOMMENT WHEN ROUTE EXISTS
-    // const data = {
-    //   firstName: userInfoForm.FirstName,
-    //   lastName: userInfoForm.LastName,
-    //   email: userInfoForm.Email,
-    //   description: userInfoForm.Bio,
-    //   hashedPassword: newPasswordHash
-    // };
-    //   const endpoint = '/users/update';
-    //   const options = {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    //   };
+    //Route needs to be modified when it's implemented od backend
+    const data = {
+      firstName: userInfoForm.FirstName,
+      lastName: userInfoForm.LastName,
+      email: userInfoForm.Email,
+      description: userInfoForm.Bio,
+      hashedPassword: newPasswordHash
+    };
+    const endpoint = '/users/update';
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
 
-    //   try {
-    //     const response = await serverFetch(endpoint, options);
-    //     if (response.ok) {
-    //       console.log(data);
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        console.log(data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  //Uncomment when route exists on backend!!
+  //Getting userId needs to be modified
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = '1'; //OR: fetch by access token?
+      const userData = await getUserData(userId);
+      if (userData) {
+        setUserHash(userData.hash);
+        setUserInfoForm({
+          FirstName: userData.firstName,
+          LastName: userData.lastName,
+          Username: userData.username,
+          Email: userData.email,
+          Bio: userData.bio
+        });
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     const userId = '1'; //Do we save userId in localStorage?
-  //     const userData = await getUserData(userId);
-  //     if (userData) {
-  //			 setUserHash(userData.hash)
-  //       setUserInfoForm({
-  //         FirstName: userData.firstName,
-  //         LastName: userData.lastName,
-  //         Username: userData.username,
-  //         Email: userData.email,
-  //         Bio: userData.bio
-  //       });
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, []);
+    fetchUserData();
+  }, []);
 
   function onChange(event) {
     const { name, value } = event.target;
@@ -165,7 +165,7 @@ function UserForm() {
                   name="FirstName"
                   onChange={onChange}
                   value={userInfoForm.FirstName}
-                  readOnly={isLocked}
+                  readOnly={true}
                 ></input>
                 <p className="categoryText">Last Name:</p>
                 <input
@@ -173,7 +173,7 @@ function UserForm() {
                   name="LastName"
                   onChange={onChange}
                   value={userInfoForm.LastName}
-                  readOnly={isLocked}
+                  readOnly={true}
                 ></input>
                 <p className="categoryText">Username:</p>
                 <input
@@ -181,7 +181,7 @@ function UserForm() {
                   name="Username"
                   onChange={onChange}
                   value={userInfoForm.Username}
-                  readOnly={isLocked}
+                  readOnly={true}
                 ></input>
                 <p className="categoryText">Email:</p>
                 <input
@@ -189,7 +189,7 @@ function UserForm() {
                   name="Email"
                   onChange={onChange}
                   value={userInfoForm.Email}
-                  readOnly={isLocked}
+                  readOnly={true}
                 ></input>
                 <button
                   className="changePassword"
@@ -317,6 +317,18 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
     </div>
   );
 }
+EditWindow.propTypes = {
+  userInfo: PropTypes.shape({
+    FirstName: PropTypes.string,
+    LastName: PropTypes.string,
+    Username: PropTypes.string,
+    Email: PropTypes.string,
+    Bio: PropTypes.string
+  }).isRequired,
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  hasChanged: PropTypes.func.isRequired
+};
 
 function PasswordChange({
   onSave,
@@ -347,10 +359,12 @@ function PasswordChange({
       setValidationMessage('Passwords do not match');
       return false;
     }
-    // if (oldHash !== newHash) {
-    //   setValidationMessage('Password is incorect!');
-    //   return false;
-    // }
+
+    //Until fetch works tempPass will bypass validation, needs to be removed later on!
+    if (oldHash !== newHash && !(formData.currentPassword == 'tempPass')) {
+      setValidationMessage('Password is incorect!');
+      return false;
+    }
     if (formData.newPassword.length < 8) {
       setValidationMessage('Password must be at least 8 characters long');
       return false;
@@ -412,5 +426,12 @@ function PasswordChange({
     </div>
   );
 }
+PasswordChange.propTypes = {
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  hash: PropTypes.string.isRequired,
+  setNewPasswordHash: PropTypes.func.isRequired,
+  hasChanged: PropTypes.func.isRequired
+};
 
 export default Profile;
