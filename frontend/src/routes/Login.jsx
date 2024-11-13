@@ -44,7 +44,7 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const hash = getHash(loginForm.password);
+      const hash = await getHash(loginForm.password);
       await loginUser(hash);
     } catch (err) {
       console.error('Error processing password:', err);
