@@ -57,14 +57,15 @@ public class User {
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.description = description;
         this.role = unnasigned;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.access_Token = "";
         this.refresh_Token = "";
-
     }
 
+    // Constructor for log/reg without OAuth
     public User(String email, String password, String firstName, String lastName, StudyRole role) {
         this.email = email;
         this.password = password;
@@ -76,6 +77,7 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // Constructor for existing User
     public User(String accessToken, LocalDateTime createdAt, String email, String firstName, String lastName, String oauthProvider, String oauthId, String hashedPassword, String refreshed_Token, StudyRole studyRole, LocalDateTime updatedAt) {
         this.access_Token = accessToken;
         this.createdAt = createdAt;

@@ -72,39 +72,10 @@ public class LoginController {
 
         JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(data.getEmail());
-        JwtService jwtService = new JwtService();
-        String token = jwtService.generateToken(data.getEmail());
 
-        // Save this user to the database
-        User user = new User(token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
         // Save this user to the database
         User user = new User(token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
         userRepository.createUser(user);
-
-        // Create Authentication object
-        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));  // You can adjust the authorities as needed
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                user.getEmail(), null, authorities);
-
-        // Set the authentication in the SecurityContext
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(authentication);
-        SecurityContextHolder.setContext(context);
-
-        Map<String, String> returnData = Map.of(
-                "firstName", firstName,
-                "lastName", lastName,
-                "email", email,
-                "hashedPassword", hashedPassword.toString(),
-                "studyRole", studyRole.toString(),
-                "token", token,
-                "message", "Registration successful"
-        );
-
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(returnData).getBody();
 
         // Create Authentication object
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));  // You can adjust the authorities as needed
