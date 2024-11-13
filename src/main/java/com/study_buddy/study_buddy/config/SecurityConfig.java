@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -16,9 +15,6 @@ import org.springframework.security.web.header.HeaderWriterFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-
-
 import java.util.List;
 
 @Configuration
@@ -30,19 +26,16 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/login/**", "/example", "/oauth2/**",
-                                    "/h2-console/**", "/favicon.ico", "/users/profile").permitAll()
+                            "/h2-console/**", "/favicon.ico", "/users/profile").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Allow OPTIONS
                     auth.anyRequest().authenticated();
                 })
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Custom CORS configuration
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Custom CORS configuration
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for testing??????????????????????????????????????????
-                .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class)  // Add the custom header filter
+                .csrf(csrf -> csrf.disable())
+                .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class) // Add the custom header filter
                 .build();
     }
-
-
 
     @Bean
     public JwtDecoder jwtDecoder() {
@@ -62,9 +55,10 @@ public class SecurityConfig {
                 // Set X-Frame-Options to SAMEORIGIN
                 httpResponse.setHeader("X-Frame-Options", "SAMEORIGIN");
 
-                // Set Content-Security-Policy to allow framing only from same origin and localhost
-                httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
-
+                // Set Content-Security-Policy to allow framing only from same origin and
+                // localhost
+                httpResponse.setHeader("Content-Security-Policy",
+                        "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
 
             }
             // Continue with the filter chain
@@ -76,7 +70,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://www.googleapis.com/**","http://localhost:8080/login/**","http://localhost:5173" ,"http://localhost:8080/favicon.ico", "http://localhost:8080/favicon.ico/**"));  // Allow frontend requests
+        config.setAllowedOrigins(List.of("https://www.googleapis.com/**", "http://localhost:8080/login/**",
+                "http://localhost:5173", "http://localhost:8080/favicon.ico", "http://localhost:8080/favicon.ico/**")); // Allow
+                                                                                                                        // frontend
+                                                                                                                        // requests
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
@@ -86,6 +83,5 @@ public class SecurityConfig {
         return source;
 
     }
-
 
 }
