@@ -2,7 +2,9 @@ package com.study_buddy.study_buddy.model;
 
 public enum StudyRole {
 	STUDENT("STUDENT"),
-	PROFESSOR("PROFESSOR");
+	PROFESSOR("PROFESSOR"),
+	ADMIN ("ADMIN"),
+	UNASSIGNED("UNASSIGNED");
 
 	private final String value;
 

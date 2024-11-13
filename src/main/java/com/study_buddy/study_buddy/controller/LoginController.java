@@ -7,8 +7,16 @@ import java.util.Map;
 
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.JwtService;
+import com.study_buddy.study_buddy.model.StudyRole;
+import com.study_buddy.study_buddy.service.JwtService;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,16 +46,16 @@ public class LoginController {
     private UserService userRepository;
 
     @PostMapping("/oauth")
-    public Map<String, String> oauth(GoogleTokenResponse tokenResponse) {
-        // GoogleTokenResponse is not naturally mapped from HTTP request bodies by
-        // Spring Boot!!!
-        // TODO: check if token needs to be handled as a JSON string or manually parsed
-        // within OAuthService
+    public Map<String, String> oauth(@RequestBody Map<String, String> requestBody) {
+        String credential = requestBody.get("credential");
+
+        if (credential == null) {
+            return Map.of("status", "error", "message", "Credential is missing");
+        }
+
+
         try {
-            // verifying the token
-            // parsing user information from the Google token payload
-            // creating or updating the User in the database
-            User user = oAuthService.processGoogleTokenResponse(tokenResponse);
+            User user = oAuthService.processGoogleTokenResponse(credential);
             return Map.of("status", "success", "message", "User " + user.getEmail() + " processed successfully");
         } catch (Exception e) {
             return Map.of("status", "error", "message", e.getMessage());
@@ -61,14 +69,42 @@ public class LoginController {
         String lastName = data.getLastName();
         String hashedPassword = data.getHashedPassword();
         StudyRole studyRole = data.getStudyRole();
-        System.out.println(hashedPassword.toString());
 
+        JwtService jwtService = new JwtService();
+        String token = jwtService.generateToken(data.getEmail());
         JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(data.getEmail());
 
         // Save this user to the database
         User user = new User(token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
+        // Save this user to the database
+        User user = new User(token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
         userRepository.createUser(user);
+
+        // Create Authentication object
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));  // You can adjust the authorities as needed
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                user.getEmail(), null, authorities);
+
+        // Set the authentication in the SecurityContext
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
+        Map<String, String> returnData = Map.of(
+                "firstName", firstName,
+                "lastName", lastName,
+                "email", email,
+                "hashedPassword", hashedPassword.toString(),
+                "studyRole", studyRole.toString(),
+                "token", token,
+                "message", "Registration successful"
+        );
+
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .body(returnData).getBody();
 
         // Create Authentication object
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));  // You can adjust the authorities as needed
