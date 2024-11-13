@@ -14,7 +14,7 @@ function Profile() {
 }
 
 function UserForm() {
-  //Route needs to be modified when it's implemented od backend
+  // TODO: Route needs to be modified when it's implemented od backend
   async function getUserData(userId) {
     const endpoint = `/users/${userId}`;
     const options = {
@@ -76,7 +76,7 @@ function UserForm() {
     e.preventDefault();
     setIsChanged(false);
 
-    //Route needs to be modified when it's implemented od backend
+    // TODO: Route needs to be modified when it's implemented od backend
     const data = {
       firstName: userInfoForm.FirstName,
       lastName: userInfoForm.LastName,
@@ -103,10 +103,10 @@ function UserForm() {
     }
   };
 
-  //Getting userId needs to be modified
+  // TODO: Getting userId needs to be modified
   useEffect(() => {
     const fetchUserData = async () => {
-      const userId = '1'; //OR: fetch by access token?
+      const userId = '1'; // OR: fetch by access token?
       const userData = await getUserData(userId);
       if (userData) {
         setUserHash(userData.hash);
@@ -360,7 +360,7 @@ function PasswordChange({
       return false;
     }
 
-    //Until fetch works tempPass will bypass validation, needs to be removed later on!
+    // TODO: Until fetch works tempPass will bypass validation, needs to be removed later on!
     if (oldHash !== newHash && !(formData.currentPassword == 'tempPass')) {
       setValidationMessage('Password is incorect!');
       return false;
