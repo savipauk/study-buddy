@@ -34,7 +34,7 @@ CREATE TABLE Students (
     username VARCHAR(100) NOT NULL,
     profile_picture VARCHAR(255),
     date_of_birth DATE,
-    -- gender ENUM('M', 'F', 'Other'),
+    gender ENUM('M', 'F', 'Other'),
     city VARCHAR(100),
     description TEXT,
     PRIMARY KEY (student_id),
@@ -61,7 +61,6 @@ CREATE TABLE Admins (
     user_id INT NOT NULL, -- foreign key prema Users
     username VARCHAR(100) NOT NULL,
     profile_picture VARCHAR(255),
-    gender ENUM('M', 'F', 'Other'),
     PRIMARY KEY (admin_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
