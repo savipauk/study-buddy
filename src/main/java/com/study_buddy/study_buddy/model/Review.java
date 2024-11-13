@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reviews")
+@Table(name = "Reviews")
 public class Review {
 
     @Id
@@ -19,12 +19,71 @@ public class Review {
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 
-    @Column(nullable = false)
+    @Column(name = "rating", nullable = false)
     private int rating;
 
+    @Column(name = "comment")
     private String comment;
 
+    @Column(name = "review_date")
     private LocalDateTime reviewDate;
 
-    // Constructors, getters, setters
+    public Review () {}
+
+    public Review(Long reviewId, Student student, Professor professor, int rating, String comment, LocalDateTime reviewDate) {
+        this.reviewId = reviewId;
+        this.student = student;
+        this.professor = professor;
+        this.rating = rating;
+        this.comment = comment;
+        this.reviewDate = reviewDate;
+    }
+
+    public Long getReviewId() {
+        return reviewId;
+    }
+
+    public void setReviewId(Long reviewId) {
+        this.reviewId = reviewId;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Professor getProfessor() {
+        return professor;
+    }
+
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public LocalDateTime getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(LocalDateTime reviewDate) {
+        this.reviewDate = reviewDate;
+    }
 }

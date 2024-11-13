@@ -3,7 +3,7 @@ package com.study_buddy.study_buddy.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "admins")
+@Table(name = "Admins")
 public class Admin {
 
     @Id
@@ -27,5 +27,53 @@ public class Admin {
         M, F, OTHER
     }
 
-    // Constructors, getters, setters
+    public Admin() {}
+
+    public Admin(Long adminId, User user, String username, Gender gender, String profilePicture) {
+        this.adminId = adminId;
+        this.user = user;
+        this.username = username;
+        this.gender = gender;
+        this.profilePicture = profilePicture;
+    }
+
+    public Long getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Long adminId) {
+        this.adminId = adminId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }
