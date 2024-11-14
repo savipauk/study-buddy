@@ -1,7 +1,10 @@
 package com.study_buddy.study_buddy.service;
 
+import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
+import com.study_buddy.study_buddy.dto.ProfileResponse;
+import com.study_buddy.study_buddy.dto.ProfileUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -86,6 +89,33 @@ public class UserService {
     // Delete a user by ID
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+
+
+
+
+    public ProfileResponse buildProfileResponse(User user) {
+        ProfileResponse profileResponse = new ProfileResponse();
+
+        profileResponse.setEmail(user.getEmail());
+        profileResponse.setFirstName(user.getFirstName());
+        profileResponse.setLastName(user.getLastName());
+        profileResponse.setRole(user.getRole());
+        profileResponse.setDescription(user.getDescription());
+
+        return profileResponse;
+    }
+
+    public void updateUserProfile(User user, ProfileUpdate profileUpdate) {
+        // Update basic User details
+        user.setFirstName(profileUpdate.getFirstName());
+        user.setLastName(profileUpdate.getLastName());
+        user.setDescription(profileUpdate.getDescription());
+
+        // Save updated User
+        userRepository.save(user);
+
     }
 }
 
