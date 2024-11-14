@@ -106,3 +106,23 @@ spring.security.oauth2.resourceserver.jwt.issuer-uri=https://accounts.google.com
 > Tena Osredečki  
 > Darian Begović  
 > Mila Podrug  
+
+
+# 📝 Kodeks ponašanja [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+[KODEKS PONAŠANJA STUDENATA FAKULTETA ELEKTROTEHNIKE I RAČUNARSTVA SVEUČILIŠTA U ZAGREBU](https://www.fer.hr/_download/repository/Kodeks_ponasanja_studenata_FER-a_procisceni_tekst_2016%5B1%5D.pdf)  
+Dodatni naputci za timski rad na predmetu: [Programsko inženjerstvo](https://wwww.fer.hr).  
+Očekuje se poštivanje [etičkog kodeksa IEEE-a](https://www.ieee.org/about/corporate/governance/p7-8.html) koji ima važnu obrazovnu funkciju sa svrhom postavljanja najviših standarda integriteta, odgovornog ponašanja i etičkog ponašanja u profesionalnim aktivnosti. Time profesionalna zajednica programskih inženjera definira opća načela koja definiraju moralni karakter, donošenje važnih poslovnih odluka i uspostavljanje jasnih moralnih očekivanja za sve pripadnike zajenice.
+
+Kodeks ponašanja skup je provedivih pravila koja služe za jasnu komunikaciju očekivanja i zahtjeva za rad zajednice/tima. Njime se jasno definiraju obaveze, prava, neprihvatljiva ponašanja te  odgovarajuće posljedice (za razliku od etičkog kodeksa). U ovom repozitoriju dan je jedan od široko prihvačenih kodeksa ponašanja za rad u zajednici otvorenog koda.
+
+>### Poboljšanjee funkcioniranja tima:
+>* definiranje načina na koji će rad biti podijeljen među članovima grupe
+>* dogovor kako će grupa međusobno komunicirati.
+>* ne gubite vrijeme na dogovore na koji će grupa rješavati sporove primjenite standarde!
+>* podrazumijeva se da svi članovi grupe slijede kodeks ponašanja.
+ 
+>###  Prijava problema
+>Postoji nekoliko stvari koje možete učiniti kako biste najbolje riješili sukobe i probleme:
+>* Obratite mi se izravno [e-pošta](mailto:vlado.sruk@fer.hr) i  učinit ćemo sve što je u našoj moći da u punom povjerenju saznamo koje korake trebamo poduzeti kako bismo riješili problem.
+>* Razgovarajte s vašim asistentom jer ima najbolji uvid u dinamiku tima. Zajedno ćete saznati kako riješiti sukob i kako izbjeći daljnje utjecaje u vašem radu.
+>* Ako se osjećate ugodno neposredno razgovarajte o problemu. Manje incidente trebalo bi rješavati izravno. Odvojite vrijeme i privatno razgovarajte s pogođenim članom tima te vjerujte u iskrenost.
