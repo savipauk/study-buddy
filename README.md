@@ -126,3 +126,7 @@ Kodeks ponašanja skup je provedivih pravila koja služe za jasnu komunikaciju o
 >* Obratite mi se izravno [e-pošta](mailto:vlado.sruk@fer.hr) i  učinit ćemo sve što je u našoj moći da u punom povjerenju saznamo koje korake trebamo poduzeti kako bismo riješili problem.
 >* Razgovarajte s vašim asistentom jer ima najbolji uvid u dinamiku tima. Zajedno ćete saznati kako riješiti sukob i kako izbjeći daljnje utjecaje u vašem radu.
 >* Ako se osjećate ugodno neposredno razgovarajte o problemu. Manje incidente trebalo bi rješavati izravno. Odvojite vrijeme i privatno razgovarajte s pogođenim članom tima te vjerujte u iskrenost.
+
+## Licenca
+
+Ovaj projekt je licenciran pod [MIT Licencom](LICENSE).
