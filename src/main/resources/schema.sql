@@ -18,6 +18,8 @@ CREATE TABLE Users (
     oauth_id VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    profile_picture VARCHAR(255),
     description TEXT,
     access_token VARCHAR(255) NOT NULL,
     refresh_token VARCHAR(255) NOT NULL,
@@ -31,12 +33,9 @@ CREATE TABLE Users (
 CREATE TABLE Students (
     student_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL, -- foreign key prema Users
-    username VARCHAR(100) NOT NULL,
-    profile_picture VARCHAR(255),
     date_of_birth DATE,
-    -- gender ENUM('M', 'F', 'Other'),
+    gender ENUM('M', 'F', 'Other'),
     city VARCHAR(100),
-    description TEXT,
     PRIMARY KEY (student_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
@@ -45,27 +44,14 @@ CREATE TABLE Students (
 CREATE TABLE Professors (
     professor_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL, -- foreign key prema Users
-    username VARCHAR(100) NOT NULL,
-    profile_picture VARCHAR(255),
     date_of_birth DATE,
     gender ENUM('M', 'F', 'Other'),
     city VARCHAR(100),
-    description TEXT,
     PRIMARY KEY (professor_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Admins (
-    admin_id INT NOT NULL AUTO_INCREMENT,
-    user_id INT NOT NULL, -- foreign key prema Users
-    username VARCHAR(100) NOT NULL,
-    profile_picture VARCHAR(255),
-    gender ENUM('M', 'F', 'Other'),
-    PRIMARY KEY (admin_id),
-    UNIQUE (user_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
-);
 
 CREATE TABLE StudyGroups (
     group_id INT NOT NULL AUTO_INCREMENT,
@@ -153,4 +139,17 @@ CREATE TABLE Materials (
     FOREIGN KEY (lesson_id) REFERENCES Lessons(lesson_id) ON DELETE SET NULL
 );
 
-
+-- User entries
+INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role)
+VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'Student')
+    --('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2' 'Google', 'oauth_student2', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'Student'),
+    --('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor'),
+    --('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor'),
+    --('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin'),
+    --('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin');
+-- student1 password: 'password123'
+-- student2 password: 'password345'
+-- professor1 password: 'password789'
+-- professor2 password: 'password012'
+-- admin1 password: 'password345'
+-- admin2 password: 'password678'

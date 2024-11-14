@@ -18,6 +18,9 @@ public class User {
     @Column(name="password", length = 255)
     private String password;
 
+    @Column(name = "username", nullable = false)
+    private String username;
+
     @Column(name = "oauth_provider", length = 50)
     private String oauthProvider;
 
@@ -48,6 +51,8 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+
+
     public User () {}
 
     // Constructor for Oauth
@@ -65,7 +70,7 @@ public class User {
         this.refresh_Token = "";
     }
 
-    // Constructor for log/reg without OAuth
+
     public User(String email, String password, String firstName, String lastName, StudyRole role) {
         this.email = email;
         this.password = password;
@@ -77,20 +82,21 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Constructor for existing User
-    public User(String accessToken, LocalDateTime createdAt, String email, String firstName, String lastName, String oauthProvider, String oauthId, String hashedPassword, String refreshed_Token, StudyRole studyRole, LocalDateTime updatedAt) {
+    // Constructor for log/reg without OAuth
+    public User(String username, String accessToken, LocalDateTime createdAt, String email, String firstName, String lastName, String oauthProvider, String oauthId, String hashedPassword, String refreshed_Token, StudyRole studyRole, LocalDateTime updatedAt) {
         this.access_Token = accessToken;
         this.createdAt = createdAt;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.description = description;
+        this.description = "";
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.password = hashedPassword;
         this.refresh_Token = refreshed_Token;
         this.role = studyRole;
         this.updatedAt = updatedAt;
+        this.username = username;
     }
 
     public Long getUserId() {
@@ -184,4 +190,8 @@ public class User {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username;}
 }

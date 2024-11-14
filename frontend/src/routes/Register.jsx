@@ -11,9 +11,13 @@ function RegisterForm() {
   const navigate = useNavigate();
 
   const [registerForm, setRegisterForm] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -24,11 +28,12 @@ function RegisterForm() {
 
   async function storeUserToDatabase(hash) {
     const data = {
+      firstName: registerForm.firstName,
+      lastName: registerForm.lastName,
+      username: registerForm.username,
       email: JSON.stringify(registerForm.email),
-      firstName: '',
-      lastName: '',
       hashedPassword: hash,
-      studyRole: 'STUDENT'
+      studyRole: registerForm.role.toUpperCase()
     };
 
     const endpoint = '/login/register';
@@ -45,6 +50,7 @@ function RegisterForm() {
       if (response.ok) {
         console.log(data);
         signIn();
+        navigate('/users/home');
       }
     } catch (error) {
       console.error(error);
@@ -89,63 +95,141 @@ function RegisterForm() {
       await storeUserToDatabase(hash);
     } catch (err) {
       console.error('Error processing password:', err);
-      console.error('Error processing password:', err);
     }
   }
 
   function isValid() {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (registerForm.password !== registerForm.confirmPassword) {
-      setErrorMessage('Passwords do not match!');
       setErrorMessage('Passwords do not match!');
       return false;
     }
-    setErrorMessage('');
+    if (!emailRegex.test(registerForm.email)) {
+      setErrorMessage('Email is invalid!');
+      return false;
+    }
+    if (registerForm.password.length < 8) {
+      setErrorMessage('Password must be at least 8 letters long');
+      return false;
+    }
+    if (!registerForm.username) {
+      setErrorMessage('Username is required');
+      return false;
+    }
+    if (!registerForm.password) {
+      setErrorMessage('Password is required');
+      return false;
+    }
+    if (!registerForm.firstName) {
+      setErrorMessage('First name is required');
+      return false;
+    }
+    if (!registerForm.lastName) {
+      setErrorMessage('Last name is required');
+      return false;
+    }
+    if (!registerForm.role) {
+      setErrorMessage('Role is required');
+      return false;
+    }
     setErrorMessage('');
     return true;
   }
 
   return (
-    <div className='formWrapper'>
-      <form className='forms' onSubmit={onSubmit}>
-        <div className='formDiv'>
-          <h1 className='helloText'>Hello!</h1>
-          <h2 className='createNewText'>Create new account</h2>
-          <div className='inputDiv'>
+    <div className="formWrapper">
+      <form className="forms" onSubmit={onSubmit}>
+        <div className="formDiv">
+          <h1 className="helloText">Hello!</h1>
+          <h2 className="createNewText">Create new account</h2>
+          <div className="inputDiv">
+            <div className="nameWrapper">
+              <input
+                className="nameInfoInput"
+                placeholder="First Name"
+                type="text"
+                name="firstName"
+                value={registerForm.firstName}
+                onChange={onChange}
+              ></input>
+              <input
+                className="nameInfoInput"
+                placeholder="Last Name"
+                type="text"
+                name="lastName"
+                value={registerForm.lastName}
+                onChange={onChange}
+              ></input>
+            </div>
             <input
-              className='infoInput'
-              type='text'
-              placeholder='Email'
+              className="infoInput"
+              type="text"
+              placeholder="Username"
+              onChange={onChange}
+              value={registerForm.username}
+              name="username"
+            ></input>
+            <input
+              className="infoInput"
+              type="text"
+              placeholder="Email"
               onChange={onChange}
               value={registerForm.email}
-              name='email'
+              name="email"
             />
           </div>
-          <div className='passwordDiv'>
+          <div className="passwordDiv">
             <input
-              className='passwordInput'
-              type='password'
-              placeholder='Password'
+              className="passwordInput"
+              type="password"
+              placeholder="Password"
               onChange={onChange}
               value={registerForm.password}
-              name='password'
+              name="password"
             />
             <input
-              className='passwordInput'
-              type='password'
-              placeholder='Confirm password'
+              className="passwordInput"
+              type="password"
+              placeholder="Confirm password"
               onChange={onChange}
               value={registerForm.confirmPassword}
-              name='confirmPassword'
+              name="confirmPassword"
             />
           </div>
-          <p className='errorMessage'>{errorMessage}</p>
-          <div className='buttonDiv'>
-            <button className='inputButton' type='submit'>
+          <div className="roleSelection">
+            <input
+              className="roleRadioButton"
+              type="radio"
+              name="role"
+              value={'Student'}
+              id="roleStudent"
+              checked={registerForm.role === 'Student'}
+              onChange={onChange}
+            ></input>
+            <label for="roleStudent" className="toggleOption">
+              Student
+            </label>
+            <input
+              className="roleRadioButton"
+              type="radio"
+              name="role"
+              value={'Professor'}
+              id="roleProfessor"
+              checked={registerForm.role === 'Professor'}
+              onChange={onChange}
+            ></input>
+            <label for="roleProfessor" className="toggleOption">
+              Professor
+            </label>
+          </div>
+          <p className="errorMessage">{errorMessage}</p>
+          <div className="buttonDiv">
+            <button className="inputButton" type="submit">
               Create new account!
             </button>
           </div>
-          <div className='oauth'>
-            <p className='signUpText'> Or sign up with... </p>
+          <div className="oauth">
+            <p className="signUpText"> Or sign up with... </p>
             <GoogleLogin
               onSuccess={loginWithGoogle}
               onError={() => {
@@ -154,9 +238,9 @@ function RegisterForm() {
             />
           </div>
         </div>
-        <div className='redirect'>
-          <p className='account'>Already have account?</p>
-          <a className='link' href='/users/login'>
+        <div className="redirect">
+          <p className="account">Already have account?</p>
+          <a className="link" href="/users/login">
             Sign in
           </a>
         </div>
