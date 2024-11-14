@@ -70,13 +70,31 @@ public class LoginController {
         String lastName = data.getLastName();
         String hashedPassword = data.getHashedPassword();
         StudyRole studyRole = data.getStudyRole();
-        System.out.println(hashedPassword);
+        String username = data.getUsername();
+
 
         JwtService jwtService = new JwtService();
-        String token = jwtService.generateToken(data.getEmail());
+        String token = jwtService.generateToken(data.getEmail(),data.getUsername());
+        // Check is this username already exists
+        if (userRepository.userExistsByUsername(email)){
+            Map<String,String> response = Map.of("email", email, "username", username, "message","User with this username already exists!", "registration", "USERNAME_EXISTS");
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .body(response).getBody();
+        }
+
+        // Check if this email already exists
+        if (userRepository.userExistsByEmail(email)){
+            Map<String,String> response = Map.of("email", email, "username", username, "message","User with this email already exists!", "registration", "EMAIL_EXISTS");
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .body(response).getBody();
+        }
+
+
 
         // Save this user to the database
-        User user = new User(token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
+        User user = new User(username, token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
         userRepository.createUser(user);
 
         // Create Authentication object
@@ -93,12 +111,12 @@ public class LoginController {
                 "firstName", firstName,
                 "lastName", lastName,
                 "email", email,
-                "hashedPassword", hashedPassword.toString(),
                 "studyRole", studyRole.toString(),
                 "token", token,
-                "message", "Registration successful"
+                "username", username,
+                "message", "Registration successful",
+                "registration", "REGISTRATION_OK"
         );
-
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -107,21 +125,22 @@ public class LoginController {
 
     @PostMapping(value = "/login", produces = "application/json")
     public Map<String, String> login(@RequestBody Login data) {
-        String email = data.getUsername();
+        String username = data.getUsername();
         String hashedPassword = data.getHashedPassword().toString();
 
         // TODO: Check in database if user exists and send a response
 
-        if (userRepository.userExistsByEmail(email)){
-            User user = userRepository.getUserByEmail(email);
+        if (userRepository.userExistsByUsername(username)){
+            // Username is unique
+            User user = userRepository.getUserByUsername(username);
             if(!userRepository.verifyPassword(user,hashedPassword)){
-                Map<String,String> response = Map.of("email", email, "passwordCheck", "NOT_OK", "message","Wrong password");
+                Map<String,String> response = Map.of("email", username, "passwordCheck", "NOT_OK", "message","Wrong password");
                 return ResponseEntity.ok()
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
                         .body(response).getBody();
             }
             else{
-                Map<String,String> response = Map.of("email", email, "passwordCheck", "OK", "message","Succesful login");
+                Map<String,String> response = Map.of("email", username, "passwordCheck", "OK", "message","Successful login");
                 return ResponseEntity.ok()
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
                         .body(response).getBody();
@@ -130,7 +149,7 @@ public class LoginController {
 
         }
 
-        Map<String,String> response = Map.of("email", email, "passwordCheck", "DOESNT_EXIST", "message","User doesn't exist");
+        Map<String,String> response = Map.of("email", username, "passwordCheck", "DOESNT_EXIST", "message","User doesn't exist");
         return ResponseEntity.ok()
                 .body(response).getBody();
     }

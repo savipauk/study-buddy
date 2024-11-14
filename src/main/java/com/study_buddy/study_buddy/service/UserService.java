@@ -15,8 +15,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     // TODO: Add password encoder
-    //private final PasswordEncoder passwordEncoder;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -35,11 +35,13 @@ public class UserService {
     }
 
     // Fetch a user by email
-    //@Transactional
-    public User getUserByEmail(String email) {
-        String quotedEmail = "\"" + email + "\"";
-        return userRepository.findByEmail(quotedEmail);
-    }
+    public User getUserByEmail(String email) { return userRepository.findByEmail(email);}
+
+    // Fetch a user by username
+    public User getUserByUsername(String username) { return userRepository.findByUsername(username);}
+
+    // Check if user exists by username
+    public boolean userExistsByUsername(String username) { return userRepository.findByUsername(username)!=null;}
 
     // Check if user exists by email
     public boolean userExistsByEmail(String email) { return getUserByEmail(email) != null; }
@@ -61,13 +63,6 @@ public class UserService {
 
     // Verify the provided password with the stored hashed password
     public boolean verifyPassword(User user, String rawPassword) {
-        System.out.println("OVO JE U VERIFY PASSWORD");
-        System.out.println(rawPassword);
-        System.out.println(user.getPassword());
-        boolean result = passwordEncoder.matches(rawPassword, user.getPassword());
-        System.out.println(result);
-        
-
         return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
