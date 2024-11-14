@@ -1,10 +1,10 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Ovaj predložak pruža minimalnu postavku za pokretanje Reacta u Viteu s HMR-om i nekim ESLint pravilima.
 
-Currently, two official plugins are available:
+Trenutno su dostupna dva službena dodatka:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+@vitejs/plugin-react koristi Babel za Fast Refresh
+@vitejs/plugin-react-swc koristi SWC za Fast Refresh
 
-Use `npm run dev` to run in dev mode.
+Pokreni `npm run dev` za rad u razvojnom načinu.
