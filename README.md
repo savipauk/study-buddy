@@ -46,7 +46,56 @@ Nakon izgradnje projekta, možete pokrenuti Spring Boot aplikaciju koristeći Ma
 ```
 ./mvnw spring-boot:run
 ```
-Aplikacija će biti dostupna na http://localhost:8080/ prema zadanim postavkama.
+
+Za frontend specifične upute pogledajte na [README](frontend/README.md).
+
+## Docker
+Aplikacija se može jednostavno postaviti i pokrenuti korištenjem Docker Compose-a. Prije svega, provjerite imate li instalirane sljedeće alate: - [Docker](https://www.docker.com/get-started) i [Docker Compose](https://docs.docker.com/compose/install/).
+U terminalu je potrebno izvršiti naredbu:
+```
+docker-compose up –build
+```
+Backend (REST API) je dostupan na: http://localhost:8080.  
+Frontend je dostupan na: http://localhost:5173.   
+
+Zaustavljanje aplikacije:  
+```
+docker-compose down
+```
+
+
+Prije pokretanja aplikacije, provjerite i po potrebi prilagodite application.properties datoteku:
+```
+spring.application.name=study-buddy
+spring.profiles.active=local
+
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+
+spring.sql.init.mode=always
+logging.level.org.springframework.security=DEBUG
+
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.username=admin
+spring.datasource.password=admin
+
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.h2.console.path=/h2-console
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.datasource.driverClassName=org.h2.Driver
+
+server.error.include-message=always
+server.error.include-binding-errors=always
+
+spring.security.oauth2.client.registration.google.client-id=GOOGLE-CLIENT-ID
+spring.security.oauth2.client.registration.google.client-secret=GOOGLE-CLIENT-SECRET
+spring.security.oauth2.resourceserver.jwt.issuer-uri=https://accounts.google.com
+```
 
 
 # Članovi tima
