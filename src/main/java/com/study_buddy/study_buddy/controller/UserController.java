@@ -4,6 +4,7 @@ import com.study_buddy.study_buddy.dto.ProfileUpdate;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import com.study_buddy.study_buddy.dto.ProfileResponse;
 import com.study_buddy.study_buddy.dto.ProfileGet;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,11 +39,14 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     // Create a new user
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
+
+    // TODO: fix updateUser - currently not in use
 
     // Update an existing user
     @PutMapping("/{id}")
@@ -53,6 +58,8 @@ public class UserController {
         }
     }
 
+    // TODO: fix deleteUser - currently not in use
+
     // Delete a user
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -61,23 +68,37 @@ public class UserController {
     }
 
 
-
+    //TODO: change Map<String,String> to ResponseEntity<ProfileResponse>
 
     // GET /profile - Fetch the user's profile
-    @GetMapping(value = "/profile", produces = "application/json")
-    public ResponseEntity<ProfileResponse> getProfile(@RequestBody ProfileGet body) {
-        String email = ProfileGet.getEmail();
+    @GetMapping(value = "/profile/{email}", produces = "application/json")
+    public Map<String ,String> getProfile(@PathVariable("email") String email) {
 
+        Map<String ,String> response;
         Optional<User> userOpt = Optional.ofNullable(userService.getUserByEmail(email));
         if (userOpt.isEmpty()) {
-            return ResponseEntity.status(404).body(null);
+            response = Map.of("message", "PROFILE_DOESNT_EXIST");
+
+            return response;
         }
 
         User user = userOpt.get();
         ProfileResponse profileResponse = userService.buildProfileResponse(user);
 
-        return ResponseEntity.ok(profileResponse);
+        response = Map.of(
+                "firstName", user.getFirstName(),
+                "lastName", user.getLastName(),
+                "email", email,
+                "studyRole", user.getRole().toString(),
+                "username", user.getUsername(),
+                "description", user.getDescription(),
+                "message", "PROFILE_LOADED"
+        );
+
+        return response;
     }
+
+    // TODO: fix updateProfile() - currently not in use
 
     // POST /profile - Update the user's profile
     @PostMapping(value = "/profile", produces = "application/json")
