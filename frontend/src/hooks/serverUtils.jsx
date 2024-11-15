@@ -28,4 +28,3 @@ export async function getHash(input) {
   const hash = await bcrypt.hash(input, salt);
   return hash;
 }
-
