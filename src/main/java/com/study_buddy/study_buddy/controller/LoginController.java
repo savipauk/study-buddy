@@ -1,13 +1,9 @@
 package com.study_buddy.study_buddy.controller;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import com.study_buddy.study_buddy.model.StudyRole;
-import com.study_buddy.study_buddy.service.JwtService;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.JwtService;
 import com.study_buddy.study_buddy.service.UserService;
@@ -18,19 +14,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.dto.Register;
 import com.study_buddy.study_buddy.model.User;
@@ -44,24 +32,55 @@ public class LoginController {
     private OAuthService oAuthService;
 
     @Autowired
-    private UserService userRepository;
+    private UserService userService;
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(@RequestBody Map<String, String> requestBody) {
         String credential = requestBody.get("credential");
 
         if (credential == null) {
-            return Map.of("status", "error", "message", "Credential is missing");
+            Map<String, String> response = Map.of("status", "error", "message", "Credential is missing");
+            return ResponseEntity.ok()
+                    //.header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
+                    .body(response).getBody();
         }
 
+        Map<String, String> response;
+        String registration;
 
         try {
             User user = oAuthService.processGoogleTokenResponse(credential);
-            return Map.of("status", "success", "message", "User " + user.getEmail() + " processed successfully");
+            if (userService.userExistsByEmail(user.getEmail())) {
+                registration = "LOGIN_OAUTH_OK";
+
+            } else {
+                registration = "REGISTRATION_OAUTH_OK";
+                userService.createUser(user);
+            }
+
+            response = Map.of(
+                    "firstName", user.getFirstName(),
+                    "lastName", user.getLastName(),
+                    "email", user.getEmail(),
+                    "studyRole", user.getRole().getValue(),
+                    "token", user.getAccess_Token(),
+                    "username", user.getUsername(),
+                    "message", "Registration successful",
+                    "registration", registration
+            );
+
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
+                    .body(response).getBody();
         } catch (Exception e) {
-            return Map.of("status", "error", "message", e.getMessage());
+            response = Map.of("status", "error", "message", e.getMessage());
+            return ResponseEntity.ok()
+                    //.header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
+                    .body(response).getBody();
         }
     }
+
 
     @PostMapping(value = "/register", produces = "application/json")
     public Map<String, String> register(@RequestBody Register data) {
@@ -74,28 +93,29 @@ public class LoginController {
 
 
         JwtService jwtService = new JwtService();
-        String token = jwtService.generateToken(data.getEmail(),data.getUsername());
+        String token = jwtService.generateToken(data.getEmail(), data.getUsername());
+
+
         // Check is this username already exists
-        if (userRepository.userExistsByUsername(email)){
-            Map<String,String> response = Map.of("email", email, "username", username, "message","User with this username already exists!", "registration", "USERNAME_EXISTS");
+        if (userService.userExistsByUsername(email)) {
+            Map<String, String> response = Map.of("email", email, "username", username, "message", "User with this username already exists!", "registration", "USERNAME_EXISTS");
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .body(response).getBody();
         }
 
         // Check if this email already exists
-        if (userRepository.userExistsByEmail(email)){
-            Map<String,String> response = Map.of("email", email, "username", username, "message","User with this email already exists!", "registration", "EMAIL_EXISTS");
+        if (userService.userExistsByEmail(email)) {
+            Map<String, String> response = Map.of("email", email, "username", username, "message", "User with this email already exists!", "registration", "EMAIL_EXISTS");
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .body(response).getBody();
         }
 
 
-
         // Save this user to the database
         User user = new User(username, token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
-        userRepository.createUser(user);
+        userService.createUser(user);
 
         // Create Authentication object
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));  // You can adjust the authorities as needed
@@ -126,31 +146,27 @@ public class LoginController {
     @PostMapping(value = "/login", produces = "application/json")
     public Map<String, String> login(@RequestBody Login data) {
         String username = data.getUsername();
-        String hashedPassword = data.getHashedPassword().toString();
+        String rawPassword = data.getHashedPassword().toString();
 
-        // TODO: Check in database if user exists and send a response
+        Map<String, String> response;
 
-        if (userRepository.userExistsByUsername(username)){
-            // Username is unique
-            User user = userRepository.getUserByUsername(username);
-            if(!userRepository.verifyPassword(user,hashedPassword)){
-                Map<String,String> response = Map.of("email", username, "passwordCheck", "NOT_OK", "message","Wrong password");
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
-                        .body(response).getBody();
-            }
-            else{
-                Map<String,String> response = Map.of("email", username, "passwordCheck", "OK", "message","Successful login");
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
-                        .body(response).getBody();
-            }
-
-
+        if (!userService.userExistsByUsername(username)) {
+            response = Map.of("email", username, "passwordCheck", "DOESNT_EXIST", "message", "User doesn't exist");
+            return ResponseEntity.ok()
+                    .body(response).getBody();
         }
 
-        Map<String,String> response = Map.of("email", username, "passwordCheck", "DOESNT_EXIST", "message","User doesn't exist");
+
+        // Username is unique
+        User user = userService.getUserByUsername(username);
+        if (!userService.verifyPassword(user, rawPassword)) {
+            response = Map.of("email", username, "passwordCheck", "NOT_OK", "message", "Wrong password");
+
+        } else {
+            response = Map.of("email", username, "passwordCheck", "OK", "message", "Successful login");
+        }
         return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
                 .body(response).getBody();
     }
 }
