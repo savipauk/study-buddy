@@ -24,7 +24,7 @@ public class User {
     @Column(name = "oauth_provider", length = 50)
     private String oauthProvider;
 
-    @Column(name = "oauth_id", unique = true, length = 255)
+    @Column(name = "oauth_id", length = 255)
     private String oauthId;
 
     @Column(name = "first_name", nullable = false, length = 100)
@@ -56,14 +56,15 @@ public class User {
     public User () {}
 
     // Constructor for Oauth
-    public User(String email, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole unnasigned) {
+    public User(String email, String username, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole role) {
         this.email = email;
         this.oauthProvider = oauthProvider;
         this.oauthId = oauthId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.description = description;
-        this.role = unnasigned;
+        this.description = "";
+        this.username = username;
+        this.role = role;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.access_Token = "";
