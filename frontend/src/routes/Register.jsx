@@ -49,7 +49,6 @@ function RegisterForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         const message = data.registration;
         if (message === 'REGISTRATION_OK') {
           setErrorMessage('');
@@ -148,99 +147,99 @@ function RegisterForm() {
   }
 
   return (
-    <div className='formWrapper'>
-      <form className='forms' onSubmit={onSubmit}>
-        <div className='formDiv'>
-          <h1 className='helloText'>Hello!</h1>
-          <h2 className='createNewText'>Create new account</h2>
-          <div className='inputDiv'>
-            <div className='nameWrapper'>
+    <div className="formWrapper">
+      <form className="forms" onSubmit={onSubmit}>
+        <div className="formDiv">
+          <h1 className="helloText">Hello!</h1>
+          <h2 className="createNewText">Create new account</h2>
+          <div className="inputDiv">
+            <div className="nameWrapper">
               <input
-                className='nameInfoInput'
-                placeholder='First Name'
-                type='text'
-                name='firstName'
+                className="nameInfoInput"
+                placeholder="First Name"
+                type="text"
+                name="firstName"
                 value={registerForm.firstName}
                 onChange={onChange}
               ></input>
               <input
-                className='nameInfoInput'
-                placeholder='Last Name'
-                type='text'
-                name='lastName'
+                className="nameInfoInput"
+                placeholder="Last Name"
+                type="text"
+                name="lastName"
                 value={registerForm.lastName}
                 onChange={onChange}
               ></input>
             </div>
             <input
-              className='infoInput'
-              type='text'
-              placeholder='Username'
+              className="infoInput"
+              type="text"
+              placeholder="Username"
               onChange={onChange}
               value={registerForm.username}
-              name='username'
+              name="username"
             ></input>
             <input
-              className='infoInput'
-              type='text'
-              placeholder='Email'
+              className="infoInput"
+              type="text"
+              placeholder="Email"
               onChange={onChange}
               value={registerForm.email}
-              name='email'
+              name="email"
             />
           </div>
-          <div className='passwordDiv'>
+          <div className="passwordDiv">
             <input
-              className='passwordInput'
-              type='password'
-              placeholder='Password'
+              className="passwordInput"
+              type="password"
+              placeholder="Password"
               onChange={onChange}
               value={registerForm.password}
-              name='password'
+              name="password"
             />
             <input
-              className='passwordInput'
-              type='password'
-              placeholder='Confirm password'
+              className="passwordInput"
+              type="password"
+              placeholder="Confirm password"
               onChange={onChange}
               value={registerForm.confirmPassword}
-              name='confirmPassword'
+              name="confirmPassword"
             />
           </div>
-          <div className='roleSelection'>
+          <div className="roleSelection">
             <input
-              className='roleRadioButton'
-              type='radio'
-              name='role'
+              className="roleRadioButton"
+              type="radio"
+              name="role"
               value={'Student'}
-              id='roleStudent'
+              id="roleStudent"
               checked={registerForm.role === 'Student'}
               onChange={onChange}
             ></input>
-            <label htmlFor='roleStudent' className='toggleOption'>
+            <label htmlFor="roleStudent" className="toggleOption">
               Student
             </label>
             <input
-              className='roleRadioButton'
-              type='radio'
-              name='role'
+              className="roleRadioButton"
+              type="radio"
+              name="role"
               value={'Professor'}
-              id='roleProfessor'
+              id="roleProfessor"
               checked={registerForm.role === 'Professor'}
               onChange={onChange}
             ></input>
-            <label htmlFor='roleProfessor' className='toggleOption'>
+            <label htmlFor="roleProfessor" className="toggleOption">
               Professor
             </label>
           </div>
-          <p className='errorMessage'>{errorMessage}</p>
-          <div className='buttonDiv'>
-            <button className='inputButton' type='submit'>
+          <p className="errorMessage">{errorMessage}</p>
+          <div className="buttonDiv">
+            <button className="inputButton" type="submit">
               Create new account!
             </button>
           </div>
-          <div className='oauth'>
-            <p className='signUpText'> Or sign up with... </p>
+          <div className="oauth">
+            <p className="signUpText"> Or sign up with... </p>
             <GoogleLogin
               onSuccess={loginWithGoogle}
               onError={() => {
@@ -249,9 +248,9 @@ function RegisterForm() {
             />
           </div>
         </div>
-        <div className='redirect'>
-          <p className='account'>Already have account?</p>
-          <a className='link' href='/users/login'>
+        <div className="redirect">
+          <p className="account">Already have account?</p>
+          <a className="link" href="/users/login">
             Sign in
           </a>
         </div>

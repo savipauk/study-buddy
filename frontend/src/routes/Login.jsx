@@ -36,7 +36,6 @@ function LoginForm() {
       if (response.ok) {
         const data = await response.json();
         const message = data.passwordCheck;
-        console.log(message);
         if (message === 'DOESNT_EXIST') {
           setErrorMessage('User does not exist');
         }
