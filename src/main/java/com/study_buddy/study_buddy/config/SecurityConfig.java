@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login/**", "/example", "/oauth2/**",
+                    auth.requestMatchers("/login/**", "/users/**", "/example", "/oauth2/**",
                                     "/h2-console/**", "/favicon.ico").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Allow OPTIONS
                     auth.anyRequest().authenticated();

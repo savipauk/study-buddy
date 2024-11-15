@@ -24,7 +24,7 @@ public class User {
     @Column(name = "oauth_provider", length = 50)
     private String oauthProvider;
 
-    @Column(name = "oauth_id", unique = true, length = 255)
+    @Column(name = "oauth_id", length = 255)
     private String oauthId;
 
     @Column(name = "first_name", nullable = false, length = 100)
