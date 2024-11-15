@@ -4,7 +4,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 import com.study_buddy.study_buddy.model.StudyRole;
-import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
