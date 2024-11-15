@@ -1,6 +1,5 @@
 package com.study_buddy.study_buddy.service;
 
-import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import com.study_buddy.study_buddy.dto.ProfileResponse;
@@ -9,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
     // TODO: Add password encoder
 
@@ -51,10 +49,12 @@ public class UserService {
 
     // Save or update a user
     public User saveOrUpdateUser(User user) {
-        // TODO: Hash the password if it is new or has been updated
-//        if (user.getPassword() != null) {
-//            user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        }
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            if (!passwordEncoder.matches(user.getPassword(), user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+        }
+
         return userRepository.save(user);
     }
 
@@ -96,11 +96,14 @@ public class UserService {
 
 
     public ProfileResponse buildProfileResponse(User user) {
+        // create new profile response dto
         ProfileResponse profileResponse = new ProfileResponse();
 
+        // map user
         profileResponse.setEmail(user.getEmail());
         profileResponse.setFirstName(user.getFirstName());
         profileResponse.setLastName(user.getLastName());
+        // TODO: User has no profile picture. How to update it?
         profileResponse.setRole(user.getRole());
         profileResponse.setDescription(user.getDescription());
 
@@ -108,14 +111,11 @@ public class UserService {
     }
 
     public void updateUserProfile(User user, ProfileUpdate profileUpdate) {
-        // Update basic User details
         user.setFirstName(profileUpdate.getFirstName());
         user.setLastName(profileUpdate.getLastName());
         user.setDescription(profileUpdate.getDescription());
 
-        // Save updated User
         userRepository.save(user);
-
     }
 }
 
