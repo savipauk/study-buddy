@@ -1,10 +1,11 @@
 package com.study_buddy.study_buddy.dto;
 
-import com.study_buddy.study_buddy.model.StudyRole;
-
 import java.time.LocalDate;
 
+// Update profile details on the backend, includes fields that the user might want to edit
+
 public class ProfileUpdate {
+
     private String firstName;
     private String lastName;
     private String description;

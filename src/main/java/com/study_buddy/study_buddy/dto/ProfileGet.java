@@ -1,9 +1,12 @@
 package com.study_buddy.study_buddy.dto;
 
-public class ProfileGet {
-    private static String email;
+// Retrieve user's profile data by passing minimal identifying information
 
-    public static String getEmail() {
+public class ProfileGet {
+
+    private String email;
+
+    public String getEmail() {
         return email;
     }
 

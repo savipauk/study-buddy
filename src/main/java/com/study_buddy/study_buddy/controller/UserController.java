@@ -60,41 +60,45 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-
-
-
-    // GET /profile - Fetch the user's profile
+    // Fetch the user's profile after calling the profile on frontend
     @GetMapping(value = "/profile", produces = "application/json")
     public ResponseEntity<ProfileResponse> getProfile(@RequestBody ProfileGet body) {
-        String email = ProfileGet.getEmail();
+        // retrieve email from SecurityContext holder (holds info after user log in)
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        //find that user by email
         Optional<User> userOpt = Optional.ofNullable(userService.getUserByEmail(email));
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(404).body(null);
         }
 
+        // use buildProfileResponse to create ProfileResponse DTO
         User user = userOpt.get();
         ProfileResponse profileResponse = userService.buildProfileResponse(user);
 
         return ResponseEntity.ok(profileResponse);
     }
 
-    // POST /profile - Update the user's profile
+    // Update the user's profile
     @PostMapping(value = "/profile", produces = "application/json")
     public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdate profileUpdate) {
+        // fetch current user email
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> userOpt = Optional.ofNullable(userService.getUserByEmail(email));
 
+        // find user in the database
+        Optional<User> userOpt = Optional.ofNullable(userService.getUserByEmail(email));
         if (userOpt.isEmpty()) {
             return ResponseEntity.status(404).body("User not found");
         }
 
         User user = userOpt.get();
 
-        // Update common User fields
-        user.setFirstName(profileUpdate.getFirstName());
-        user.setLastName(profileUpdate.getLastName());
-        user.setDescription(profileUpdate.getDescription());
+        if (profileUpdate.getFirstName() != null) user.setFirstName(profileUpdate.getFirstName());
+        if (profileUpdate.getLastName() != null) user.setLastName(profileUpdate.getLastName());
+        if (profileUpdate.getDescription() != null) user.setDescription(profileUpdate.getDescription());
+
+        // saveOrUpdateUser calls "save" from repo because it saves if the user is new and updates if just the data is new
+        // TODO: Add save to UserRepo? Overriding issue
         userService.saveOrUpdateUser(user);
 
         return ResponseEntity.ok("Profile updated successfully");
