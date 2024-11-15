@@ -31,7 +31,7 @@ function RegisterForm() {
       firstName: registerForm.firstName,
       lastName: registerForm.lastName,
       username: registerForm.username,
-      email: JSON.stringify(registerForm.email),
+      email: registerForm.email,
       hashedPassword: hash,
       studyRole: registerForm.role.toUpperCase()
     };
@@ -48,9 +48,19 @@ function RegisterForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        console.log(data);
-        signIn();
-        navigate('/users/home');
+        const data = await response.json();
+        const message = data.registration;
+        if (message === 'REGISTRATION_OK') {
+          setErrorMessage('');
+          signIn();
+          navigate('/users/home');
+        }
+        if (message === 'EMAIL_EXISTS') {
+          setErrorMessage('Email already taken');
+        }
+        if (message === 'USERNAME_EXISTS') {
+          setErrorMessage('Username already taken');
+        }
       }
     } catch (error) {
       console.error(error);
@@ -206,7 +216,7 @@ function RegisterForm() {
               checked={registerForm.role === 'Student'}
               onChange={onChange}
             ></input>
-            <label for="roleStudent" className="toggleOption">
+            <label htmlFor="roleStudent" className="toggleOption">
               Student
             </label>
             <input
@@ -218,7 +228,7 @@ function RegisterForm() {
               checked={registerForm.role === 'Professor'}
               onChange={onChange}
             ></input>
-            <label for="roleProfessor" className="toggleOption">
+            <label htmlFor="roleProfessor" className="toggleOption">
               Professor
             </label>
           </div>

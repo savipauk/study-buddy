@@ -3,22 +3,23 @@ import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
-import { getHash, serverFetch } from '../hooks/serverUtils';
+import { serverFetch } from '../hooks/serverUtils';
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
   const { signIn, signInWithGoogle } = useAuth();
+  const [errorMessage, setErrorMessage] = useState('');
 
   function onChange(event) {
     const { name, value } = event.target;
     setLoginForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
 
-  async function loginUser(hash) {
+  async function loginUser() {
     const data = {
       username: loginForm.username,
-      hashedPassword: hash
+      hashedPassword: loginForm.password
     };
 
     const endpoint = '/login/login';
@@ -33,23 +34,28 @@ function LoginForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        signIn();
-        navigate('/users/home');
+        const data = await response.json();
+        const message = data.passwordCheck;
+        if (message === 'DOESNT_EXIST') {
+          setErrorMessage('User does not exist');
+        }
+        if (message === 'NOT_OK') {
+          setErrorMessage('Password incorrect');
+        }
+        if (message === 'OK') {
+          setErrorMessage('');
+          signIn();
+          navigate('/users/home');
+        }
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  async function onSubmit(e) {
+  function onSubmit(e) {
     e.preventDefault();
-
-    try {
-      const hash = await getHash(loginForm.password);
-      await loginUser(hash);
-    } catch (err) {
-      console.error('Error processing password:', err);
-    }
+    loginUser();
   }
 
   async function loginWithGoogle(response) {
@@ -101,6 +107,7 @@ function LoginForm() {
                 value={loginForm.password}
               />
             </div>
+            <p className="errorMessage">{errorMessage}</p>
             <div className="buttonDiv">
               <button className="inputButton" type="submit">
                 Sign In
