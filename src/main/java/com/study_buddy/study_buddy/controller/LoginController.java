@@ -97,7 +97,7 @@ public class LoginController {
 
 
         // Check is this username already exists
-        if (userService.userExistsByUsername(email)) {
+        if (userService.userExistsByUsername(username)) {
             Map<String, String> response = Map.of("email", email, "username", username, "message", "User with this username already exists!", "registration", "USERNAME_EXISTS");
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
