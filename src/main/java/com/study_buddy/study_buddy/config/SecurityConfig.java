@@ -17,7 +17,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
-
 import java.util.List;
 
 @Configuration
@@ -28,19 +27,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login/**", "/users/**", "/example", "/oauth2/**",
-                                    "/h2-console/**", "/favicon.ico").permitAll()
+                    auth.requestMatchers("/login/**", "/users/**", "/example/greeting",
+                            "/oauth2/**", "/h2-console/**", "/favicon.ico").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Allow OPTIONS
                     auth.anyRequest().authenticated();
                 })
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Custom CORS configuration
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for testing??????????????????????????????????????????
-                .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class)  // Add the custom header filter
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for
+                                                       // testing??????????????????????????????????????????
+                .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class) // Add the custom header filter
                 .build();
     }
-
-
 
     @Bean
     public JwtDecoder jwtDecoder() {
@@ -60,9 +58,10 @@ public class SecurityConfig {
                 // Set X-Frame-Options to SAMEORIGIN
                 httpResponse.setHeader("X-Frame-Options", "SAMEORIGIN");
 
-                // Set Content-Security-Policy to allow framing only from same origin and localhost
-                httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
-
+                // Set Content-Security-Policy to allow framing only from same origin and
+                // localhost
+                httpResponse.setHeader("Content-Security-Policy",
+                        "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
 
             }
             // Continue with the filter chain
@@ -84,6 +83,5 @@ public class SecurityConfig {
         return source;
 
     }
-
 
 }
