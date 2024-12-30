@@ -73,7 +73,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*")); // Consider tightening this for specific origins
+        config.setAllowedOrigins(List.of("https://www.googleapis.com/**","http://localhost:5173" ,"http://localhost:8080/favicon.ico", "http://localhost:8080/favicon.ico/**", "http://localhost:5173/users/**",
+                "http://localhost:5173/users/profile/update/**", "http://localhost:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
