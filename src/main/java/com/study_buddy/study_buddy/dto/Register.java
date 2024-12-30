@@ -3,6 +3,8 @@ package com.study_buddy.study_buddy.dto;
 
 import com.study_buddy.study_buddy.model.StudyRole;
 
+import java.util.Map;
+
 public class Register {
 	private String email;
 	private String firstName;
@@ -12,6 +14,19 @@ public class Register {
 	private String username;
 	private String profile_picture;
 	private String description;
+
+	public Map<String,String> responseRegister(String message){
+		Map<String, String> response;
+		response = Map.of(
+				"firstName", this.getFirstName(),
+				"lastName", this.getLastName(),
+				"email", this.getEmail(),
+				"studyRole", this.getStudyRole().toString(),
+				"username", this.getUsername(),
+				"registration", message
+		);
+		return response;
+	}
 
 	public String getEmail() {
 		return email;

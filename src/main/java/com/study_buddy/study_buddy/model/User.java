@@ -2,6 +2,7 @@ package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "Users")
@@ -42,6 +43,7 @@ public class User {
     @Column(name = "refresh_token", length = 255)
     private String refresh_Token;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "role", nullable = false)
     private StudyRole role;
 
@@ -50,6 +52,9 @@ public class User {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(name = "profile_picture", length = 255)
+    private String profilePicture;
 
 
 
@@ -100,21 +105,58 @@ public class User {
         this.username = username;
     }
 
-    public Long getUserId() {
-        return id;
+    public Map<String,String> response(String message){
+        Map<String, String> response;
+        response = Map.of(
+                "firstName", this.getFirstName(),
+                "lastName", this.getLastName(),
+                "email", this.getEmail(),
+                "studyRole", this.getRole().toString(),
+                "username", this.getUsername(),
+                "description", this.getDescription(),
+                "message", message
+        );
+        return response;
     }
 
-    public void setUserId(Long userId) {
-        this.id = id;
+    // Joining new changed data from new_user with old unchanged data from old_user
+    public User setChanges(User old_user, User new_user){
+        // USER_ID, Oauth_provider, oauth_id, created_at, role and tokens are determined by old_user
+
+        // email, password, first_name, last_name, username, profile_picture and description
+        // are given in new_user
+        old_user.setEmail(new_user.getEmail());
+        old_user.setPassword(new_user.getPassword());
+        old_user.setFirstName(new_user.getFirstName());
+        old_user.setLastName(new_user.getLastName());
+        old_user.setUsername(new_user.getUsername());
+        if(new_user.getProfilePicture()== null){
+            old_user.setProfilePicture("");
+        } else {
+            old_user.setProfilePicture(new_user.getProfilePicture());
+        }
+        if(new_user.getDescription()==null){
+            old_user.setDescription("");
+        } else {
+            old_user.setDescription(new_user.getDescription());
+        }
+
+
+
+        // updated_at is current date and time
+        old_user.setUpdatedAt(LocalDateTime.now());
+
+
+        return old_user;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public Long getUserId() { return id; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public void setUserId(Long userId) { this.id = id; }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
 
     public String getPassword() {
         return password;
@@ -168,31 +210,44 @@ public class User {
 
     public String getRefresh_Token() { return refresh_Token; }
 
-    public StudyRole getRole() {
-        return role;
-    }
+    public StudyRole getRole() { return role; }
 
-    public void setRole(StudyRole role) {
-        this.role = role;
-    }
+    public void setRole(StudyRole role) { this.role = role; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username;}
+
+    public String getProfilePicture() {return profilePicture; }
+
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", oauthProvider='" + oauthProvider + '\'' +
+                ", oauthId='" + oauthId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", description='" + description + '\'' +
+                ", access_Token='" + access_Token + '\'' +
+                ", refresh_Token='" + refresh_Token + '\'' +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", profilePicture='" + profilePicture + '\'' +
+                '}';
+    }
 }
