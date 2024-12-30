@@ -80,13 +80,12 @@ function LoginForm() {
         const data = await response.json();
         const registration = data.registration;
         const email = data.email;
-        if (registration === 'REGISTRATION_OK') {
+        if (registration === 'REGISTRATION_OAUTH_OK') {
           setIsProfileSetupComplete(false);
-          navigate('users/setup');
+        } else if (registration === 'LOGIN_OAUTH_OK') {
+          setIsProfileSetupComplete(true);
         }
-        setIsProfileSetupComplete(true);
         signInWithGoogle(credential, email);
-        console.log(response);
         navigate('/users/home');
       }
     } catch (error) {

@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isProfileSetupComplete, setIsProfileSetupComplete] = useState(null);
+  const [isProfileSetupComplete, setIsProfileSetupComplete] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');

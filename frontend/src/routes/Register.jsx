@@ -7,7 +7,7 @@ import { serverFetch } from '../hooks/serverUtils';
 import { getHash } from '../hooks/serverUtils';
 
 function RegisterForm() {
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, setIsProfileSetupComplete } = useAuth();
   const navigate = useNavigate();
 
   const [registerForm, setRegisterForm] = useState({
@@ -86,7 +86,14 @@ function RegisterForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-        const email = data.email();
+        const registration = data.registration;
+        const email = data.email;
+        console.log(registration);
+        if (registration === 'REGISTRATION_OAUTH_OK') {
+          setIsProfileSetupComplete(false);
+        } else if (registration === 'LOGIN_OAUTH_OK') {
+          setIsProfileSetupComplete(true);
+        }
         signInWithGoogle(credential, email);
         navigate('/users/home');
       }
