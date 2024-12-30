@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import { serverFetch } from '../hooks/serverUtils';
 import { getHash } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
+import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   return (
@@ -14,9 +16,8 @@ function Profile() {
 }
 
 function UserForm() {
-  // TODO: Route needs to be modified when it's implemented od backend
-  async function getUserData(userId) {
-    const endpoint = `/users/${userId}`;
+  async function getUserData(userEmail) {
+    const endpoint = `/users/${userEmail}`;
     const options = {
       method: 'GET',
       headers: {
@@ -38,7 +39,7 @@ function UserForm() {
       return null;
     }
   }
-
+  const navigate = useNavigate();
   const [userInfoForm, setUserInfoForm] = useState({
     FirstName: '',
     LastName: '',
@@ -53,6 +54,8 @@ function UserForm() {
 
   const [newPasswordHash, setNewPasswordHash] = useState('');
   const [isChanged, setIsChanged] = useState(false);
+
+  const { isProfileSetupComplete } = useAuth();
 
   const handleEditClick = () => setShowEditWindow(true);
   const handleCloseWindow = () => {
@@ -103,11 +106,10 @@ function UserForm() {
     }
   };
 
-  // TODO: Getting userId needs to be modified
   useEffect(() => {
     const fetchUserData = async () => {
-      const userId = '1'; // OR: fetch by access token?
-      const userData = await getUserData(userId);
+      const userEmail = localStorage.getItem('user_email');
+      const userData = await getUserData(userEmail);
       if (userData) {
         setUserHash(userData.hash);
         setUserInfoForm({
@@ -119,9 +121,12 @@ function UserForm() {
         });
       }
     };
-
-    fetchUserData();
-  }, []);
+    if (isProfileSetupComplete) {
+      fetchUserData();
+    } else {
+      navigate('/users/home');
+    }
+  }, [isProfileSetupComplete, navigate]);
 
   function onChange(event) {
     const { name, value } = event.target;
