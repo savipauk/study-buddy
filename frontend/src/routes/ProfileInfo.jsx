@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../styles/ProfilePage.css';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import { getUserData } from '../hooks/serverUtils';
 
 function ProfileInfo() {
   const { isProfileSetupComplete } = useAuth();
@@ -10,10 +11,27 @@ function ProfileInfo() {
   const handleProfileClick = () => {
     navigate('/users/profile/edit');
   };
+  const [userInfoForm, setUserInfoForm] = useState({
+    FirstName: '',
+    LastName: ''
+  });
+
+  const fetchUserData = async () => {
+    const userEmail = localStorage.getItem('user_email');
+    const userData = await getUserData(userEmail);
+    if (userData) {
+      setUserInfoForm({
+        FirstName: userData.firstName,
+        LastName: userData.lastName
+      });
+    }
+  };
 
   useEffect(() => {
     if (!isProfileSetupComplete) {
       navigate('/users/home');
+    } else {
+      fetchUserData();
     }
   }, [isProfileSetupComplete, navigate]);
 
@@ -29,10 +47,10 @@ function ProfileInfo() {
         </div>
         <div className="accountInfo">
           <div className="username">
-            <label>First Name</label>
+            <label>{userInfoForm.FirstName}</label>
           </div>
           <div className="username">
-            <label>Last Name</label>
+            <label>{userInfoForm.LastName}</label>
           </div>
         </div>
         <button className="editProfileButton" onClick={handleProfileClick}>

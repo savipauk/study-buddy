@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import '../styles/ProfilePage.css';
 import Header from '../components/Header';
-import { serverFetch } from '../hooks/serverUtils';
-import { getHash } from '../hooks/serverUtils';
+import { serverFetch, getUserData, getHash } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
 import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -16,29 +15,6 @@ function Profile() {
 }
 
 function UserForm() {
-  async function getUserData(userEmail) {
-    const endpoint = `/users/${userEmail}`;
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const response = await serverFetch(endpoint, options);
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        console.log('Failed to fetch data', response.statusText);
-        return null;
-      }
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  }
   const navigate = useNavigate();
   const [userInfoForm, setUserInfoForm] = useState({
     FirstName: '',
@@ -79,7 +55,6 @@ function UserForm() {
     e.preventDefault();
     setIsChanged(false);
 
-    // TODO: Route needs to be modified when it's implemented od backend
     const data = {
       firstName: userInfoForm.FirstName,
       lastName: userInfoForm.LastName,
@@ -87,7 +62,8 @@ function UserForm() {
       description: userInfoForm.Bio,
       hashedPassword: newPasswordHash
     };
-    const endpoint = '/users/update';
+    const userEmail = localStorage.getItem('user_email');
+    const endpoint = `/users/update/${userEmail}`;
     const options = {
       method: 'POST',
       headers: {
