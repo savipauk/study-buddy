@@ -121,7 +121,7 @@ public class User {
 
     // Joining new changed data from new_user with old unchanged data from old_user
     public User setChanges(User old_user, User new_user){
-        // USER_ID, Oauth_provider, oauth_id, created_at, role and tokens are determined by old_user
+        // USER_ID, Oauth_provider, oauth_id, created_at and tokens are determined by old_user
 
         // email, password, first_name, last_name, username, profile_picture and description
         // are given in new_user
@@ -141,11 +141,13 @@ public class User {
             old_user.setDescription(new_user.getDescription());
         }
 
-
+        // Setting up profile for oauth registration requires role to be given in new_user
+        if (new_user.getRole() != null){
+            old_user.setRole(new_user.getRole());
+        }
 
         // updated_at is current date and time
         old_user.setUpdatedAt(LocalDateTime.now());
-
 
         return old_user;
     }
@@ -158,45 +160,25 @@ public class User {
 
     public void setEmail(String email) { this.email = email; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() { return password; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getOauthProvider() {
-        return oauthProvider;
-    }
+    public String getOauthProvider() { return oauthProvider; }
 
-    public void setOauthProvider(String oauthProvider) {
-        this.oauthProvider = oauthProvider;
-    }
+    public void setOauthProvider(String oauthProvider) { this.oauthProvider = oauthProvider; }
 
-    public String getOauthId() {
-        return oauthId;
-    }
+    public String getOauthId() { return oauthId; }
 
-    public void setOauthId(String oauthId) {
-        this.oauthId = oauthId;
-    }
+    public void setOauthId(String oauthId) { this.oauthId = oauthId; }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    public String getFirstName() { return firstName; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public String getLastName() {
-        return lastName;
-    }
+    public String getLastName() { return lastName; }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
     public String getDescription() { return description; }
 

@@ -98,9 +98,7 @@ public class UserController {
                         //.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .body(old_user.response("USERNAME_EXISTS")).getBody();
             }
-
         }
-
         // Check if this email already exists
         if (userService.userExistsByEmail(new_user.getEmail())) {
             if(!Objects.equals(new_user.getEmail(), old_user.getEmail())){
@@ -110,13 +108,8 @@ public class UserController {
             }
         }
 
-
         // Joining new changed data from new_user with old unchanged data from old_user
         new_user = new_user.setChanges(old_user, new_user);
-
-
-
-
         userService.saveOrUpdateUser(new_user);
         return ResponseEntity.ok()
                 //.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
