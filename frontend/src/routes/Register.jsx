@@ -52,7 +52,7 @@ function RegisterForm() {
         const message = data.registration;
         if (message === 'REGISTRATION_OK') {
           setErrorMessage('');
-          signIn();
+          signIn(registerForm.email);
           navigate('/users/home');
         }
         if (message === 'EMAIL_EXISTS') {
@@ -85,7 +85,9 @@ function RegisterForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        signInWithGoogle(credential);
+        const data = await response.json();
+        const email = data.email();
+        signInWithGoogle(credential, email);
         navigate('/users/home');
       }
     } catch (error) {

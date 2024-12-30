@@ -8,7 +8,7 @@ import { serverFetch } from '../hooks/serverUtils';
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, setIsProfileSetupComplete } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
 
   function onChange(event) {
@@ -36,6 +36,7 @@ function LoginForm() {
       if (response.ok) {
         const data = await response.json();
         const message = data.passwordCheck;
+        const email = data.email;
         if (message === 'DOESNT_EXIST') {
           setErrorMessage('User does not exist');
         }
@@ -44,7 +45,7 @@ function LoginForm() {
         }
         if (message === 'OK') {
           setErrorMessage('');
-          signIn();
+          signIn(email);
           navigate('/users/home');
         }
       }
@@ -76,7 +77,16 @@ function LoginForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        signInWithGoogle(credential);
+        const data = await response.json();
+        const registration = data.registration;
+        const email = data.email;
+        if (registration === 'REGISTRATION_OK') {
+          setIsProfileSetupComplete(false);
+          navigate('users/setup');
+        }
+        setIsProfileSetupComplete(true);
+        signInWithGoogle(credential, email);
+        console.log(response);
         navigate('/users/home');
       }
     } catch (error) {
