@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 
-
 /**
  * Fetches data from a REST API server endpoint.
  *
@@ -25,4 +24,28 @@ export async function getHash(input) {
   const salt = await bcrypt.genSalt(saltRounds);
   const hash = await bcrypt.hash(input, salt);
   return hash;
+}
+
+export async function getUserData(userEmail) {
+  const endpoint = `/users/${userEmail}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const response = await serverFetch(endpoint, options);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.log('Failed to fetch data', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
