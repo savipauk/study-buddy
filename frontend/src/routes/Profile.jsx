@@ -60,10 +60,11 @@ function UserForm() {
       lastName: userInfoForm.LastName,
       email: userInfoForm.Email,
       description: userInfoForm.Bio,
-      hashedPassword: newPasswordHash
+      hashedPassword: newPasswordHash,
+      username: userInfoForm.Username
     };
     const userEmail = localStorage.getItem('user_email');
-    const endpoint = `/users/update/${userEmail}`;
+    const endpoint = `/users/profile/update/${userEmail}`;
     const options = {
       method: 'POST',
       headers: {
@@ -93,7 +94,7 @@ function UserForm() {
           LastName: userData.lastName,
           Username: userData.username,
           Email: userData.email,
-          Bio: userData.bio
+          Bio: userData.description
         });
       }
     };

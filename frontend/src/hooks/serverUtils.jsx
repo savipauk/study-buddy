@@ -27,7 +27,7 @@ export async function getHash(input) {
 }
 
 export async function getUserData(userEmail) {
-  const endpoint = `/users/${userEmail}`;
+  const endpoint = `/users/profile/${userEmail}`;
   const options = {
     method: 'GET',
     headers: {

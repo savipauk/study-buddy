@@ -37,15 +37,15 @@ function ProfileSetup() {
 
   async function setupFinish() {
     //Remove when backend is updated
-    setIsProfileSetupComplete(true);
     const userEmail = localStorage.getItem('user_email');
     const data = {
+      email: localStorage.getItem('user_email'),
       username: setupForm.username,
       firstName: setupForm.firstName,
       lastName: setupForm.lastName,
       role: setupForm.role.toUpperCase()
     };
-    const endpoint = `/users/profile/setup/${userEmail}`;
+    const endpoint = `/users/profile/update/${userEmail}`;
     const options = {
       method: 'POST',
       headers: {
