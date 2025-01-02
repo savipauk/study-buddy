@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import '../styles/ProfilePage.css';
 import Header from '../components/Header';
-import { serverFetch, getUserData, getHash } from '../hooks/serverUtils';
+import {
+  serverFetch,
+  getUserData,
+  getHash,
+  checkHash
+} from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
 import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +52,8 @@ function UserForm() {
     setShowPasswordWindow(true);
   };
 
-  const handlePasswordSave = () => {
+  const handlePasswordSave = (hash) => {
+    setUserHash(hash);
     setShowPasswordWindow(false);
   };
 
@@ -55,7 +61,6 @@ function UserForm() {
     const fetchUserData = async () => {
       const userEmail = localStorage.getItem('user_email');
       const userData = await getUserData(userEmail);
-      console.log(userData);
       if (userData) {
         setUserHash(userData.password);
         setUserInfoForm({
@@ -325,7 +330,7 @@ EditWindow.propTypes = {
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  oauth: PropTypes.string
+  oauth: PropTypes.bool.isRequired
 };
 
 function PasswordChange({ onSave, onClose, hash }) {
@@ -341,24 +346,19 @@ function PasswordChange({ onSave, onClose, hash }) {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  async function hashPassword() {
-    let hashed = await getHash(formData.currentPassword);
-    return hashed;
-  }
-
-  function isValid(oldHash, newHash) {
+  async function isValid(enteredPassword, hash) {
     if (formData.newPassword !== formData.confirmNewPassword) {
       setValidationMessage('Passwords do not match');
       return false;
     }
-
-    // TODO: Until fetch works tempPass will bypass validation, needs to be removed later on!
-    if (oldHash !== newHash && !(formData.currentPassword == 'tempPass')) {
-      setValidationMessage('Password is incorect!');
-      return false;
-    }
     if (formData.newPassword.length < 8) {
       setValidationMessage('Password must be at least 8 characters long');
+      return false;
+    }
+    const match = await checkHash(enteredPassword, hash);
+    // TODO: Until fetch works tempPass will bypass validation, needs to be removed later on!
+    if (!match && !(formData.currentPassword == 'tempPass')) {
+      setValidationMessage('Password is incorect!');
       return false;
     } else {
       setValidationMessage('');
@@ -368,21 +368,26 @@ function PasswordChange({ onSave, onClose, hash }) {
 
   const updatePaswword = async (e) => {
     e.preventDefault();
-    const currentHash = await hashPassword(formData.currentPassword);
-    if (!isValid(hash, currentHash)) {
+    const enteredPassword = formData.currentPassword;
+    if (!(await isValid(enteredPassword, hash))) {
+      console.log('razliciti hashevi');
       return;
     } else {
+      console.log('Hashevi isti, mijenjam');
+      const currentHash = await getHash(formData.newPassword);
       await handleSaveNewPassword(currentHash);
-      onSave();
+      onSave(currentHash);
     }
   };
 
   const handleSaveNewPassword = async (newHash) => {
+    const userEmail = localStorage.getItem('user_email');
+
     const data = {
-      hashedPassword: newHash
+      hashedPassword: newHash,
+      email: userEmail
     };
 
-    const userEmail = localStorage.getItem('user_email');
     const endpoint = `/users/profile/update/${userEmail}`;
     const options = {
       method: 'POST',
@@ -393,8 +398,7 @@ function PasswordChange({ onSave, onClose, hash }) {
     };
 
     try {
-      const response = await serverFetch(endpoint, options);
-      console.log(response);
+      await serverFetch(endpoint, options);
     } catch (error) {
       console.error(error);
     }

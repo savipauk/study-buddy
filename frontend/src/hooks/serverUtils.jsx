@@ -26,6 +26,12 @@ export async function getHash(input) {
   return hash;
 }
 
+export async function checkHash(password, hash) {
+  const match = await bcrypt.compare(password, hash);
+  console.log('Match->', match);
+  return match;
+}
+
 export async function getUserData(userEmail) {
   const endpoint = `/users/profile/${userEmail}`;
   const options = {
