@@ -55,8 +55,9 @@ function UserForm() {
     const fetchUserData = async () => {
       const userEmail = localStorage.getItem('user_email');
       const userData = await getUserData(userEmail);
+      console.log(userData);
       if (userData) {
-        setUserHash(userData.hash);
+        setUserHash(userData.password);
         setUserInfoForm({
           FirstName: userData.firstName,
           LastName: userData.lastName,
@@ -371,7 +372,31 @@ function PasswordChange({ onSave, onClose, hash }) {
     if (!isValid(hash, currentHash)) {
       return;
     } else {
+      await handleSaveNewPassword(currentHash);
       onSave();
+    }
+  };
+
+  const handleSaveNewPassword = async (newHash) => {
+    const data = {
+      hashedPassword: newHash
+    };
+
+    const userEmail = localStorage.getItem('user_email');
+    const endpoint = `/users/profile/update/${userEmail}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
     }
   };
 
