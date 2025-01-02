@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = (info) => {
     // Maybe track this in the database
-    localStorage.setItem('username', info);
+    localStorage.setItem('user_email', info);
     setIsSignedIn(true);
   };
   const signOut = () => {

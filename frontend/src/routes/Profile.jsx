@@ -28,17 +28,17 @@ function UserForm() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
 
-  const [newPasswordHash, setNewPasswordHash] = useState('');
-  const [isChanged, setIsChanged] = useState(false);
-
   const { isProfileSetupComplete } = useAuth();
+
+  const loggedInWithOAUTH =
+    localStorage.getItem('is_logged_in_with_google') === 'true' || false;
 
   const handleEditClick = () => setShowEditWindow(true);
   const handleCloseWindow = () => {
     setShowEditWindow(false);
     setShowPasswordWindow(false);
   };
-  const handleSaveChanges = (updatedInfo) => {
+  const handleSaveChanges = async (updatedInfo) => {
     setUserInfoForm(updatedInfo);
     setShowEditWindow(false);
   };
@@ -49,38 +49,6 @@ function UserForm() {
 
   const handlePasswordSave = () => {
     setShowPasswordWindow(false);
-  };
-
-  const handleSaveData = async (e) => {
-    e.preventDefault();
-    setIsChanged(false);
-
-    const data = {
-      firstName: userInfoForm.FirstName,
-      lastName: userInfoForm.LastName,
-      email: userInfoForm.Email,
-      description: userInfoForm.Bio,
-      hashedPassword: newPasswordHash,
-      username: userInfoForm.Username
-    };
-    const userEmail = localStorage.getItem('user_email');
-    const endpoint = `/users/profile/update/${userEmail}`;
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    };
-
-    try {
-      const response = await serverFetch(endpoint, options);
-      if (response.ok) {
-        console.log(data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   useEffect(() => {
@@ -108,7 +76,6 @@ function UserForm() {
   function onChange(event) {
     const { name, value } = event.target;
     setUserInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
-    setIsChanged(true);
   }
 
   return (
@@ -128,6 +95,7 @@ function UserForm() {
                 </button>
                 <p className="aboutText">About</p>
                 <textarea
+                  readOnly
                   className="aboutInput"
                   name="Bio"
                   onChange={onChange}
@@ -173,12 +141,14 @@ function UserForm() {
                   value={userInfoForm.Email}
                   readOnly={true}
                 ></input>
-                <button
-                  className="changePassword"
-                  onClick={handlePasswordChange}
-                >
-                  Change password
-                </button>
+                {!loggedInWithOAUTH && (
+                  <button
+                    className="changePassword"
+                    onClick={handlePasswordChange}
+                  >
+                    Change password
+                  </button>
+                )}
               </div>
             </form>
           </div>
@@ -188,19 +158,12 @@ function UserForm() {
             Edit!
           </button>
         </div>
-        {isChanged && (
-          <div className="editWrapper">
-            <button className="editButton" onClick={handleSaveData}>
-              Save!
-            </button>
-          </div>
-        )}
         {showEditWindow && (
           <EditWindow
             userInfo={userInfoForm}
             onSave={handleSaveChanges}
             onClose={handleCloseWindow}
-            hasChanged={setIsChanged}
+            oauth={loggedInWithOAUTH}
           />
         )}
         {showPasswordWindow && (
@@ -208,8 +171,6 @@ function UserForm() {
             onSave={handlePasswordSave}
             onClose={handleCloseWindow}
             hash={userHash}
-            setNewPasswordHash={setNewPasswordHash}
-            hasChanged={setIsChanged}
           />
         )}
       </div>
@@ -217,13 +178,43 @@ function UserForm() {
   );
 }
 
-function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
+function EditWindow({ userInfo, onSave, onClose, oauth }) {
   const [formData, setFormData] = useState(userInfo);
   const [validationMessage, setValidationMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSaveData = async () => {
+    const data = {
+      firstName: formData.FirstName,
+      lastName: formData.LastName,
+      email: formData.Email,
+      description: formData.Bio,
+      username: formData.Username
+    };
+
+    const userEmail = localStorage.getItem('user_email');
+    const endpoint = `/users/profile/update/${userEmail}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        return data.message;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   function isValid() {
@@ -240,7 +231,7 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
       setValidationMessage('Username is required');
       return false;
     }
-    if (!emailRegex.test(formData.Email)) {
+    if (!emailRegex.test(formData.Email) && !oauth) {
       setValidationMessage('Email is invalid!');
       return false;
     }
@@ -248,12 +239,24 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
     return true;
   }
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async (e) => {
+    e.preventDefault();
     if (!isValid()) {
       return;
+    } else {
+      const message = await handleSaveData();
+      if (message == 'USERNAME_EXISTS') {
+        setValidationMessage('Username taken');
+        return;
+      }
+      if (message == 'EMAIL_EXISTS') {
+        setValidationMessage('Email taken');
+        return;
+      }
+      if (message == 'UPDATE_OK') {
+        onSave(formData);
+      }
     }
-    hasChanged(true);
-    onSave(formData);
   };
 
   return (
@@ -281,13 +284,25 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
           value={formData.Username}
           onChange={handleChange}
         />
-        <p>Email:</p>
-        <input
-          className="inputEdit"
-          name="Email"
-          value={formData.Email}
+        {!oauth && (
+          <>
+            <p>Email:</p>
+            <input
+              className="inputEdit"
+              name="Email"
+              value={formData.Email}
+              onChange={handleChange}
+            />
+          </>
+        )}
+        <p className="aboutText">About</p>
+        <textarea
+          className="aboutInput"
+          name="Bio"
           onChange={handleChange}
-        />
+          value={formData.Bio}
+        ></textarea>
+
         <p className="errorMessage">{validationMessage}</p>
         <button className="EditWindowButton" onClick={handleSaveClick}>
           Accept
@@ -309,16 +324,10 @@ EditWindow.propTypes = {
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  hasChanged: PropTypes.func.isRequired
+  oauth: PropTypes.string
 };
 
-function PasswordChange({
-  onSave,
-  onClose,
-  hash,
-  setNewPasswordHash,
-  hasChanged
-}) {
+function PasswordChange({ onSave, onClose, hash }) {
   const [validationMessage, setValidationMessage] = useState('');
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -362,9 +371,6 @@ function PasswordChange({
     if (!isValid(hash, currentHash)) {
       return;
     } else {
-      const hashedPassword = await getHash(formData.newPassword);
-      setNewPasswordHash(hashedPassword);
-      hasChanged(true);
       onSave();
     }
   };
@@ -411,9 +417,7 @@ function PasswordChange({
 PasswordChange.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  hash: PropTypes.string.isRequired,
-  setNewPasswordHash: PropTypes.func.isRequired,
-  hasChanged: PropTypes.func.isRequired
+  hash: PropTypes.string.isRequired
 };
 
 export default Profile;
