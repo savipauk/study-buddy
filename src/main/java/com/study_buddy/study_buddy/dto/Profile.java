@@ -2,26 +2,38 @@ package com.study_buddy.study_buddy.dto;
 
 import com.study_buddy.study_buddy.model.StudyRole;
 
-import java.time.LocalDate;
+import java.util.Map;
 
-public class ProfileResponse {
+public class Profile {
     // private Long userId;
     private String email;
     private String firstName;
     private String lastName;
+    private String username;
     private StudyRole role;
     private String description;
     // private String accessToken;
     private String profilePicture;
     // private String city;
 
-    // public String getAccessToken() {
-    // return accessToken;
-    // }
+    public Map<String,String> profileResponse (String message){
+        Map<String, String> response;
+        response = Map.of(
+                "firstName", this.getFirstName(),
+                "lastName", this.getLastName(),
+                "email", this.getEmail(),
+                "studyRole", this.getRole().toString(),
+                "username", this.getUsername(),
+                "description", this.getDescription(),
+                "message", message
+        );
+
+        return response;
+    };
+
+    // public String getAccessToken() { return accessToken; }
     //
-    // public void setAccessToken(String accessToken) {
-    // this.accessToken = accessToken;
-    // }
+    // public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
 
     public StudyRole getRole() {
         return role;
@@ -79,6 +91,9 @@ public class ProfileResponse {
 //        this.city = city;
 //    }
 
+    public String getUsername() { return username; }
+
+    public void setUsername(String Username) { this.username = Username; }
     public String getProfilePicture() {
         return profilePicture;
     }
