@@ -10,6 +10,7 @@ public class Profile {
     private String firstName;
     private String lastName;
     private String username;
+    private String password;
     private StudyRole role;
     private String description;
     // private String accessToken;
@@ -25,6 +26,7 @@ public class Profile {
                 "studyRole", this.getRole().toString(),
                 "username", this.getUsername(),
                 "description", this.getDescription(),
+                "password", this.getPassword(),
                 "message", message
         );
 
@@ -101,4 +103,8 @@ public class Profile {
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
 }
