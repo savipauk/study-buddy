@@ -70,7 +70,7 @@ public class UserController {
 
 
     // GET /profile - Fetch the user's profile
-    @GetMapping(value = "/profile/{username}", produces = "application/json")
+    @GetMapping(value = "/profile/{email}", produces = "application/json")
     public Map<String ,String> getProfile(@PathVariable("email") String email) {
 
         Optional<User> userOpt = Optional.ofNullable(userService.getUserByEmail(email));
