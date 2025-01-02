@@ -7,8 +7,13 @@ import java.util.Map;
 @RequestMapping("/example")
 public class ExampleController {
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(value = "/greeting", produces = "application/json")
     public Map<String, String> getExample() {
         return Map.of("hello", "world");
+    }
+
+    @GetMapping(value = "/unauthorized", produces = "application/json")
+    public Map<String, String> getUnauthorizedExample() {
+        return Map.of("unauthorized", "world");
     }
 }

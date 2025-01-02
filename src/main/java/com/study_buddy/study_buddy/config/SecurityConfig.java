@@ -38,8 +38,7 @@ public class SecurityConfig {
                 .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class)  // Add the custom header filter
                 .build();
     }
-
-
+  
     @Bean
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromOidcIssuerLocation("https://accounts.google.com");
@@ -58,9 +57,10 @@ public class SecurityConfig {
                 // Set X-Frame-Options to SAMEORIGIN
                 httpResponse.setHeader("X-Frame-Options", "SAMEORIGIN");
 
-                // Set Content-Security-Policy to allow framing only from same origin and localhost
-                httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
-
+                // Set Content-Security-Policy to allow framing only from same origin and
+                // localhost
+                httpResponse.setHeader("Content-Security-Policy",
+                        "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
 
             }
             // Continue with the filter chain
@@ -83,6 +83,5 @@ public class SecurityConfig {
         return source;
 
     }
-
 
 }
