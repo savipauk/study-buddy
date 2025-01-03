@@ -5,16 +5,22 @@
 }
 
 body {
-  /* background: linear-gradient(#c31431cb, #240b36e1); */
+  /* background: linear-gradient(#d6d0b9d2, #FFFFFF);  */
   background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
 }
 
 .formWrapper {
   display: flex;
   width: 100vw;
+  height: 100%;
   justify-content: center;
   flex-wrap: wrap;
   align-content: center;
+  align-self: center;
+  align-items: center;
   justify-self: left;
 }
 

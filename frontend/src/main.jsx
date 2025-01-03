@@ -10,6 +10,7 @@ import Login from './routes/Login';
 import HomePage from './routes/Home';
 import Profile from './routes/Profile';
 import { AuthProvider } from './components/AuthContext';
+import ProfileInfo from './routes/ProfileInfo';
 
 const router = createBrowserRouter([
   {
@@ -33,8 +34,13 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: 'users/profile',
+    path: 'users/profile/edit',
     element: <Profile />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: 'users/profile',
+    element: <ProfileInfo />,
     errorElement: <ErrorPage />
   }
 ]);

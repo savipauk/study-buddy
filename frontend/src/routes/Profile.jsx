@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
 import '../styles/ProfilePage.css';
 import Header from '../components/Header';
-import { serverFetch } from '../hooks/serverUtils';
-import { getHash } from '../hooks/serverUtils';
+import {
+  serverFetch,
+  getUserData,
+  getHash,
+  checkHash
+} from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
+import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   return (
@@ -14,31 +20,7 @@ function Profile() {
 }
 
 function UserForm() {
-  // TODO: Route needs to be modified when it's implemented od backend
-  async function getUserData(userId) {
-    const endpoint = `/users/${userId}`;
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    try {
-      const response = await serverFetch(endpoint, options);
-      if (response.ok) {
-        const data = await response.json();
-        return data;
-      } else {
-        console.log('Failed to fetch data', response.statusText);
-        return null;
-      }
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  }
-
+  const navigate = useNavigate();
   const [userInfoForm, setUserInfoForm] = useState({
     FirstName: '',
     LastName: '',
@@ -51,15 +33,17 @@ function UserForm() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
 
-  const [newPasswordHash, setNewPasswordHash] = useState('');
-  const [isChanged, setIsChanged] = useState(false);
+  const { isProfileSetupComplete } = useAuth();
+
+  const loggedInWithOAUTH =
+    localStorage.getItem('is_logged_in_with_google') === 'true' || false;
 
   const handleEditClick = () => setShowEditWindow(true);
   const handleCloseWindow = () => {
     setShowEditWindow(false);
     setShowPasswordWindow(false);
   };
-  const handleSaveChanges = (updatedInfo) => {
+  const handleSaveChanges = async (updatedInfo) => {
     setUserInfoForm(updatedInfo);
     setShowEditWindow(false);
   };
@@ -68,65 +52,36 @@ function UserForm() {
     setShowPasswordWindow(true);
   };
 
-  const handlePasswordSave = () => {
+  const handlePasswordSave = (hash) => {
+    setUserHash(hash);
     setShowPasswordWindow(false);
   };
 
-  const handleSaveData = async (e) => {
-    e.preventDefault();
-    setIsChanged(false);
-
-    // TODO: Route needs to be modified when it's implemented od backend
-    const data = {
-      firstName: userInfoForm.FirstName,
-      lastName: userInfoForm.LastName,
-      email: userInfoForm.Email,
-      description: userInfoForm.Bio,
-      hashedPassword: newPasswordHash
-    };
-    const endpoint = '/users/update';
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    };
-
-    try {
-      const response = await serverFetch(endpoint, options);
-      if (response.ok) {
-        console.log(data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // TODO: Getting userId needs to be modified
   useEffect(() => {
     const fetchUserData = async () => {
-      const userId = '1'; // OR: fetch by access token?
-      const userData = await getUserData(userId);
+      const userEmail = localStorage.getItem('user_email');
+      const userData = await getUserData(userEmail);
       if (userData) {
-        setUserHash(userData.hash);
+        setUserHash(userData.password);
         setUserInfoForm({
           FirstName: userData.firstName,
           LastName: userData.lastName,
           Username: userData.username,
           Email: userData.email,
-          Bio: userData.bio
+          Bio: userData.description
         });
       }
     };
-
-    fetchUserData();
-  }, []);
+    if (isProfileSetupComplete) {
+      fetchUserData();
+    } else {
+      navigate('/users/home');
+    }
+  }, [isProfileSetupComplete, navigate]);
 
   function onChange(event) {
     const { name, value } = event.target;
     setUserInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
-    setIsChanged(true);
   }
 
   return (
@@ -146,6 +101,7 @@ function UserForm() {
                 </button>
                 <p className="aboutText">About</p>
                 <textarea
+                  readOnly
                   className="aboutInput"
                   name="Bio"
                   onChange={onChange}
@@ -191,12 +147,14 @@ function UserForm() {
                   value={userInfoForm.Email}
                   readOnly={true}
                 ></input>
-                <button
-                  className="changePassword"
-                  onClick={handlePasswordChange}
-                >
-                  Change password
-                </button>
+                {!loggedInWithOAUTH && (
+                  <button
+                    className="changePassword"
+                    onClick={handlePasswordChange}
+                  >
+                    Change password
+                  </button>
+                )}
               </div>
             </form>
           </div>
@@ -206,19 +164,12 @@ function UserForm() {
             Edit!
           </button>
         </div>
-        {isChanged && (
-          <div className="editWrapper">
-            <button className="editButton" onClick={handleSaveData}>
-              Save!
-            </button>
-          </div>
-        )}
         {showEditWindow && (
           <EditWindow
             userInfo={userInfoForm}
             onSave={handleSaveChanges}
             onClose={handleCloseWindow}
-            hasChanged={setIsChanged}
+            oauth={loggedInWithOAUTH}
           />
         )}
         {showPasswordWindow && (
@@ -226,8 +177,6 @@ function UserForm() {
             onSave={handlePasswordSave}
             onClose={handleCloseWindow}
             hash={userHash}
-            setNewPasswordHash={setNewPasswordHash}
-            hasChanged={setIsChanged}
           />
         )}
       </div>
@@ -235,13 +184,43 @@ function UserForm() {
   );
 }
 
-function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
+function EditWindow({ userInfo, onSave, onClose, oauth }) {
   const [formData, setFormData] = useState(userInfo);
   const [validationMessage, setValidationMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSaveData = async () => {
+    const data = {
+      firstName: formData.FirstName,
+      lastName: formData.LastName,
+      email: formData.Email,
+      description: formData.Bio,
+      username: formData.Username
+    };
+
+    const userEmail = localStorage.getItem('user_email');
+    const endpoint = `/users/profile/update/${userEmail}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        return data.message;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   function isValid() {
@@ -258,7 +237,7 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
       setValidationMessage('Username is required');
       return false;
     }
-    if (!emailRegex.test(formData.Email)) {
+    if (!emailRegex.test(formData.Email) && !oauth) {
       setValidationMessage('Email is invalid!');
       return false;
     }
@@ -266,12 +245,24 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
     return true;
   }
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async (e) => {
+    e.preventDefault();
     if (!isValid()) {
       return;
+    } else {
+      const message = await handleSaveData();
+      if (message == 'USERNAME_EXISTS') {
+        setValidationMessage('Username taken');
+        return;
+      }
+      if (message == 'EMAIL_EXISTS') {
+        setValidationMessage('Email taken');
+        return;
+      }
+      if (message == 'UPDATE_OK') {
+        onSave(formData);
+      }
     }
-    hasChanged(true);
-    onSave(formData);
   };
 
   return (
@@ -299,13 +290,25 @@ function EditWindow({ userInfo, onSave, onClose, hasChanged }) {
           value={formData.Username}
           onChange={handleChange}
         />
-        <p>Email:</p>
-        <input
-          className="inputEdit"
-          name="Email"
-          value={formData.Email}
+        {!oauth && (
+          <>
+            <p>Email:</p>
+            <input
+              className="inputEdit"
+              name="Email"
+              value={formData.Email}
+              onChange={handleChange}
+            />
+          </>
+        )}
+        <p className="aboutText">About</p>
+        <textarea
+          className="aboutInput"
+          name="Bio"
           onChange={handleChange}
-        />
+          value={formData.Bio}
+        ></textarea>
+
         <p className="errorMessage">{validationMessage}</p>
         <button className="EditWindowButton" onClick={handleSaveClick}>
           Accept
@@ -327,16 +330,10 @@ EditWindow.propTypes = {
   }).isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  hasChanged: PropTypes.func.isRequired
+  oauth: PropTypes.bool.isRequired
 };
 
-function PasswordChange({
-  onSave,
-  onClose,
-  hash,
-  setNewPasswordHash,
-  hasChanged
-}) {
+function PasswordChange({ onSave, onClose, hash }) {
   const [validationMessage, setValidationMessage] = useState('');
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -349,24 +346,18 @@ function PasswordChange({
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  async function hashPassword() {
-    let hashed = await getHash(formData.currentPassword);
-    return hashed;
-  }
-
-  function isValid(oldHash, newHash) {
+  async function isValid(enteredPassword, hash) {
     if (formData.newPassword !== formData.confirmNewPassword) {
       setValidationMessage('Passwords do not match');
       return false;
     }
-
-    // TODO: Until fetch works tempPass will bypass validation, needs to be removed later on!
-    if (oldHash !== newHash && !(formData.currentPassword == 'tempPass')) {
-      setValidationMessage('Password is incorect!');
-      return false;
-    }
     if (formData.newPassword.length < 8) {
       setValidationMessage('Password must be at least 8 characters long');
+      return false;
+    }
+    const match = await checkHash(enteredPassword, hash);
+    if (!match) {
+      setValidationMessage('Password is incorect!');
       return false;
     } else {
       setValidationMessage('');
@@ -376,14 +367,37 @@ function PasswordChange({
 
   const updatePaswword = async (e) => {
     e.preventDefault();
-    const currentHash = await hashPassword(formData.currentPassword);
-    if (!isValid(hash, currentHash)) {
+    const enteredPassword = formData.currentPassword;
+    if (!(await isValid(enteredPassword, hash))) {
       return;
     } else {
-      const hashedPassword = await getHash(formData.newPassword);
-      setNewPasswordHash(hashedPassword);
-      hasChanged(true);
-      onSave();
+      const currentHash = await getHash(formData.newPassword);
+      await handleSaveNewPassword(currentHash);
+      onSave(currentHash);
+    }
+  };
+
+  const handleSaveNewPassword = async (newHash) => {
+    const userEmail = localStorage.getItem('user_email');
+
+    const data = {
+      password: newHash,
+      email: userEmail
+    };
+
+    const endpoint = `/users/profile/update/${userEmail}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      await serverFetch(endpoint, options);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -429,9 +443,7 @@ function PasswordChange({
 PasswordChange.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  hash: PropTypes.string.isRequired,
-  setNewPasswordHash: PropTypes.func.isRequired,
-  hasChanged: PropTypes.func.isRequired
+  hash: PropTypes.string.isRequired
 };
 
 export default Profile;
