@@ -370,10 +370,8 @@ function PasswordChange({ onSave, onClose, hash }) {
     e.preventDefault();
     const enteredPassword = formData.currentPassword;
     if (!(await isValid(enteredPassword, hash))) {
-      console.log('razliciti hashevi');
       return;
     } else {
-      console.log('Hashevi isti, mijenjam');
       const currentHash = await getHash(formData.newPassword);
       await handleSaveNewPassword(currentHash);
       onSave(currentHash);
@@ -384,7 +382,7 @@ function PasswordChange({ onSave, onClose, hash }) {
     const userEmail = localStorage.getItem('user_email');
 
     const data = {
-      hashedPassword: newHash,
+      password: newHash,
       email: userEmail
     };
 
