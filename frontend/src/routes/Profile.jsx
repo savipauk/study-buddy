@@ -356,8 +356,7 @@ function PasswordChange({ onSave, onClose, hash }) {
       return false;
     }
     const match = await checkHash(enteredPassword, hash);
-    // TODO: Until fetch works tempPass will bypass validation, needs to be removed later on!
-    if (!match && !(formData.currentPassword == 'tempPass')) {
+    if (!match) {
       setValidationMessage('Password is incorect!');
       return false;
     } else {
