@@ -2,7 +2,6 @@ package com.study_buddy.study_buddy.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,7 +18,7 @@ public class JwtService {
 
 
     // Method to generate a JWT token
-    public String generateToken(String email) {
+    public String generateToken(String email, String username) {
         System.out.println("Expiration value: " + expiration);
         return JWT.create()
                 .withSubject(email)  // Set the subject as the user's email or ID

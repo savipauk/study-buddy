@@ -8,7 +8,8 @@ public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long adminId;
+    @Column(name = "admin_id")
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -20,29 +21,21 @@ public class Admin {
     @Column(length = 255)
     private String profilePicture;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    public enum Gender {
-        M, F, OTHER
-    }
-
     public Admin() {}
 
-    public Admin(Long adminId, User user, String username, Gender gender, String profilePicture) {
-        this.adminId = adminId;
+    public Admin(Long adminId, User user, String username, String profilePicture) {
+        this.id = id;
         this.user = user;
         this.username = username;
-        this.gender = gender;
         this.profilePicture = profilePicture;
     }
 
     public Long getAdminId() {
-        return adminId;
+        return id;
     }
 
     public void setAdminId(Long adminId) {
-        this.adminId = adminId;
+        this.id = id;
     }
 
     public User getUser() {
@@ -67,13 +60,5 @@ public class Admin {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
     }
 }

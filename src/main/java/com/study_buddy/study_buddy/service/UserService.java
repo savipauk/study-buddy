@@ -2,7 +2,10 @@ package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
+import com.study_buddy.study_buddy.dto.Profile;
+import com.study_buddy.study_buddy.dto.ProfileUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,8 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     // TODO: Add password encoder
-    // private final PasswordEncoder passwordEncoder;
+
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -32,14 +36,16 @@ public class UserService {
     }
 
     // Fetch a user by email
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
+    public User getUserByEmail(String email) { return userRepository.findByEmail(email);}
+
+    // Fetch a user by username
+    public User getUserByUsername(String username) { return userRepository.findByUsername(username);}
+
+    // Check if user exists by username
+    public boolean userExistsByUsername(String username) { return userRepository.findByUsername(username)!=null;}
 
     // Check if user exists by email
-    public boolean userExistsByEmail(String email) {
-        return getUserByEmail(email) != null;
-    }
+    public boolean userExistsByEmail(String email) { return getUserByEmail(email) != null; }
 
     // Save or update a user
     public User saveOrUpdateUser(User user) {
@@ -55,11 +61,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // TODO: password verification
+
     // Verify the provided password with the stored hashed password
-//    public boolean verifyPassword(User user, String rawPassword) {
-//        return passwordEncoder.matches(rawPassword, user.getPassword());
-//    }
+    public boolean verifyPassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
 
     // Update an existing user
     public User updateUser(Long id, User updatedUser) {
@@ -81,6 +87,34 @@ public class UserService {
     // Delete a user by ID
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+
+
+
+
+    public Profile buildProfileResponse(User user) {
+        Profile profile = new Profile();
+
+        profile.setEmail(user.getEmail());
+        profile.setFirstName(user.getFirstName());
+        profile.setLastName(user.getLastName());
+        profile.setRole(user.getRole());
+        profile.setDescription(user.getDescription());
+        profile.setUsername(user.getUsername());
+
+        return profile;
+    }
+
+    public void updateUserProfile(User user, ProfileUpdate profileUpdate) {
+        // Update basic User details
+        user.setFirstName(profileUpdate.getFirstName());
+        user.setLastName(profileUpdate.getLastName());
+        user.setDescription(profileUpdate.getDescription());
+
+        // Save updated User
+        userRepository.save(user);
+
     }
 }
 
