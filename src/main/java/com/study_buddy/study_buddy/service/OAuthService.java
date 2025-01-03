@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 
 import com.study_buddy.study_buddy.model.StudyRole;
+import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class OAuthService {
 
     public User processGoogleTokenResponse(String credential) throws Exception {
         // Parse the token
+
         GoogleIdToken idToken = verifier.verify(credential);
 
         if (idToken == null) {
@@ -45,17 +47,22 @@ public class OAuthService {
         String firstName = (String) payload.get("given_name");
         String lastName = (String) payload.get("family_name");
 
+
         // Check if the user already exists in the database
         User user = userRepository.findByOauthId(googleId);
-
         if (user == null) {
-            // Appropriate constructor: User(String email, String username, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole unassigned)
-            user = new User(email, email,"google", googleId, firstName, lastName, StudyRole.UNASSIGNED);
+            // Appropriate constructor
+            // User(String email, String oauthProvider, String oauthId, String firstName, String lastName, StudyRole unassigned)
+            user = new User(email, "google", googleId, firstName, lastName, StudyRole.UNASSIGNED);
+
+            userRepository.save(user);
 
         } else {
             // Update the user's updatedAt timestamp if they already exist
             user.setUpdatedAt(LocalDateTime.now());
+            userRepository.save(user);
         }
+
         return user;
     }
 }
