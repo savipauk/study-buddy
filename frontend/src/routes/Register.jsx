@@ -17,8 +17,15 @@ function RegisterForm() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: ''
+    role: '',
+    gender: '',
+    location: '',
+    dob: ''
   });
+
+  const [day, setDay] = useState('');
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   function onChange(event) {
@@ -26,6 +33,28 @@ function RegisterForm() {
     setRegisterForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
 
+  const handleDOBChange = (type, value) => {
+    if (type === 'day') {
+      setDay(value);
+    }
+    if (type === 'month') {
+      setMonth(value);
+    }
+    if (type === 'year') {
+      setYear(value);
+    }
+
+    const updatedDay = type === 'day' ? value : day;
+    const updatedMonth = type === 'month' ? value : month;
+    const updatedYear = type === 'year' ? value : year;
+    if (updatedDay && updatedMonth && updatedYear) {
+      const dob = `${updatedDay}/${updatedMonth}/${updatedYear}`;
+      setRegisterForm((prevForm) => ({
+        ...prevForm,
+        dob: dob
+      }));
+    }
+  };
   async function storeUserToDatabase(hash) {
     const data = {
       firstName: registerForm.firstName,
@@ -33,9 +62,12 @@ function RegisterForm() {
       username: registerForm.username,
       email: registerForm.email,
       hashedPassword: hash,
-      studyRole: registerForm.role.toUpperCase()
+      studyRole: registerForm.role.toUpperCase(),
+      gender: registerForm.gender,
+      location: registerForm.location,
+      dob: registerForm.dob
     };
-
+    console.log(data);
     const endpoint = '/login/register';
     const options = {
       method: 'POST',
@@ -214,6 +246,106 @@ function RegisterForm() {
               value={registerForm.confirmPassword}
               name="confirmPassword"
             />
+          </div>
+          <input
+            className="infoInput"
+            type="text"
+            placeholder="Location"
+            onChange={onChange}
+            value={registerForm.location}
+            name="location"
+          ></input>
+          <div className="dateOfBirth">
+            <label className="dobTitle">Date of Birth</label>
+            <div className="dobSelector">
+              <div className="dropdown">
+                <select
+                  name="day"
+                  className="dobSelect"
+                  value={day}
+                  onChange={(e) => handleDOBChange('day', e.target.value)}
+                >
+                  <option value="">Day</option>
+                  {Array.from({ length: 31 }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {i + 1}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="dropdown">
+                <select
+                  name="month"
+                  className="dobSelect"
+                  value={month}
+                  onChange={(e) => handleDOBChange('month', e.target.value)}
+                >
+                  <option value="">Month</option>
+                  {[
+                    'January',
+                    'February',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December'
+                  ].map((month, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {month}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="dropdown">
+                <select
+                  name="year"
+                  className="dobSelect"
+                  value={year}
+                  onChange={(e) => handleDOBChange('year', e.target.value)}
+                >
+                  <option value="">Year</option>
+                  {Array.from({ length: 100 }, (_, i) => {
+                    const year = new Date().getFullYear() - i;
+                    return (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="genderSelection">
+            <input
+              className="genderRadioButton"
+              type="radio"
+              name="gender"
+              value={'M'}
+              id="genderMale"
+              checked={registerForm.gender === 'M'}
+              onChange={onChange}
+            ></input>
+            <label htmlFor="genderMale" className="toggleOption">
+              Male
+            </label>
+            <input
+              className="genderRadioButton"
+              type="radio"
+              name="gender"
+              value={'F'}
+              id="genderFemale"
+              checked={registerForm.gender === 'F'}
+              onChange={onChange}
+            ></input>
+            <label htmlFor="genderFemale" className="toggleOption">
+              Female
+            </label>
           </div>
           <div className="roleSelection">
             <input

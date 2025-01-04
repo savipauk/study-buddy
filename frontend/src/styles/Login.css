@@ -4,14 +4,6 @@
   gap: 15px;
 }
 
-body {
-  /* background: linear-gradient(#d6d0b9d2, #FFFFFF);  */
-  background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
-  display: flex;
-  flex-wrap: wrap;
-  height: 100vh;
-}
-
 .formWrapper {
   display: flex;
   width: 100vw;
@@ -98,6 +90,45 @@ body {
   gap: 0.2em;
 }
 
+.dateOfBirth {
+  width: 100%;
+  margin-top: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dobTitle {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: 1.3em;
+  color: #333;
+}
+
+.dobSelector {
+  display: flex;
+  gap: 0.5em;
+}
+
+.dobSelect {
+  padding: 0.5em;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+.dropdown {
+  display: flex;
+  overflow-y: hidden;
+  height: 2em;
+  max-height: 3em;
+}
+
+.dobSelect:focus {
+  size: 5;
+}
+
 .passwordDiv {
   width: 100%;
   display: flex;
@@ -142,6 +173,39 @@ body {
 }
 
 .roleRadioButton:checked + .toggleOption {
+  background-color: #254766a9;
+}
+
+.genderSelection {
+  width: 50%;
+  display: flex;
+  justify-content: end;
+  margin-top: 2em;
+  border-radius: 25px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.genderRadioButton {
+  display: none;
+}
+
+.toggleOption {
+  text-align: center;
+  flex: 1;
+  padding: 0.3em;
+  font-size: 1.2em;
+  color: white;
+  cursor: pointer;
+  background-color: #355b7d96;
+  transition: background 0.2s;
+}
+
+.toggleOption:not(:last-of-type) {
+  border-right: 1px solid #00000096;
+}
+
+.genderRadioButton:checked + .toggleOption {
   background-color: #254766a9;
 }
 
