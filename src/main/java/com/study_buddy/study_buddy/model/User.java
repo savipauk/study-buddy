@@ -123,28 +123,21 @@ public class User {
     public User setChanges(User old_user, User new_user){
         // USER_ID, Oauth_provider, oauth_id, created_at and tokens are determined by old_user
 
-        // email, password, first_name, last_name, username, profile_picture and description
-        // are given in new_user
+        // email is always given in new_user
         old_user.setEmail(new_user.getEmail());
-        old_user.setPassword(new_user.getPassword());
-        old_user.setFirstName(new_user.getFirstName());
-        old_user.setLastName(new_user.getLastName());
-        old_user.setUsername(new_user.getUsername());
-        if(new_user.getProfilePicture()== null){
-            old_user.setProfilePicture("");
-        } else {
-            old_user.setProfilePicture(new_user.getProfilePicture());
-        }
-        if(new_user.getDescription()==null){
-            old_user.setDescription("");
-        } else {
-            old_user.setDescription(new_user.getDescription());
-        }
+
+        // Setting up new password if password is changed
+        if(new_user.getPassword() != null){ old_user.setPassword(new_user.getPassword()); }
+
+        // Saving changes only if something was changed
+        if(new_user.getDescription() != null) { old_user.setDescription(new_user.getDescription()); }
+        if(new_user.getProfilePicture() != null) { old_user.setProfilePicture(new_user.getProfilePicture()); }
+        if(new_user.getFirstName() != null) { old_user.setFirstName(new_user.getFirstName()); }
+        if(new_user.getLastName() != null) { old_user.setLastName(new_user.getLastName()); }
+        if(new_user.getUsername() != null) {  old_user.setUsername(new_user.getUsername()); }
 
         // Setting up profile for oauth registration requires role to be given in new_user
-        if (new_user.getRole() != null){
-            old_user.setRole(new_user.getRole());
-        }
+        if (new_user.getRole() != null){ old_user.setRole(new_user.getRole()); }
 
         // updated_at is current date and time
         old_user.setUpdatedAt(LocalDateTime.now());

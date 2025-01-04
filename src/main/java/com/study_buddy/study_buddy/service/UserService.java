@@ -102,6 +102,7 @@ public class UserService {
         profile.setRole(user.getRole());
         profile.setDescription(user.getDescription());
         profile.setUsername(user.getUsername());
+        profile.setPassword(user.getPassword());
 
         return profile;
     }
