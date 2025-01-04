@@ -51,7 +51,10 @@ function ProfileSetup() {
     const updatedMonth = type === 'month' ? value : month;
     const updatedYear = type === 'year' ? value : year;
     if (updatedDay && updatedMonth && updatedYear) {
-      const dob = `${updatedDay}/${updatedMonth}/${updatedYear}`;
+      const dob = `${updatedYear}/${updatedMonth.padStart(
+        2,
+        '0'
+      )}/${updatedDay.padStart(2, '0')}`;
       setSetupForm((prevForm) => ({
         ...prevForm,
         dob: dob
