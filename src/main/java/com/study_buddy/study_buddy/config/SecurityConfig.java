@@ -16,8 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-
-
 import java.util.List;
 
 @Configuration
@@ -28,20 +26,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login/**", "/users/**", "/example", "/oauth2/**",
+                    auth.requestMatchers("/login/**", "/example", "/oauth2/**",
+                                    "/users/profile/update/**","/users/profile/**", "/users/**",
                                     "/h2-console/**", "/favicon.ico").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Allow OPTIONS
                     auth.anyRequest().authenticated();
                 })
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Custom CORS configuration
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for testing??????????????????????????????????????????
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for testing
                 .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class)  // Add the custom header filter
                 .build();
     }
-
-
-
+  
     @Bean
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromOidcIssuerLocation("https://accounts.google.com");
@@ -60,9 +57,10 @@ public class SecurityConfig {
                 // Set X-Frame-Options to SAMEORIGIN
                 httpResponse.setHeader("X-Frame-Options", "SAMEORIGIN");
 
-                // Set Content-Security-Policy to allow framing only from same origin and localhost
-                httpResponse.setHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
-
+                // Set Content-Security-Policy to allow framing only from same origin and
+                // localhost
+                httpResponse.setHeader("Content-Security-Policy",
+                        "frame-ancestors 'self' http://localhost:8080 https://accounts.google.com");
 
             }
             // Continue with the filter chain
@@ -74,7 +72,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*")); // Consider tightening this for specific origins
+        config.setAllowedOrigins(List.of("https://www.googleapis.com/**","http://localhost:5173" ,"http://localhost:8080/favicon.ico", "http://localhost:8080/favicon.ico/**", "http://localhost:5173/users/**",
+                "http://localhost:5173/users/profile/update/**", "http://localhost:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
@@ -84,6 +83,5 @@ public class SecurityConfig {
         return source;
 
     }
-
 
 }

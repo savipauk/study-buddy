@@ -1,15 +1,13 @@
 package com.study_buddy.study_buddy.service;
 
-import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
-import com.study_buddy.study_buddy.dto.ProfileResponse;
+import com.study_buddy.study_buddy.dto.Profile;
 import com.study_buddy.study_buddy.dto.ProfileUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,16 +93,18 @@ public class UserService {
 
 
 
-    public ProfileResponse buildProfileResponse(User user) {
-        ProfileResponse profileResponse = new ProfileResponse();
+    public Profile buildProfileResponse(User user) {
+        Profile profile = new Profile();
 
-        profileResponse.setEmail(user.getEmail());
-        profileResponse.setFirstName(user.getFirstName());
-        profileResponse.setLastName(user.getLastName());
-        profileResponse.setRole(user.getRole());
-        profileResponse.setDescription(user.getDescription());
+        profile.setEmail(user.getEmail());
+        profile.setFirstName(user.getFirstName());
+        profile.setLastName(user.getLastName());
+        profile.setRole(user.getRole());
+        profile.setDescription(user.getDescription());
+        profile.setUsername(user.getUsername());
+        profile.setPassword(user.getPassword());
 
-        return profileResponse;
+        return profile;
     }
 
     public void updateUserProfile(User user, ProfileUpdate profileUpdate) {
