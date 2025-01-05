@@ -157,7 +157,10 @@ public class User {
         if(new_user.getUsername() != null) {  old_user.setUsername(new_user.getUsername()); }
 
         // Setting up profile for oauth registration requires role to be given in new_user
-        if (new_user.getRole() != null){ old_user.setRole(new_user.getRole()); }
+        if (new_user.getRole() != null) { old_user.setRole(new_user.getRole()); }
+        if (new_user.getGender() !=null) { old_user.setGender(new_user.getGender());}
+        if (new_user.getCity() != null) { old_user.setCity(new_user.getCity());}
+        if (new_user.getDateOfBirth() != null) { old_user.setDateOfBirth(new_user.getDateOfBirth());}
 
         // updated_at is current date and time
         old_user.setUpdatedAt(LocalDateTime.now());

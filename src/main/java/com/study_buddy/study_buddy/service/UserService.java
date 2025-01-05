@@ -103,6 +103,9 @@ public class UserService {
         profile.setDescription(user.getDescription());
         profile.setUsername(user.getUsername());
         profile.setPassword(user.getPassword());
+        profile.setGender(user.getGender());
+        profile.setCity(user.getCity());
+        profile.setDateOfBirth(user.getDateOfBirth());
 
         return profile;
     }

@@ -1,7 +1,9 @@
 package com.study_buddy.study_buddy.dto;
 
+import com.study_buddy.study_buddy.model.Gender;
 import com.study_buddy.study_buddy.model.StudyRole;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 public class Profile {
@@ -15,28 +17,28 @@ public class Profile {
     private String description;
     // private String accessToken;
     private String profilePicture;
-    // private String city;
+    private LocalDate dateOfBirth;
+    private String city;
+    private Gender gender;
 
     public Map<String,String> profileResponse (String message){
         Map<String, String> response;
         if(password==null){ password = "DummyPass"; };
-        response = Map.of(
-                "firstName", this.getFirstName(),
-                "lastName", this.getLastName(),
-                "email", this.getEmail(),
-                "studyRole", this.getRole().toString(),
-                "username", this.getUsername(),
-                "description", this.getDescription(),
-                "password", this.getPassword(),
-                "message", message
+        response = Map.ofEntries(
+                Map.entry("firstName", this.getFirstName()),
+                Map.entry("lastName", this.getLastName()),
+                Map.entry("email", this.getEmail()),
+                Map.entry("studyRole", this.getRole().toString()),
+                Map.entry("username", this.getUsername()),
+                Map.entry("description", this.getDescription()),
+                Map.entry("password", this.getPassword()),
+                Map.entry("gender", this.getGender().toString()),
+                Map.entry("city", this.getCity()),
+                Map.entry("dateOfBirth", this.getDateOfBirth().toString()),
+                Map.entry("message", message)
         );
-
         return response;
     };
-
-    // public String getAccessToken() { return accessToken; }
-    //
-    // public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
 
     public StudyRole getRole() {
         return role;
@@ -53,14 +55,6 @@ public class Profile {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    //public Long getUserId() {
-    //	return userId;
-    //}
-    //
-    //public void setUserId(Long userId) {
-    //	this.userId = userId;
-    //}
 
     public String getFirstName() {
         return firstName;
@@ -86,17 +80,22 @@ public class Profile {
         this.description = description;
     }
 
-//    public String getCity() {
-//        return city;
-//    }
-//
-//    public void setCity(String city) {
-//        this.city = city;
-//    }
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+
+    public String getCity() { return city; }
+
+    public void setCity(String city) { this.city = city; }
+
+    public Gender getGender() { return gender; }
+
+    public void setGender(Gender gender) { this.gender = gender; }
 
     public String getUsername() { return username; }
 
     public void setUsername(String Username) { this.username = Username; }
+
     public String getProfilePicture() {
         return profilePicture;
     }

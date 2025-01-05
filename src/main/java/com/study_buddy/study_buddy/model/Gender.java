@@ -2,8 +2,8 @@ package com.study_buddy.study_buddy.model;
 
 public enum Gender {
 	NOTDEFINED("NOTDEFINED"),
-	MALE("M"),
-	FEMALE("F");
+	M("M"), //MALE
+	F("F"); //FEMALE
 
 	private final String value;
 

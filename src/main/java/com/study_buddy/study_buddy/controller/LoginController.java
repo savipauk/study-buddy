@@ -87,8 +87,8 @@ public class LoginController {
         String email = data.getEmail();
         String firstName = data.getFirstName();
         String lastName = data.getLastName();
-        String hashedPassword = data.getHashedPassword();
-        StudyRole studyRole = data.getStudyRole();
+        String hashedPassword = data.getPassword();
+        StudyRole studyRole = data.getRole();
         String username = data.getUsername();
 
         JwtService jwtService = new JwtService();
@@ -111,6 +111,9 @@ public class LoginController {
 
         // Save this user to the database
         User user = new User(username, token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
+        user.setGender(data.getGender());
+        user.setDateOfBirth(data.getDateOfBirth());
+        user.setCity(data.getCity());
         userService.createUser(user);
 
         // Create Authentication object
