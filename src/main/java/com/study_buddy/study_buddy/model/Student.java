@@ -1,115 +1,48 @@
 package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Students")
-public class Student {
+public class Student{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
-    private Long id;
+    private Long studentId;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true) // References the user_id column in the Users table
     private User user;
 
-    @Column(name = "username", nullable = false, length = 100)
-    private String username;
+    /*@OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Long user_id;*/
 
-    @Column(name = "profile_picture", length = 255)
-    private String profilePicture;
 
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
-    private Student.Gender gender;
-
-    @Column(name = "city", length = 100)
-    private String city;
-
-    @Column(name = "description", length = 255)
-    private String description;
-
-     public enum Gender {
-        M, F, OTHER
-     }
+   /* @ManyToMany(mappedBy = "participants")
+    private Set<StudyGroup> studyGroups = new HashSet<>();*/
 
     public Student() {}
 
-    public Student(Long id, User user, String username, String profilePicture, LocalDate dateOfBirth, 
-            Gender gender, String city, String description) {
-        this.id = id;
-        this.user = user;
-        this.username = username;
-        this.profilePicture = profilePicture;
-        this.dateOfBirth = dateOfBirth;
-        this.gender = gender;
-        this.city = city;
-        this.description = description;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
+    public Student(Long student_id, User user) {
+        this.studentId = student_id;
         this.user = user;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public User getUser() { return user; }
 
-    public String getProfilePicture() {
-        return profilePicture;
-    }
+    public void setUser(User user) { this.user = user; }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
+    public Long getStudent_id() { return studentId; }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
+    public void setStudent_id(Long student_id) { this.studentId = student_id; }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Gender getGender() { return gender; }
-
-    public void setGender(Gender gender) { this.gender = gender; }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

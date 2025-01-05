@@ -19,6 +19,7 @@ public class Profile {
 
     public Map<String,String> profileResponse (String message){
         Map<String, String> response;
+        if(password==null){ password = "DummyPass"; };
         response = Map.of(
                 "firstName", this.getFirstName(),
                 "lastName", this.getLastName(),

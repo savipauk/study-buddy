@@ -33,9 +33,9 @@ CREATE TABLE Users (
 CREATE TABLE Students (
     student_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL, -- foreign key prema Users
-    date_of_birth DATE,
-    gender ENUM('M', 'F', 'Other'),
-    city VARCHAR(100),
+    --date_of_birth DATE,
+    --gender ENUM('M', 'F', 'Other'),
+    --city VARCHAR(100),
     PRIMARY KEY (student_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
@@ -55,7 +55,7 @@ CREATE TABLE Professors (
 
 CREATE TABLE StudyGroups (
     group_id INT NOT NULL AUTO_INCREMENT,
-    creator_id INT NOT NULL, -- foreign key prema Students
+    creator_id INT NOT NULL, -- foreign key prema Users
     group_name VARCHAR(255) NOT NULL,
     location VARCHAR(255),
     date DATE NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE StudyGroups (
     description TEXT,
     expiration_date DATE NOT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (

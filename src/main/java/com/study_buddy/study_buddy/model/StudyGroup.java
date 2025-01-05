@@ -1,7 +1,14 @@
 package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Table(name = "StudyGroups")
@@ -9,12 +16,13 @@ public class StudyGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_id")
-    private Long id;
+    @Column(name = "study_group_id")
+    private Long studyGroupId;
 
+    // TODO: CHANGE USER TO STUDENT
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
-    private Student creator;
+    private User creator;
 
     @Column(name = "group_name", nullable = false, length = 255)
     private String groupName;
@@ -22,8 +30,17 @@ public class StudyGroup {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "x-coordinate")
+    private String xCoordinate;
+
+    @Column(name = "y-coordinate")
+    private String yCoordinate;
+
     @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "time")
+    private LocalTime time;
 
     @Column(name = "max_members", nullable = false)
     private int maxMembers;
@@ -34,82 +51,98 @@ public class StudyGroup {
     @Column(name = "expiration_date", nullable = false)
     private LocalDate expirationDate;
 
+    @ManyToMany
+    @JoinTable(
+            name = "StudyGroupParticipants",
+            joinColumns = @JoinColumn(name = "study_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> creators = new HashSet<>();
+
     public StudyGroup() {
     }
 
-    public StudyGroup(Long id, Student creator, String groupName, String location, LocalDate date, int maxMembers,
+    /*public void addParticipant(User student) {
+        if (participants.size() < maxMembers) {
+            participants.add(student);
+            student.getStudyGroups().add(this);
+        } else {
+            throw new IllegalStateException("Study group is full!");
+        }
+    }
+
+    public void removeParticipant(Student student) {
+        participants.remove(student);
+        student.getStudyGroups().remove(this);
+    }*/
+
+    public Map<String,String> studyGroupResponse(String message){
+        Map<String,String> response = Map.of(
+                //"creator", this.creator.get,
+                "groupName", this.getGroupName(),
+                "xCoortinate", this.getxCoordinate(),
+                "yCoordinate", this.getyCoordinate(),
+                "date", this.getDate().toString(),
+                "maxMembers", String.valueOf(this.getMaxMembers()),
+                "description", this.getDescription(),
+                "message", message
+        );
+        return response;
+    }
+
+
+    public StudyGroup(Long id, User creator, String groupName, String location, LocalDate date, int maxMembers,
             String description, LocalDate expirationDate) {
-        this.id = id;
+        this.studyGroupId = id;
         this.creator = creator;
         this.groupName = groupName;
-        this.location = location;
         this.date = date;
         this.maxMembers = maxMembers;
         this.description = description;
         this.expirationDate = expirationDate;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return studyGroupId; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.studyGroupId = id; }
 
-    public Student getCreator() {
-        return creator;
-    }
+    public User getCreator() { return creator; }
 
-    public void setCreator(Student creator) {
-        this.creator = creator;
-    }
+    public void setCreator(User creator) { this.creator = creator; }
 
-    public String getGroupName() {
-        return groupName;
-    }
+    public String getGroupName() { return groupName; }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
+    public void setGroupName(String groupName) { this.groupName = groupName; }
 
-    public String getLocation() {
-        return location;
-    }
+    public LocalDate getDate() { return date; }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public void setDate(LocalDate date) { this.date = date; }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public int getMaxMembers() { return maxMembers; }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+    public void setMaxMembers(int maxMembers) { this.maxMembers = maxMembers; }
 
-    public int getMaxMembers() {
-        return maxMembers;
-    }
+    public String getDescription() { return description; }
 
-    public void setMaxMembers(int maxMembers) {
-        this.maxMembers = maxMembers;
-    }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getxCoordinate() { return xCoordinate; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setxCoordinate(String xCoordinate) { this.xCoordinate = xCoordinate; }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
+    public String getyCoordinate() { return yCoordinate; }
 
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
-    }
+    public void setyCoordinate(String yCoordinate) { this.yCoordinate = yCoordinate; }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public LocalTime getTime() { return time; }
+
+    public void setTime(LocalTime time) { this.time = time; }
+
+    public LocalDate getExpirationDate() { return expirationDate; }
+
+    public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
 }

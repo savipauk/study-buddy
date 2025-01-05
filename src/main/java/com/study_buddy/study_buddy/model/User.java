@@ -1,7 +1,10 @@
 package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -56,6 +59,23 @@ public class User {
     @Column(name = "profile_picture", length = 255)
     private String profilePicture;
 
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+
+    @Column(name = "city", length = 100)
+    private String city;
+
+    // TODO: Create table Student
+    /*@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Student student;*/
+
+    // User is creator of studyGroup
+    @ManyToMany(mappedBy = "creators")
+    private List<StudyGroup> studyGroups;
 
 
     public User () {}
@@ -82,7 +102,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.description = description;
+        this.description = "";
         this.role = role;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -205,6 +225,18 @@ public class User {
 
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+
+    public Gender getGender() { return gender; }
+
+    public void setGender(Gender gender) { this.gender = gender; }
+
+    public String getCity() { return city; }
+
+    public void setCity(String city) { this.city = city; }
+
     @Override
     public String toString() {
         return "User{" +
@@ -223,6 +255,9 @@ public class User {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", profilePicture='" + profilePicture + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                ", city='" + city + '\'' +
                 '}';
     }
 }
