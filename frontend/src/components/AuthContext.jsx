@@ -21,8 +21,7 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = (credential, email) => {
     localStorage.setItem('is_logged_in_with_google', 'true');
     localStorage.setItem('access_token', credential);
-    localStorage.setItem('user_email', email);
-    signIn();
+    signIn(email);
   };
 
   const signIn = (info) => {
