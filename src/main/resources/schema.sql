@@ -153,3 +153,9 @@ VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrK
 -- professor2 password: 'password012'
 -- admin1 password: 'password345'
 -- admin2 password: 'password678'
+
+
+-- Student entires
+INSERT INTO Students(user_id)
+VALUES ('1'),
+       ('2');

@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,9 +56,10 @@ public class StudyGroup {
     @JoinTable(
             name = "StudyGroupParticipants",
             joinColumns = @JoinColumn(name = "study_group_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "student_id")
     )
-    private Set<User> creators = new HashSet<>();
+    private List<Student> creators;
+    //private Set<Student> creators = new HashSet<>();
 
     public StudyGroup() {
     }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.JwtService;
+import com.study_buddy.study_buddy.service.StudentService;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,9 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StudentService studentService;
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(@RequestBody Map<String, String> requestBody) {
@@ -125,6 +129,11 @@ public class LoginController {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
+
+        // INSERT INTO TABLE STUDENT
+        if (data.getRole().name().equals("STUDENT")) {
+            studentService.createStudent(user);
+        }
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

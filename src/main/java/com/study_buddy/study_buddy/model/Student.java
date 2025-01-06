@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,9 +18,15 @@ public class Student{
     @Column(name = "student_id")
     private Long studentId;
 
+    // CONNECTING TABLES USER-STUDENT
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true) // References the user_id column in the Users table
     private User user;
+
+    // CONNECTING TABLES STUDENT-STUDYGROUP
+    // Student is creator of studyGroup
+    @ManyToMany(mappedBy = "creators")
+    private List<StudyGroup> studyGroups;
 
     /*@OneToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,6 +37,7 @@ public class Student{
     private Set<StudyGroup> studyGroups = new HashSet<>();*/
 
     public Student() {}
+
 
     public Student(Long student_id, User user) {
         this.studentId = student_id;

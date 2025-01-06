@@ -1,6 +1,9 @@
 package com.study_buddy.study_buddy.model;
 
+import com.study_buddy.study_buddy.service.StudentService;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.NullLiteral;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,13 +72,10 @@ public class User {
     @Column(name = "city", length = 100)
     private String city;
 
-    // TODO: Create table Student
-    /*@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Student student;*/
+    // CONNECTING TABLES USER-STUDENT
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Student student;
 
-    // User is creator of studyGroup
-    @ManyToMany(mappedBy = "creators")
-    private List<StudyGroup> studyGroups;
 
 
     public User () {}
@@ -139,7 +139,7 @@ public class User {
         return response;
     }
 
-    // Joining new changed data from new_user with old unchanged data from old_user
+    /*// Joining new changed data from new_user with old unchanged data from old_user
     public User setChanges(User old_user, User new_user){
         // USER_ID, Oauth_provider, oauth_id, created_at and tokens are determined by old_user
 
@@ -157,7 +157,12 @@ public class User {
         if(new_user.getUsername() != null) {  old_user.setUsername(new_user.getUsername()); }
 
         // Setting up profile for oauth registration requires role to be given in new_user
-        if (new_user.getRole() != null) { old_user.setRole(new_user.getRole()); }
+        if (new_user.getRole() != null) {
+            old_user.setRole(new_user.getRole());
+            if (new_user.getRole().name().equals("STUDENT")) {
+                studentService.createStudent(new_user);
+            }
+        }
         if (new_user.getGender() !=null) { old_user.setGender(new_user.getGender());}
         if (new_user.getCity() != null) { old_user.setCity(new_user.getCity());}
         if (new_user.getDateOfBirth() != null) { old_user.setDateOfBirth(new_user.getDateOfBirth());}
@@ -166,7 +171,7 @@ public class User {
         old_user.setUpdatedAt(LocalDateTime.now());
 
         return old_user;
-    }
+    }*/
 
     public Long getUserId() { return id; }
 
