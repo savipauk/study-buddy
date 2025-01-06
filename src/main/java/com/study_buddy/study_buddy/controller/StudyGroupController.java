@@ -1,8 +1,11 @@
 package com.study_buddy.study_buddy.controller;
 
 import com.study_buddy.study_buddy.dto.StudyGroupDto;
+import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.StudyGroup;
 import com.study_buddy.study_buddy.model.User;
+import com.study_buddy.study_buddy.service.GroupMemberService;
+import com.study_buddy.study_buddy.service.StudentService;
 import com.study_buddy.study_buddy.service.StudyGroupService;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +20,17 @@ import java.util.Optional;
 @RequestMapping("/studyGroup")
 public class StudyGroupController {
 
-    private final UserService userService;
+    private final StudentService studentService;
     private final StudyGroupService studyGroupService;
+    private final GroupMemberService groupMemberService;
+    private final UserService userService;
 
     @Autowired
-    public StudyGroupController(UserService userService, StudyGroupService studyGroupService) {
-        this.userService = userService;
+    public StudyGroupController(StudentService studentService, StudyGroupService studyGroupService, GroupMemberService groupMemberService, UserService userService) {
+        this.studentService = studentService;
         this.studyGroupService = studyGroupService;
+        this.groupMemberService = groupMemberService;
+        this.userService = userService;
     }
 
 
@@ -45,9 +52,10 @@ public class StudyGroupController {
     public ResponseEntity<StudyGroup> createStudyGroup(@RequestBody StudyGroupDto dto) {
         // Creating new studyGroup
         User creator = userService.getUserByEmail(dto.getCreatorEmail());
+        Student creatorStudent = studentService.getStudentByUserId(creator.getUserId());
 
         StudyGroup studyGroup = new StudyGroup();
-        studyGroup.setCreator(creator);
+        studyGroup.setCreator(creatorStudent);
         studyGroup.setGroupName(dto.getGroupName());
         studyGroup.setLocation(dto.getLocation());
         studyGroup.setxCoordinate(dto.getxCoordinate());
@@ -61,11 +69,23 @@ public class StudyGroupController {
         studyGroupService.createStudyGroup(studyGroup);
 
         // Inserting studyGroup creator into GroupMember table
-
+        groupMemberService.addStudentToGroup(creatorStudent, studyGroup);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(studyGroup);
     }
 
+    // Add a student to a study group
+    @PostMapping("/{groupId}/add-student/{studentId}")
+    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("studentId") Long studentId) {
+        Student student = studentService.getStudentById(studentId);
+        StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
+
+        groupMemberService.addStudentToGroup(student, studyGroup);
+
+        return ResponseEntity.ok("Student added to the group successfully.");
+    }
+
+    // TODO - edit this functions
     /*// Update a study group
     @PutMapping("/{id}")
     public ResponseEntity<StudyGroup> updateStudyGroup(@PathVariable Long id, @RequestBody StudyGroup updatedStudyGroup) {
@@ -80,17 +100,6 @@ public class StudyGroupController {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
-        }
-    }
-
-    // Add a student to a study group
-    @PostMapping("/{groupId}/add-student/{studentId}")
-    public ResponseEntity<Void> addStudentToGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
-        try {
-            studyGroupService.addStudentToGroup(groupId, studentId);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

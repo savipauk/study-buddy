@@ -3,7 +3,6 @@ package com.study_buddy.study_buddy.service;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import com.study_buddy.study_buddy.dto.Profile;
-import com.study_buddy.study_buddy.dto.ProfileUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

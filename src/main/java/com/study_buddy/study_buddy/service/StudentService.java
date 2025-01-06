@@ -3,7 +3,6 @@ package com.study_buddy.study_buddy.service;
 import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.StudentRepository;
-import com.study_buddy.study_buddy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +21,8 @@ public class StudentService {
         studentRepository.save(student);
         return student;
     }
+
+    public Student getStudentById(Long id) { return studentRepository.findByStudentId(id); }
+
+    public Student getStudentByUserId(Long id) { return studentRepository.findByUserId(id); }
 }

@@ -49,8 +49,8 @@ public class Student{
 
     public void setUser(User user) { this.user = user; }
 
-    public Long getStudent_id() { return studentId; }
+    public Long getStudentId() { return studentId; }
 
-    public void setStudent_id(Long student_id) { this.studentId = student_id; }
+    public void setStudentId(Long student_id) { this.studentId = student_id; }
 
 }
