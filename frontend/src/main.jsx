@@ -10,6 +10,7 @@ import Login from './routes/Login';
 import HomePage from './routes/Home';
 import Profile from './routes/Profile';
 import { AuthProvider } from './components/AuthContext';
+import ProfileInfo from './routes/ProfileInfo';
 
 const router = createBrowserRouter([
   {
@@ -33,14 +34,19 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: 'users/profile',
+    path: 'users/profile/edit',
     element: <Profile />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: 'users/profile',
+    element: <ProfileInfo />,
     errorElement: <ErrorPage />
   }
 ]);
 
 createRoot(document.getElementById('root')).render(
-  <GoogleOAuthProvider clientId='4143611273-h8v79jdefdqr65l0n23efpg84r5vospr.apps.googleusercontent.com'>
+  <GoogleOAuthProvider clientId="4143611273-h8v79jdefdqr65l0n23efpg84r5vospr.apps.googleusercontent.com">
     <AuthProvider>
       <StrictMode>
         <RouterProvider router={router} />

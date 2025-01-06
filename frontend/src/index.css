@@ -23,11 +23,15 @@ a:hover {
 }
 
 body {
-  margin: 0;
+  /* background: linear-gradient(#d6d0b9d2, #FFFFFF);  */
+  background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  flex-wrap: wrap;
   min-height: 100vh;
+  height: 100%;
+  min-width: 100vw;
+  padding-top: 2em;
+  margin: 0;
 }
 
 h1 {

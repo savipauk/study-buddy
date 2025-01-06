@@ -2,7 +2,7 @@
 
 # Opis projekta
 
-Ovaj projekt je rezultat timskog rada u sklopu projektnog zadatka kolegija Programsko inženjerstvo na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
+Ovaj projekt rezultat je timskog rada razvijenog u sklopu projektnog zadatka kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu.
 
 Širenje ovisnosti o digitalnim uređajima dovodi do problema s koncentracijom i smanjene sposobnosti dubokog razmišljanja. To je samo jedan od uzroka otežane organizacije vremena i zadataka, no s njime se susreće velik broj učenika i studenata. Što se tiče akademskih zahtjeva, određena gradiva i predmeti učenicima mogu djelovati odbojno i pretjerano složeno, zbog čega se gubi interes za redovitim radom i svladavanjem gradiva. Također, ne pružaju sve obrazovne ustanove adekvatan način podučavanja, niti podršku svojih nastavnika, što učenicima otežava rješavanje problema na vrijeme i s razumijevanjem.  
 Prethodno navedeni problemi pridonose povećanju stresa i anksioznosti zbog akademskih izazova, pritisaka u vezi ispita te društvenih očekivanja i neizvjesnosti u budućnosti. Zbog takvih je problema i nedostataka osmišljena platforma StudyBuddy.

@@ -4,17 +4,15 @@
   gap: 15px;
 }
 
-body {
-  /* background: linear-gradient(#c31431cb, #240b36e1); */
-  background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
-}
-
 .formWrapper {
   display: flex;
   width: 100vw;
+  height: 100%;
   justify-content: center;
   flex-wrap: wrap;
   align-content: center;
+  align-self: center;
+  align-items: center;
   justify-self: left;
 }
 
@@ -75,12 +73,12 @@ body {
   margin-bottom: 0.5em;
 }
 
-.nameWrapper{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: nowrap;
-	gap: 0.2em;
+.nameWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 0.2em;
 }
 
 .nameInfoInput {
@@ -89,7 +87,46 @@ body {
   padding: 1em;
   border-radius: 16px;
   margin-top: 1em;
-	gap: 0.2em;
+  gap: 0.2em;
+}
+
+.dateOfBirth {
+  width: 100%;
+  margin-top: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dobTitle {
+  display: block;
+  margin-bottom: 0.5em;
+  font-size: 1.3em;
+  color: #333;
+}
+
+.dobSelector {
+  display: flex;
+  gap: 0.5em;
+}
+
+.dobSelect {
+  padding: 0.5em;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+.dropdown {
+  display: flex;
+  overflow-y: hidden;
+  height: 2em;
+  max-height: 3em;
+}
+
+.dobSelect:focus {
+  size: 5;
 }
 
 .passwordDiv {
@@ -107,36 +144,69 @@ body {
   padding: 1em;
 }
 
-.roleSelection{
-	width: 80%;
-	display: flex;
-	margin-top: 2em;
-	border-radius: 12px;
-	align-items: center;
-	overflow: hidden;
+.roleSelection {
+  width: 80%;
+  display: flex;
+  margin-top: 2em;
+  border-radius: 12px;
+  align-items: center;
+  overflow: hidden;
 }
 
-.roleRadioButton{
-	display: none;
+.roleRadioButton {
+  display: none;
 }
 
-.toggleOption{
-	text-align: center;
-	flex: 1;
-	padding: 0.5em;
-	font-size: 1.2em;
-	color: white;
-	cursor: pointer;
-	background-color: #355b7d96;
-	transition: background 0.2s;
+.toggleOption {
+  text-align: center;
+  flex: 1;
+  padding: 0.5em;
+  font-size: 1.2em;
+  color: white;
+  cursor: pointer;
+  background-color: #355b7d96;
+  transition: background 0.2s;
 }
 
-.toggleOption:not(:last-of-type){
-	border-right: 1px solid #00000096;
+.toggleOption:not(:last-of-type) {
+  border-right: 1px solid #00000096;
 }
 
-.roleRadioButton:checked + .toggleOption{
-	background-color: #254766a9;
+.roleRadioButton:checked + .toggleOption {
+  background-color: #254766a9;
+}
+
+.genderSelection {
+  width: 50%;
+  display: flex;
+  justify-content: end;
+  margin-top: 2em;
+  border-radius: 25px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.genderRadioButton {
+  display: none;
+}
+
+.toggleOption {
+  text-align: center;
+  flex: 1;
+  padding: 0.3em;
+  font-size: 1.2em;
+  color: white;
+  cursor: pointer;
+  background-color: #355b7d96;
+  transition: background 0.2s;
+}
+
+.toggleOption:not(:last-of-type) {
+  border-right: 1px solid #00000096;
+}
+
+.genderRadioButton:checked + .toggleOption {
+  background-color: #254766a9;
 }
 
 .buttonDiv {

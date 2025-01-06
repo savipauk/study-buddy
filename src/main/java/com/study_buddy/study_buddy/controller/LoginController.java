@@ -91,27 +91,23 @@ public class LoginController {
         StudyRole studyRole = data.getStudyRole();
         String username = data.getUsername();
 
-
         JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(data.getEmail(), data.getUsername());
 
-
         // Check is this username already exists
         if (userService.userExistsByUsername(username)) {
-            Map<String, String> response = Map.of("email", email, "username", username, "message", "User with this username already exists!", "registration", "USERNAME_EXISTS");
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                    .body(response).getBody();
+                    .body(data.responseRegister("USERNAME_EXISTS")).getBody();
         }
 
         // Check if this email already exists
         if (userService.userExistsByEmail(email)) {
-            Map<String, String> response = Map.of("email", email, "username", username, "message", "User with this email already exists!", "registration", "EMAIL_EXISTS");
+            //Map<String, String> response = Map.of("email", email, "username", username, "message", "User with this email already exists!", "registration", "EMAIL_EXISTS");
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                    .body(response).getBody();
+                    .body(data.responseRegister("EMAIL_EXISTS")).getBody();
         }
-
 
         // Save this user to the database
         User user = new User(username, token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
@@ -127,20 +123,9 @@ public class LoginController {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
-        Map<String, String> returnData = Map.of(
-                "firstName", firstName,
-                "lastName", lastName,
-                "email", email,
-                "studyRole", studyRole.toString(),
-                "token", token,
-                "username", username,
-                "message", "Registration successful",
-                "registration", "REGISTRATION_OK"
-        );
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(returnData).getBody();
+                .body(data.responseRegister("REGISTRATION_OK")).getBody();
     }
 
     @PostMapping(value = "/login", produces = "application/json")
@@ -151,7 +136,7 @@ public class LoginController {
         Map<String, String> response;
 
         if (!userService.userExistsByUsername(username)) {
-            response = Map.of("email", username, "passwordCheck", "DOESNT_EXIST", "message", "User doesn't exist");
+            response = Map.of("username", username,"passwordCheck", "DOESNT_EXIST", "message", "User doesn't exist");
             return ResponseEntity.ok()
                     .body(response).getBody();
         }
@@ -160,10 +145,10 @@ public class LoginController {
         // Username is unique
         User user = userService.getUserByUsername(username);
         if (!userService.verifyPassword(user, rawPassword)) {
-            response = Map.of("email", username, "passwordCheck", "NOT_OK", "message", "Wrong password");
+            response = Map.of("username", username,"email", user.getEmail(),"passwordCheck", "NOT_OK", "message", "Wrong password");
 
         } else {
-            response = Map.of("email", username, "passwordCheck", "OK", "message", "Successful login");
+            response = Map.of("username", username, "email",user.getEmail(),"passwordCheck", "OK", "message", "Successful login");
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
