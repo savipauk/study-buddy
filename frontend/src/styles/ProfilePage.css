@@ -1,3 +1,7 @@
+.profileWrapper{
+  border: 1px solid black;
+}
+
 .image {
   width: 50%;
   border-radius: 500px;
@@ -10,6 +14,7 @@
   flex-wrap: wrap;
   justify-content: center;
   padding-top: 5em;
+  border: 1px solid black
 }
 
 .profilePictureWrapper {
@@ -53,7 +58,7 @@
 
 .personalInfo {
   font-size: 2em;
-  color: aliceblue;
+  color: black;
   text-align: center;
 }
 
@@ -71,14 +76,14 @@
   margin-left: 1em;
   padding: 0;
   margin-bottom: 0;
-  color: aliceblue;
+  color: black;
 }
 
 .input {
   margin-left: 1em;
   border-radius: 5px;
   font-size: 1em;
-  border: 0px;
+  border: 1px solid black;
   padding: 0.5em;
   cursor: pointer;
 }
@@ -88,7 +93,7 @@
   padding: 0;
   margin-bottom: 0;
   text-align: center;
-  color: aliceblue;
+  color: black;
 }
 
 .aboutInput {
@@ -96,7 +101,7 @@
   width: 100%;
   border-radius: 5px;
   font-size: 1em;
-  border: 0px;
+  border: 1px solid black;
   height: 10em;
   padding: 0.5em;
   overflow-wrap: break-word;
@@ -113,17 +118,22 @@
   margin-top: 1.5em;
   padding: 0.5em;
   margin-left: 1em;
+  background-color: black;
+  color: white;
 }
 
 .editWrapper {
-  width: 100%;
+  width: 95%;
   display: flex;
   justify-content: center;
   margin-top: 1em;
+  padding-bottom: 10px;
 }
 
 .editButton {
   font-size: 1em;
+  background-color: black;
+  color: white;
 }
 
 .allInfoWrapper {
@@ -132,10 +142,8 @@
   padding-bottom: 5em;
   display: flex;
   flex-wrap: nowrap;
-  background: rgba(53, 92, 125, 0.3);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 2px white solid;
+  background: white;
+  border: 1px black solid;
   border-radius: 8px;
 }
 
@@ -152,11 +160,10 @@
 }
 
 .modalContent {
-  background: linear-gradient(#355c7d, #6c5b7b, #c06c84);
   padding: 2em;
   border-radius: 5px;
-  border: 2px white solid;
-  width: 20%;
+  border: 1px solid black;
+  width: 25%;
   text-align: center;
 }
 
@@ -164,14 +171,15 @@
   margin-left: 1em;
   border-radius: 5px;
   font-size: 1em;
-  border: 0px;
+  border: 1px solid black;
   padding: 0.5em;
 }
 
 .EditWindowButton {
   margin: 2em;
   width: 30%;
-  background-color: #355c7d;
+  background-color: black;
+  color: white;
 }
 
 .editProfileText {
@@ -181,6 +189,7 @@
 .profileInfoWrapper {
   display: flex;
   align-items: center;
+  border: 0px;
   justify-content: center;
   gap: 10%;
   border-radius: 10px;
@@ -188,7 +197,6 @@
   padding-right: 10vw;
   margin: 20px auto;
   width: 80vw;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .profilePictureInfo {
@@ -200,7 +208,7 @@
   width: 10em;
   height: 10em;
   border-radius: 50%;
-  border: 2px solid #007bff;
+  border: 1px solid black;
   object-fit: cover;
 }
 
@@ -212,7 +220,7 @@
 }
 
 .editProfileButton {
-  background-color: transparent;
+  background-color: white;
   color: black;
   border: none;
   border-radius: 5px;

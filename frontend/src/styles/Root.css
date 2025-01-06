@@ -1,8 +1,14 @@
+*{
+  background-color: white;
+}
+
+
 .welcomeWrapper {
   display: flex;
   width: 100vw;
   justify-content: center;
   flex-wrap: wrap;
+
 }
 
 .title {
@@ -10,7 +16,7 @@
   font-size: 40px;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: black;
   margin-bottom: 0;
   padding-bottom: 0;
 }
@@ -26,11 +32,12 @@
   font-weight: bold;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   margin-bottom: 0.4em;
-  color: white;
+  color: black;
 }
 
 .signUpButton {
-  background: linear-gradient(360deg, #8e9eab, #eef2f3);
+  background: black;
+  color: white;
   padding: 1em;
   padding-left: 2em;
   padding-right: 2em;
