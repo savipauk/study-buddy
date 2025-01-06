@@ -48,10 +48,10 @@ function RegisterForm() {
     const updatedMonth = type === 'month' ? value : month;
     const updatedYear = type === 'year' ? value : year;
     if (updatedDay && updatedMonth && updatedYear) {
-      const dob = `${updatedYear}/${updatedMonth.padStart(
+      const dob = `${updatedYear}-${updatedMonth.padStart(
         2,
         '0'
-      )}/${updatedDay.padStart(2, '0')}`;
+      )}-${updatedDay.padStart(2, '0')}`;
       setRegisterForm((prevForm) => ({
         ...prevForm,
         dob: dob
@@ -64,11 +64,11 @@ function RegisterForm() {
       lastName: registerForm.lastName,
       username: registerForm.username,
       email: registerForm.email,
-      hashedPassword: hash,
-      studyRole: registerForm.role.toUpperCase(),
+      password: hash,
+      role: registerForm.role.toUpperCase(),
       gender: registerForm.gender,
-      location: registerForm.location,
-      dob: registerForm.dob
+      city: registerForm.location,
+      dateOfBirth: registerForm.dob
     };
     console.log(data);
     const endpoint = '/login/register';

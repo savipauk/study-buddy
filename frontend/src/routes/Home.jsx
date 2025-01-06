@@ -51,10 +51,10 @@ function ProfileSetup() {
     const updatedMonth = type === 'month' ? value : month;
     const updatedYear = type === 'year' ? value : year;
     if (updatedDay && updatedMonth && updatedYear) {
-      const dob = `${updatedYear}/${updatedMonth.padStart(
+      const dob = `${updatedYear}-${updatedMonth.padStart(
         2,
         '0'
-      )}/${updatedDay.padStart(2, '0')}`;
+      )}-${updatedDay.padStart(2, '0')}`;
       setSetupForm((prevForm) => ({
         ...prevForm,
         dob: dob
@@ -76,8 +76,8 @@ function ProfileSetup() {
       lastName: setupForm.lastName,
       role: setupForm.role.toUpperCase(),
       gender: setupForm.gender,
-      location: setupForm.location,
-      dob: setupForm.dob
+      city: setupForm.location,
+      dateOfBirth: setupForm.dob
     };
     console.log(data);
     const endpoint = `/users/profile/update/${userEmail}`;
