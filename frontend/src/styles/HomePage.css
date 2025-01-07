@@ -15,23 +15,23 @@
   text-align: left;
 }
 .blurred {
-	width: 100vw;
+  width: 100vw;
   filter: blur(5px);
   pointer-events: none;
-	overflow: hidden;
+  overflow: hidden;
 }
 body.no-scroll {
   overflow: hidden;
 }
-.newStudyGroup{
-	display: flex;
-	justify-content: right;
-	margin-left: 3em;
-	margin-right: 3em;
+.newStudyGroup {
+  display: flex;
+  justify-content: right;
+  margin-left: 3em;
+  margin-right: 3em;
 }
 
-.setupWrapper{
-	position: fixed;
+.setupWrapper {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -43,7 +43,7 @@ body.no-scroll {
   z-index: 1000;
 }
 
-.newStudyGroupButton{
-	background-color: black;
-	color: white;
+.newStudyGroupButton {
+  background-color: black;
+  color: white;
 }

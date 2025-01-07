@@ -1,4 +1,4 @@
-.profileWrapper{
+.profileWrapper {
   border: 1px solid black;
 }
 
@@ -14,7 +14,7 @@
   flex-wrap: wrap;
   justify-content: center;
   padding-top: 5em;
-  border: 1px solid black
+  border: 1px solid black;
 }
 
 .profilePictureWrapper {

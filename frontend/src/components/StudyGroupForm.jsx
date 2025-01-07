@@ -162,79 +162,79 @@ function CreateStudyGroupForm({ onClose }) {
   }
 
   return (
-    <div className='wholeWrapper'>
-      <div className='studygroupWrapper'>
-        <div className='createTitle'>
-          <label className='textLabel'>Kreiraj Study Group!</label>
+    <div className="wholeWrapper">
+      <div className="studygroupWrapper">
+        <div className="createTitle">
+          <label className="textLabel">Kreiraj Study Group!</label>
         </div>
-        <div className='smallInputsWrapper'>
-          <div className='inputWrapper'>
-            <div className='inputs'>
-              <label className='inputLabel'>Naziv</label>
+        <div className="smallInputsWrapper">
+          <div className="inputWrapper">
+            <div className="inputs">
+              <label className="inputLabel">Naziv</label>
             </div>
-            <div className='inputs'>
+            <div className="inputs">
               <input
-                type='text'
-                name='name'
+                type="text"
+                name="name"
                 value={groupInfoForm.name}
                 onChange={onChange}
               ></input>
             </div>
           </div>
-          <div className='inputWrapper'>
-            <div className='inputs'>
-              <label className='inputLabel'>Datum i vrijeme</label>
+          <div className="inputWrapper">
+            <div className="inputs">
+              <label className="inputLabel">Datum i vrijeme</label>
             </div>
-            <div className='inputs'>
+            <div className="inputs">
               <DatePicker
                 selected={selectedDate}
                 onChange={handleDateTimeSelect}
                 showTimeSelect
-                dateFormat='Pp'
+                dateFormat="Pp"
                 timeIntervals={15}
-                placeholderText='Odaberite datum i vrijeme'
+                placeholderText="Odaberite datum i vrijeme"
                 minDate={new Date()}
               />
             </div>
           </div>
-          <div className='inputWrapper'>
-            <div className='inputs'>
-              <label className='inputLabel'>Maksimalan broj clanova</label>
+          <div className="inputWrapper">
+            <div className="inputs">
+              <label className="inputLabel">Maksimalan broj clanova</label>
             </div>
-            <div className='inputsButtons'>
+            <div className="inputsButtons">
               <button
-                className='numButton'
+                className="numButton"
                 onClick={() => changeParticipants(0)}
               >
-                <i className='fa-solid fa-circle-minus'></i>
+                <i className="fa-solid fa-circle-minus"></i>
               </button>
-              <label className='numLabel'>{maxNum}</label>
+              <label className="numLabel">{maxNum}</label>
               <button
-                className='numButton'
+                className="numButton"
                 onClick={() => changeParticipants(1)}
               >
-                <i className='fa-solid fa-circle-plus'></i>
+                <i className="fa-solid fa-circle-plus"></i>
               </button>
             </div>
           </div>
         </div>
-        <div className='descriptionInput'>
-          <div className='decriptionText'>
-            <label className='inputLabel'>Opis</label>
+        <div className="descriptionInput">
+          <div className="decriptionText">
+            <label className="inputLabel">Opis</label>
           </div>
           <textarea
-            className='groupDescrition'
-            type='text'
-            name='description'
+            className="groupDescrition"
+            type="text"
+            name="description"
             value={groupInfoForm.description}
             onChange={onChange}
           ></textarea>
         </div>
-        <div className='inputWrapper'>
-          <div className='inputs'>
-            <label className='inputLabel'>Lokacija</label>
+        <div className="inputWrapper">
+          <div className="inputs">
+            <label className="inputLabel">Lokacija</label>
           </div>
-          <div className='mapsWrapper'>
+          <div className="mapsWrapper">
             <LoadScriptNext
               googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
               libraries={librariesHardcode}
@@ -244,9 +244,9 @@ function CreateStudyGroupForm({ onClose }) {
                 onPlacesChanged={handlePlaceSelect}
               >
                 <input
-                  className='searchBar'
-                  placeholder='Upišite lokaciju'
-                  type='text'
+                  className="searchBar"
+                  placeholder="Upišite lokaciju"
+                  type="text"
                 />
               </StandaloneSearchBox>
               <GoogleMap
@@ -264,10 +264,10 @@ function CreateStudyGroupForm({ onClose }) {
             </LoadScriptNext>
           </div>
         </div>
-        <div className='validationMessage'>
+        <div className="validationMessage">
           <label>{validationMessage}</label>
         </div>
-        <div className='createGroupButton'>
+        <div className="createGroupButton">
           <button onClick={onClose}>Prekini</button>
           <button onClick={onSubmit}>Podnesi</button>
         </div>

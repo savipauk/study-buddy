@@ -6,14 +6,13 @@
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
-	justify-content: space-between;
+  justify-content: space-between;
   padding: 1.5em;
   gap: 1.5em;
-	
 }
 
 .wholeWrapper {
-	position: fixed;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -31,17 +30,17 @@
   margin-bottom: 0.5em;
   color: #222;
   text-align: center;
-	width: 100%;
+  width: 100%;
 }
 
 .inputWrapper {
   width: 100%;
   display: flex;
-	flex-wrap: wrap;
-	align-content: center;
-	/* justify-content: center; */
+  flex-wrap: wrap;
+  align-content: center;
+  /* justify-content: center; */
   gap: 0.3em;
-	margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .inputs {
@@ -50,13 +49,12 @@
   width: 100%;
 }
 
-
 .inputs input {
   padding: 0.5em;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.95em;
-	border: 1px rgba(0, 0, 0, 0.705) solid;
+  border: 1px rgba(0, 0, 0, 0.705) solid;
 }
 
 .mapsWrapper {
@@ -65,8 +63,7 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   overflow: hidden;
-	border: 2px rgba(0, 0, 0, 0.705) solid;
-	background: transparent !important;  
+  border: 2px rgba(0, 0, 0, 0.705) solid;
 }
 
 .searchBar {
@@ -85,96 +82,95 @@
   box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
 }
 
-.smallInputsWrapper{
-	display: flex;
-	flex-wrap: wrap;
-	width: 45%;
-	align-content: baseline;
+.smallInputsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 45%;
+  align-content: baseline;
 }
 
-.descriptionInput{
-	width: 45%;
-	display: flex;
-	flex-wrap: wrap;
-	align-items:start;
-	align-content: start;
+.descriptionInput {
+  width: 45%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  align-content: start;
 }
 
-.groupDescrition{
-	box-sizing: border-box;
-	width: 100%;		
-	border-radius: 5px;
-	font-size: 1em;
-	border: 1px rgba(0, 0, 0, 0.705) solid;
-	height: 60%;
-	overflow-wrap: break-word;
-	word-wrap: break-word;
-	resize: none;
+.groupDescrition {
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 1px rgba(0, 0, 0, 0.705) solid;
+  height: 60%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  resize: none;
 }
 
-.decriptionText{
-	width: 100%;
-	padding-bottom: 0.3em;
-	text-align: center;
-	height: auto;
+.decriptionText {
+  width: 100%;
+  padding-bottom: 0.3em;
+  text-align: center;
+  height: auto;
 }
 
-.createGroupButton{
-	width: 100%;
-	display: flex;
-	justify-content: space-evenly;
+.createGroupButton {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .createGroupButton button {
-	background-color: rgb(0, 0, 0);
-	color: white;
+  background-color: rgb(0, 0, 0);
+  color: white;
 }
 
 .inputsButtons {
   display: flex;
   flex-direction: row;
-	justify-content: left;
+  justify-content: left;
   width: 100%;
-	height: auto;
-	font-size: 0.95em;
+  height: auto;
+  font-size: 0.95em;
 }
 
-.numButton{
-	width: 20%;
-	text-align: center;
-	padding: 0;
-	border: 0px;
+.numButton {
+  width: 20%;
+  text-align: center;
+  padding: 0;
+  border: 0px;
 }
 
 .numButton:hover {
   transform: scale(1.1);
-  outline: none; 
-	border: 0px ;
+  outline: none;
+  border: 0px;
 }
 
-.numLabel{
-	padding: 0.5em;
-	width: 20%;
-	text-align: center;
+.numLabel {
+  padding: 0.5em;
+  width: 20%;
+  text-align: center;
 
-	font-size: 0.95em;
+  font-size: 0.95em;
 }
 
-.allInputsWrapper{
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	align-content: center;
-	align-items: center;
-
+.allInputsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
 }
 
-.partialInfoWrapper{
-	width: 45%;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	align-content: center;
+.partialInfoWrapper {
+  width: 45%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
 }
 
 .typeWrapper {
@@ -192,7 +188,7 @@
 .toggleOptionType {
   text-align: center;
   flex: 1;
-	padding: 0.5em;
+  padding: 0.5em;
   font-size: 0.95em;
   color: rgb(255, 255, 255);
   cursor: pointer;
@@ -208,11 +204,11 @@
   background-color: #000000;
 }
 
-.validationMessage{
-	display: flex;
-	width: 100%;
-	justify-content: center;
+.validationMessage {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
-.validationMessage label{
-	color: red;
+.validationMessage label {
+  color: red;
 }

@@ -1,12 +1,8 @@
-
-
-
 .welcomeWrapper {
   display: flex;
   width: 100vw;
   justify-content: center;
   flex-wrap: wrap;
-
 }
 
 .title {
