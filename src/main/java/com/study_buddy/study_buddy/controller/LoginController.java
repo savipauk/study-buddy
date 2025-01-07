@@ -143,7 +143,7 @@ public class LoginController {
     @PostMapping(value = "/login", produces = "application/json")
     public Map<String, String> login(@RequestBody Login data) {
         String username = data.getUsername();
-        String rawPassword = data.getHashedPassword().toString();
+        String rawPassword = data.getPassword().toString();
 
         Map<String, String> response;
 

@@ -2,7 +2,7 @@ package com.study_buddy.study_buddy.dto;
 
 public class Login {
 	private String email;
-	private String hashedPassword;
+	private String password;
 	private String username;
 	public String getUsername() {
 		return username;
@@ -12,13 +12,9 @@ public class Login {
 		this.username = username;
 	}
 
-	public String getHashedPassword() {
-		return hashedPassword;
-	}
+	public String getPassword() { return password;}
 
-	public void setHashedPassword(String hash) {
-		this.hashedPassword = hash;
-	}
+	public void setPassword(String password) { this.password = password; }
 
 	public String getEmail() { return email; }
 
