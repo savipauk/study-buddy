@@ -2,19 +2,50 @@ import '../styles/HomePage.css';
 import '../styles/Login.css';
 import Header from '../components/Header';
 import useAuth from '../hooks/useAuth';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
+import CreateStudyGroupForm from '../components/StudyGroupForm';
 
 function HomePage() {
   const { isProfileSetupComplete } = useAuth();
+  const [createClicked, setCreateClicked] = useState(false);
+
+  const handleCreateGroup = () => {
+    setCreateClicked(true);
+  };
+  const handleCloseCreateGroup = () => {
+    setCreateClicked(false);
+  };
+  useEffect(() => {
+    if (createClicked || !isProfileSetupComplete) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }, [createClicked, isProfileSetupComplete]);
   return (
-    <div>
-      <div className={isProfileSetupComplete ? 'homePageWrapper' : 'blurred'}>
+    <>
+      <div
+        className={`${
+          createClicked || !isProfileSetupComplete
+            ? 'blurred'
+            : 'homePageWrapper'
+        }`}
+      >
         <Header></Header>
-        <h1 className="someText">HOMEPAGE</h1>
+        <div className='newStudyGroup'>
+          <button className='newStudyGroupButton' onClick={handleCreateGroup}>
+            Kreiraj StudyGroup
+          </button>
+        </div>
+
+        <h1 className='someText'>HOMEPAGE</h1>
       </div>
       {!isProfileSetupComplete && <ProfileSetup />}
-    </div>
+      {createClicked && (
+        <CreateStudyGroupForm onClose={handleCloseCreateGroup} />
+      )}
+    </>
   );
 }
 
@@ -138,57 +169,57 @@ function ProfileSetup() {
   }
 
   return (
-    <div className="formWrapper">
-      <form className="forms" onSubmit={onSubmit}>
-        <div className="formDiv">
-          <h1 className="helloText">Profile setup!</h1>
-          <div className="inputDiv">
-            <div className="nameWrapper">
+    <div className='setupWrapper'>
+      <form className='forms' onSubmit={onSubmit}>
+        <div className='formDiv'>
+          <h1 className='helloText'>Profile setup!</h1>
+          <div className='inputDiv'>
+            <div className='nameWrapper'>
               <input
-                className="nameInfoInput"
-                placeholder="First Name"
-                type="text"
-                name="firstName"
+                className='nameInfoInput'
+                placeholder='First Name'
+                type='text'
+                name='firstName'
                 value={setSetupForm.firstName}
                 onChange={onChange}
               ></input>
               <input
-                className="nameInfoInput"
-                placeholder="Last Name"
-                type="text"
-                name="lastName"
+                className='nameInfoInput'
+                placeholder='Last Name'
+                type='text'
+                name='lastName'
                 value={setSetupForm.lastName}
                 onChange={onChange}
               ></input>
             </div>
             <input
-              className="infoInput"
-              type="text"
-              placeholder="Username"
+              className='infoInput'
+              type='text'
+              placeholder='Username'
               onChange={onChange}
               value={setSetupForm.username}
-              name="username"
+              name='username'
             ></input>
           </div>
           <input
-            className="infoInput"
-            type="text"
-            placeholder="Location"
+            className='infoInput'
+            type='text'
+            placeholder='Location'
             onChange={onChange}
             value={setupForm.location}
-            name="location"
+            name='location'
           ></input>
-          <div className="dateOfBirth">
-            <label className="dobTitle">Date of Birth</label>
-            <div className="dobSelector">
-              <div className="dropdown">
+          <div className='dateOfBirth'>
+            <label className='dobTitle'>Date of Birth</label>
+            <div className='dobSelector'>
+              <div className='dropdown'>
                 <select
-                  name="day"
-                  className="dobSelect"
+                  name='day'
+                  className='dobSelect'
                   value={day}
                   onChange={(e) => handleDOBChange('day', e.target.value)}
                 >
-                  <option value="">Day</option>
+                  <option value=''>Day</option>
                   {Array.from({ length: 31 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -196,14 +227,14 @@ function ProfileSetup() {
                   ))}
                 </select>
               </div>
-              <div className="dropdown">
+              <div className='dropdown'>
                 <select
-                  name="month"
-                  className="dobSelect"
+                  name='month'
+                  className='dobSelect'
                   value={month}
                   onChange={(e) => handleDOBChange('month', e.target.value)}
                 >
-                  <option value="">Month</option>
+                  <option value=''>Month</option>
                   {[
                     'January',
                     'February',
@@ -224,14 +255,14 @@ function ProfileSetup() {
                   ))}
                 </select>
               </div>
-              <div className="dropdown">
+              <div className='dropdown'>
                 <select
-                  name="year"
-                  className="dobSelect"
+                  name='year'
+                  className='dobSelect'
                   value={year}
                   onChange={(e) => handleDOBChange('year', e.target.value)}
                 >
-                  <option value="">Year</option>
+                  <option value=''>Year</option>
                   {Array.from({ length: 100 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -244,61 +275,61 @@ function ProfileSetup() {
               </div>
             </div>
           </div>
-          <div className="genderSelection">
+          <div className='genderSelection'>
             <input
-              className="genderRadioButton"
-              type="radio"
-              name="gender"
+              className='genderRadioButton'
+              type='radio'
+              name='gender'
               value={'M'}
-              id="genderMale"
+              id='genderMale'
               checked={setupForm.gender === 'M'}
               onChange={onChange}
             ></input>
-            <label htmlFor="genderMale" className="toggleOption">
+            <label htmlFor='genderMale' className='toggleOption'>
               Male
             </label>
             <input
-              className="genderRadioButton"
-              type="radio"
-              name="gender"
+              className='genderRadioButton'
+              type='radio'
+              name='gender'
               value={'F'}
-              id="genderFemale"
+              id='genderFemale'
               checked={setupForm.gender === 'F'}
               onChange={onChange}
             ></input>
-            <label htmlFor="genderFemale" className="toggleOption">
+            <label htmlFor='genderFemale' className='toggleOption'>
               Female
             </label>
           </div>
-          <div className="roleSelection">
+          <div className='roleSelection'>
             <input
-              className="roleRadioButton"
-              type="radio"
-              name="role"
+              className='roleRadioButton'
+              type='radio'
+              name='role'
               value={'Student'}
-              id="roleStudent"
+              id='roleStudent'
               checked={setupForm.role === 'Student'}
               onChange={onChange}
             ></input>
-            <label htmlFor="roleStudent" className="toggleOption">
+            <label htmlFor='roleStudent' className='toggleOption'>
               Student
             </label>
             <input
-              className="roleRadioButton"
-              type="radio"
-              name="role"
+              className='roleRadioButton'
+              type='radio'
+              name='role'
               value={'Professor'}
-              id="roleProfessor"
+              id='roleProfessor'
               checked={setupForm.role === 'Professor'}
               onChange={onChange}
             ></input>
-            <label htmlFor="roleProfessor" className="toggleOption">
+            <label htmlFor='roleProfessor' className='toggleOption'>
               Professor
             </label>
           </div>
-          <p className="errorMessage">{errorMessage}</p>
-          <div className="buttonDiv">
-            <button className="inputButton" type="submit">
+          <p className='errorMessage'>{errorMessage}</p>
+          <div className='buttonDiv'>
+            <button className='inputButton' type='submit'>
               Finish
             </button>
           </div>
