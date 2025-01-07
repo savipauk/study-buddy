@@ -2,19 +2,50 @@ import '../styles/HomePage.css';
 import '../styles/Login.css';
 import Header from '../components/Header';
 import useAuth from '../hooks/useAuth';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
+import CreateStudyGroupForm from '../components/StudyGroupForm';
 
 function HomePage() {
   const { isProfileSetupComplete } = useAuth();
+  const [createClicked, setCreateClicked] = useState(false);
+
+  const handleCreateGroup = () => {
+    setCreateClicked(true);
+  };
+  const handleCloseCreateGroup = () => {
+    setCreateClicked(false);
+  };
+  useEffect(() => {
+    if (createClicked || !isProfileSetupComplete) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }, [createClicked, isProfileSetupComplete]);
   return (
-    <div>
-      <div className={isProfileSetupComplete ? 'homePageWrapper' : 'blurred'}>
+    <>
+      <div
+        className={`${
+          createClicked || !isProfileSetupComplete
+            ? 'blurred'
+            : 'homePageWrapper'
+        }`}
+      >
         <Header></Header>
+        <div className="newStudyGroup">
+          <button className="newStudyGroupButton" onClick={handleCreateGroup}>
+            Kreiraj StudyGroup
+          </button>
+        </div>
+
         <h1 className="someText">HOMEPAGE</h1>
       </div>
       {!isProfileSetupComplete && <ProfileSetup />}
-    </div>
+      {createClicked && (
+        <CreateStudyGroupForm onClose={handleCloseCreateGroup} />
+      )}
+    </>
   );
 }
 
@@ -138,10 +169,10 @@ function ProfileSetup() {
   }
 
   return (
-    <div className="formWrapper">
+    <div className="setupWrapper">
       <form className="forms" onSubmit={onSubmit}>
         <div className="formDiv">
-          <h1 className="helloText">Profile setup!</h1>
+          <h1 className="helloText">Dovrši profil!</h1>
           <div className="inputDiv">
             <div className="nameWrapper">
               <input
