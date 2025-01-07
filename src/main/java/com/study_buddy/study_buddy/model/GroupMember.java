@@ -30,6 +30,8 @@ public class GroupMember {
         this.memberId = memberId;
         this.groupId = groupId;
         this.joinDate = joinDate;
+        this.id = new GroupMemberID(memberId.getStudentId(),groupId.getGroupId());
+
     }
 
     public GroupMemberID getId() {
@@ -62,5 +64,15 @@ public class GroupMember {
 
     public void setJoinDate(LocalDateTime joinDate) {
         this.joinDate = joinDate;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupMember{" +
+                "id=" + id +
+                ", memberId=" + memberId +
+                ", groupId=" + groupId +
+                ", joinDate=" + joinDate +
+                '}';
     }
 }
