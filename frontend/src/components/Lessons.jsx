@@ -125,7 +125,7 @@ function CreateInstructionForm({ onClose }) {
       return false;
     }
     if (maxNum <= 0) {
-      setValidationMessage('Maksimalan broj clanova mora biti veći od 0');
+      setValidationMessage('Maksimalan broj članova mora biti veći od 0');
       return false;
     }
     if (!location.lat || !location.lng) {
@@ -250,7 +250,7 @@ function CreateInstructionForm({ onClose }) {
             </div>
             <div className="inputWrapper">
               <div className="inputs">
-                <label className="inputLabel">Maksimalan broj clanova</label>
+                <label className="inputLabel">Maksimalan broj članova</label>
               </div>
               <div className="inputsButtons">
                 <button
@@ -270,7 +270,7 @@ function CreateInstructionForm({ onClose }) {
             </div>
             <div className="inputWrapper">
               <div className="inputs">
-                <label className="inputLabel">Minimalan broj clanova</label>
+                <label className="inputLabel">Minimalan broj članova</label>
               </div>
               <div className="inputsButtons">
                 <button

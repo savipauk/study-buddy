@@ -172,7 +172,7 @@ function ProfileSetup() {
     <div className="setupWrapper">
       <form className="forms" onSubmit={onSubmit}>
         <div className="formDiv">
-          <h1 className="helloText">Profile setup!</h1>
+          <h1 className="helloText">Dovrši profil!</h1>
           <div className="inputDiv">
             <div className="nameWrapper">
               <input

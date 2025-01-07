@@ -106,7 +106,7 @@ function CreateStudyGroupForm({ onClose }) {
       return false;
     }
     if (maxNum <= 0) {
-      setValidationMessage('Broj clanova mora biti veći od 0');
+      setValidationMessage('Broj članova mora biti veći od 0');
       return false;
     }
     if (!location.lat || !location.lng) {
@@ -199,7 +199,7 @@ function CreateStudyGroupForm({ onClose }) {
           </div>
           <div className="inputWrapper">
             <div className="inputs">
-              <label className="inputLabel">Maksimalan broj clanova</label>
+              <label className="inputLabel">Maksimalan broj članova</label>
             </div>
             <div className="inputsButtons">
               <button
