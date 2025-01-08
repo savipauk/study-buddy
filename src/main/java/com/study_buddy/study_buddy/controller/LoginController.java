@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.JwtService;
+import com.study_buddy.study_buddy.service.StudentService;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,9 @@ public class LoginController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private StudentService studentService;
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(@RequestBody Map<String, String> requestBody) {
@@ -87,8 +91,8 @@ public class LoginController {
         String email = data.getEmail();
         String firstName = data.getFirstName();
         String lastName = data.getLastName();
-        String hashedPassword = data.getHashedPassword();
-        StudyRole studyRole = data.getStudyRole();
+        String hashedPassword = data.getPassword();
+        StudyRole studyRole = data.getRole();
         String username = data.getUsername();
 
         JwtService jwtService = new JwtService();
@@ -111,6 +115,9 @@ public class LoginController {
 
         // Save this user to the database
         User user = new User(username, token, LocalDateTime.now(), email, firstName, lastName, "", "", hashedPassword, "", studyRole, LocalDateTime.now());
+        user.setGender(data.getGender());
+        user.setDateOfBirth(data.getDateOfBirth());
+        user.setCity(data.getCity());
         userService.createUser(user);
 
         // Create Authentication object
@@ -122,6 +129,11 @@ public class LoginController {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
+
+        // INSERT INTO TABLE STUDENT
+        if (data.getRole().name().equals("STUDENT")) {
+            studentService.createStudent(user);
+        }
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)

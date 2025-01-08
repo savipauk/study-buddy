@@ -23,6 +23,9 @@ CREATE TABLE Users (
     description TEXT,
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
+    date_of_birth DATE,
+    gender ENUM('M', 'F', 'Other'),
+    city VARCHAR(100),
     role ENUM('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -33,9 +36,6 @@ CREATE TABLE Users (
 CREATE TABLE Students (
     student_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL, -- foreign key prema Users
-    date_of_birth DATE,
-    gender ENUM('M', 'F', 'Other'),
-    city VARCHAR(100),
     PRIMARY KEY (student_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
@@ -55,7 +55,7 @@ CREATE TABLE Professors (
 
 CREATE TABLE StudyGroups (
     group_id INT NOT NULL AUTO_INCREMENT,
-    creator_id INT NOT NULL, -- foreign key prema Students
+    creator_id INT NOT NULL, -- foreign key prema Users
     group_name VARCHAR(255) NOT NULL,
     location VARCHAR(255),
     date DATE NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE StudyGroups (
     description TEXT,
     expiration_date DATE NOT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (
@@ -140,16 +140,22 @@ CREATE TABLE Materials (
 );
 
 -- User entries
-INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role)
-VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT'),
-    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT'),
-    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor'),
-    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor'),
-    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin'),
-    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin');
+INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city)
+VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb'),
+    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb'),
+    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb'),
+    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','F', '1971-11-12', 'Zagreb'),
+    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'M', '1965-12-02', 'Zagreb'),
+    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'F', '1980-03-04', 'Zagreb');
 -- student1 password: 'password123'
 -- student2 password: 'password345'
 -- professor1 password: 'password789'
 -- professor2 password: 'password012'
 -- admin1 password: 'password345'
 -- admin2 password: 'password678'
+
+
+-- Student entires
+INSERT INTO Students(user_id)
+VALUES ('1'),
+       ('2');

@@ -16,9 +16,11 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@react-google-maps/api": "^2.20.5",
     "@react-oauth/google": "^0.12.1",
     "bcryptjs": "^2.4.3",
     "react": "^18.3.1",
+    "react-datepicker": "^7.6.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0"
   },

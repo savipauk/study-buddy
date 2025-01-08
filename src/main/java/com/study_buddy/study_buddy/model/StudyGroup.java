@@ -2,6 +2,9 @@ package com.study_buddy.study_buddy.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "StudyGroups")
@@ -10,7 +13,8 @@ public class StudyGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
-    private Long id;
+    private Long groupId;
+
 
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false)
@@ -22,8 +26,17 @@ public class StudyGroup {
     @Column(name = "location")
     private String location;
 
+    @Column(name = "x-coordinate")
+    private String xCoordinate;
+
+    @Column(name = "y-coordinate")
+    private String yCoordinate;
+
     @Column(name = "date")
     private LocalDate date;
+
+    @Column(name = "time")
+    private LocalTime time;
 
     @Column(name = "max_members", nullable = false)
     private int maxMembers;
@@ -34,82 +47,85 @@ public class StudyGroup {
     @Column(name = "expiration_date", nullable = false)
     private LocalDate expirationDate;
 
+    // CONNECTING TABLES STUDENT-STUDYGROUP
+    @ManyToMany
+    @JoinTable(
+            name = "GroupMembers",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
+    private List<Student> creators;
+
     public StudyGroup() {
     }
 
+    public Map<String,String> studyGroupResponse(String message){
+        Map<String,String> response = Map.of(
+                //"creator", this.creator.get,
+                "groupName", this.getGroupName(),
+                "xCoortinate", this.getxCoordinate(),
+                "yCoordinate", this.getyCoordinate(),
+                "date", this.getDate().toString(),
+                "maxMembers", String.valueOf(this.getMaxMembers()),
+                "description", this.getDescription(),
+                "message", message
+        );
+        return response;
+    }
+
+
     public StudyGroup(Long id, Student creator, String groupName, String location, LocalDate date, int maxMembers,
             String description, LocalDate expirationDate) {
-        this.id = id;
+        this.groupId = id;
         this.creator = creator;
         this.groupName = groupName;
-        this.location = location;
         this.date = date;
         this.maxMembers = maxMembers;
         this.description = description;
         this.expirationDate = expirationDate;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getGroupId() { return groupId; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setGroupId(Long groupId) { this.groupId = groupId; }
 
-    public Student getCreator() {
-        return creator;
-    }
+    public Student getCreator() { return creator; }
 
-    public void setCreator(Student creator) {
-        this.creator = creator;
-    }
+    public void setCreator(Student creator) { this.creator = creator; }
 
-    public String getGroupName() {
-        return groupName;
-    }
+    public String getGroupName() { return groupName; }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
+    public void setGroupName(String groupName) { this.groupName = groupName; }
 
-    public String getLocation() {
-        return location;
-    }
+    public LocalDate getDate() { return date; }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public void setDate(LocalDate date) { this.date = date; }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public int getMaxMembers() { return maxMembers; }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+    public void setMaxMembers(int maxMembers) { this.maxMembers = maxMembers; }
 
-    public int getMaxMembers() {
-        return maxMembers;
-    }
+    public String getDescription() { return description; }
 
-    public void setMaxMembers(int maxMembers) {
-        this.maxMembers = maxMembers;
-    }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getxCoordinate() { return xCoordinate; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setxCoordinate(String xCoordinate) { this.xCoordinate = xCoordinate; }
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
-    }
+    public String getyCoordinate() { return yCoordinate; }
 
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
-    }
+    public void setyCoordinate(String yCoordinate) { this.yCoordinate = yCoordinate; }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public LocalTime getTime() { return time; }
+
+    public void setTime(LocalTime time) { this.time = time; }
+
+    public LocalDate getExpirationDate() { return expirationDate; }
+
+    public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
 }

@@ -108,12 +108,12 @@ public class UserController {
             }
         }
 
-        // Joining new changed data from new_user with old unchanged data from old_user
-        new_user = new_user.setChanges(old_user, new_user);
-        userService.saveOrUpdateUser(new_user);
+        // Updating user
+
+        old_user = userService.updateUserProfile(old_user,new_user);
         return ResponseEntity.ok()
                 //.header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .body(new_user.response("UPDATE_OK")).getBody();
+                .body(old_user.response("UPDATE_OK")).getBody();
 
     }
 }

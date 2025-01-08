@@ -1,7 +1,13 @@
 package com.study_buddy.study_buddy.model;
 
+import com.study_buddy.study_buddy.service.StudentService;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.NullLiteral;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -56,6 +62,20 @@ public class User {
     @Column(name = "profile_picture", length = 255)
     private String profilePicture;
 
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+
+    @Column(name = "city", length = 100)
+    private String city;
+
+    // CONNECTING TABLES USER-STUDENT
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Student student;
+
 
 
     public User () {}
@@ -82,7 +102,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.description = description;
+        this.description = "";
         this.role = role;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -119,7 +139,7 @@ public class User {
         return response;
     }
 
-    // Joining new changed data from new_user with old unchanged data from old_user
+    /*// Joining new changed data from new_user with old unchanged data from old_user
     public User setChanges(User old_user, User new_user){
         // USER_ID, Oauth_provider, oauth_id, created_at and tokens are determined by old_user
 
@@ -137,13 +157,21 @@ public class User {
         if(new_user.getUsername() != null) {  old_user.setUsername(new_user.getUsername()); }
 
         // Setting up profile for oauth registration requires role to be given in new_user
-        if (new_user.getRole() != null){ old_user.setRole(new_user.getRole()); }
+        if (new_user.getRole() != null) {
+            old_user.setRole(new_user.getRole());
+            if (new_user.getRole().name().equals("STUDENT")) {
+                studentService.createStudent(new_user);
+            }
+        }
+        if (new_user.getGender() !=null) { old_user.setGender(new_user.getGender());}
+        if (new_user.getCity() != null) { old_user.setCity(new_user.getCity());}
+        if (new_user.getDateOfBirth() != null) { old_user.setDateOfBirth(new_user.getDateOfBirth());}
 
         // updated_at is current date and time
         old_user.setUpdatedAt(LocalDateTime.now());
 
         return old_user;
-    }
+    }*/
 
     public Long getUserId() { return id; }
 
@@ -205,6 +233,18 @@ public class User {
 
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+
+    public Gender getGender() { return gender; }
+
+    public void setGender(Gender gender) { this.gender = gender; }
+
+    public String getCity() { return city; }
+
+    public void setCity(String city) { this.city = city; }
+
     @Override
     public String toString() {
         return "User{" +
@@ -223,6 +263,9 @@ public class User {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", profilePicture='" + profilePicture + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                ", city='" + city + '\'' +
                 '}';
     }
 }

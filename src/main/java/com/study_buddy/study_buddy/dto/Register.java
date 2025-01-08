@@ -1,19 +1,24 @@
 package com.study_buddy.study_buddy.dto;
 
 
+import com.study_buddy.study_buddy.model.Gender;
 import com.study_buddy.study_buddy.model.StudyRole;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 public class Register {
 	private String email;
 	private String firstName;
 	private String lastName;
-	private String hashedPassword;
-	private StudyRole studyRole;
 	private String username;
-	private String profile_picture;
+	private String password;
+	private StudyRole role;
 	private String description;
+	private String profilePicture;
+	private LocalDate dateOfBirth;
+	private String city;
+	private Gender gender;
 
 	public Map<String,String> responseRegister(String message){
 		Map<String, String> response;
@@ -21,7 +26,7 @@ public class Register {
 				"firstName", this.getFirstName(),
 				"lastName", this.getLastName(),
 				"email", this.getEmail(),
-				"studyRole", this.getStudyRole().toString(),
+				"studyRole", this.getRole().toString(),
 				"username", this.getUsername(),
 				"registration", message
 		);
@@ -52,29 +57,41 @@ public class Register {
 		this.lastName = lastName;
 	}
 
-	public String getHashedPassword() {
-		return hashedPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setHashedPassword(String hash) {
-		this.hashedPassword = hash;
+	public void setPassword(String hash) {
+		this.password = hash;
 	}
 
-	public StudyRole getStudyRole() {return studyRole;}
+	public StudyRole getRole() {return role;}
 
-	public void setStudyRole(StudyRole studyRole) {
-		this.studyRole = studyRole;
+	public void setRole(StudyRole studyRole) {
+		this.role = studyRole;
 	}
 
 	public String getUsername() { return username; }
 
 	public void setUsername(String username) { this.username = username; }
 
-	public String getProfile_picture() { return profile_picture; }
+	public String getProfilePicture() { return profilePicture; }
 
-	public void setProfile_picture(String profile_picture) { this.profile_picture = profile_picture; }
+	public void setProfilePicture(String profile_picture) { this.profilePicture = profile_picture; }
 
 	public String getDescription() { return description; }
 
 	public void setDescription(String description) { this.description = description; }
+
+	public LocalDate getDateOfBirth() { return dateOfBirth; }
+
+	public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+
+	public String getCity() { return city; }
+
+	public void setCity(String city) { this.city = city; }
+
+	public Gender getGender() { return gender; }
+
+	public void setGender(Gender gender) { this.gender = gender; }
 }
