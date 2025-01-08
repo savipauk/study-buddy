@@ -23,15 +23,17 @@ public class LessonParticipant {
     @Column(name = "participation_date", nullable = false)
     private LocalDateTime participationDate;
 
+    // Constructors
     public LessonParticipant() {}
 
-    public LessonParticipant(Student participantId, Lesson lessonId, LocalDateTime participationDate) {
+    public LessonParticipant(Student participantId, Lesson lessonId) {
         this.participantId = participantId;
         this.lessonId = lessonId;
-        this.participationDate = participationDate;
+        this.participationDate = LocalDateTime.now();
+        this.id = new LessonParticipantID(participantId.getStudentId(),lessonId.getLessonId());
     }
 
-
+    // Getters and setters
     public LessonParticipantID getId() {
         return id;
     }

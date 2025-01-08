@@ -76,6 +76,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;
 
+    // CONNECTING TABLES USER-PROFESSOR
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Professor professor;
+
 
 
     public User () {}
@@ -138,40 +142,6 @@ public class User {
         );
         return response;
     }
-
-    /*// Joining new changed data from new_user with old unchanged data from old_user
-    public User setChanges(User old_user, User new_user){
-        // USER_ID, Oauth_provider, oauth_id, created_at and tokens are determined by old_user
-
-        // email is always given in new_user
-        old_user.setEmail(new_user.getEmail());
-
-        // Setting up new password if password is changed
-        if(new_user.getPassword() != null){ old_user.setPassword(new_user.getPassword()); }
-
-        // Saving changes only if something was changed
-        if(new_user.getDescription() != null) { old_user.setDescription(new_user.getDescription()); }
-        if(new_user.getProfilePicture() != null) { old_user.setProfilePicture(new_user.getProfilePicture()); }
-        if(new_user.getFirstName() != null) { old_user.setFirstName(new_user.getFirstName()); }
-        if(new_user.getLastName() != null) { old_user.setLastName(new_user.getLastName()); }
-        if(new_user.getUsername() != null) {  old_user.setUsername(new_user.getUsername()); }
-
-        // Setting up profile for oauth registration requires role to be given in new_user
-        if (new_user.getRole() != null) {
-            old_user.setRole(new_user.getRole());
-            if (new_user.getRole().name().equals("STUDENT")) {
-                studentService.createStudent(new_user);
-            }
-        }
-        if (new_user.getGender() !=null) { old_user.setGender(new_user.getGender());}
-        if (new_user.getCity() != null) { old_user.setCity(new_user.getCity());}
-        if (new_user.getDateOfBirth() != null) { old_user.setDateOfBirth(new_user.getDateOfBirth());}
-
-        // updated_at is current date and time
-        old_user.setUpdatedAt(LocalDateTime.now());
-
-        return old_user;
-    }*/
 
     public Long getUserId() { return id; }
 

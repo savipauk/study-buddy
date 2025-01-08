@@ -15,11 +15,6 @@ public class StudyGroup {
     @Column(name = "group_id")
     private Long groupId;
 
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
-    private Student creator;
-
     @Column(name = "group_name", nullable = false, length = 255)
     private String groupName;
 
@@ -48,6 +43,11 @@ public class StudyGroup {
     private LocalDate expirationDate;
 
     // CONNECTING TABLES STUDENT-STUDYGROUP
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private Student creator;
+
+    // CONNECTING TABLES STUDYGROUP-GROUPMEMBERS
     @ManyToMany
     @JoinTable(
             name = "GroupMembers",

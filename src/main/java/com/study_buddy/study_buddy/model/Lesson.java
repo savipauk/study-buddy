@@ -1,6 +1,8 @@
 package com.study_buddy.study_buddy.model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -11,18 +13,32 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lesson_id")
-    private Long id;
+    private Long lessonId;
 
-    @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
-    private Professor professor;
+    @Column(name = "subject")
+    private String subject;
+
+    @Column(name = "duration", nullable = false)
+    private String duration;
+
+    @Column(name = "max_participants", nullable = false)
+    private int maxMembers;
+
+    @Column(name = "min_participants", nullable = false)
+    private int minMembers;
+
+    @Column(name = "x_coordinate")
+    private String xCoordinate;
+
+    @Column(name = "y_coordinate")
+    private String yCoordinate;
+
+    @Column(name = "location")
+    private String location;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "lesson_type", nullable = false)
     private LessonType lessonType;
-
-    @Column(name = "location")
-    private String location;
 
     @Column(name = "price")
     private Float price;
@@ -30,128 +46,108 @@ public class Lesson {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "duration", nullable = false)
-    private int duration;
-
-    @Column(name = "max_participants", nullable = false)
-    private int maxParticipants;
-
-    @Column(name = "min_participants", nullable = false)
-    private int minParticipants;
+    @Column(name = "time", nullable = false)
+    private LocalTime time;
 
     @Column(name = "registration_deadline", nullable = false)
     private LocalDate registrationDeadline;
 
-    public enum LessonType {
-        MASS("Mass"),
-        ONE_ON_ONE("One on one");
+    // CONNECTING TABLES PROFESSOR-LESSON
+    @ManyToOne
+    @JoinColumn(name = "professor_id", nullable = false)
+    private Professor professor;
 
-        private final String value;
+    // CONNECTING TABLES STUDENT-LESSONPARTICIPANT
+    @ManyToMany
+    @JoinTable(
+            name = "LessonParticipants",
+            joinColumns = @JoinColumn(name = "lesson_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_id")
+    )
+    private List<Professor> studentParticipants;
 
-        LessonType(String value) {
-            this.value = value;
-        }
 
-        public String getValue() {
-            return value;
-        }
-    }
-
+    // Constructors
     public Lesson() {
     }
 
-    public Lesson(Long id, Professor professor, LessonType lessonType, String location, Float price,
-            LocalDate date, int duration,
-            int maxParticipants, int minParticipants, LocalDate registrationDeadline) {
-        this.id = id;
-        this.professor = professor;
-        this.lessonType = lessonType;
-        this.location = location;
-        this.price = price;
-        this.date = date;
-        this.duration = duration;
-        this.maxParticipants = maxParticipants;
-        this.minParticipants = minParticipants;
-        this.registrationDeadline = registrationDeadline;
-    }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters and setters
+    public Long getLessonId() { return lessonId; }
 
-    public Professor getProfessor() {
-        return professor;
-    }
+    public void setLessonId(Long lessonId) { this.lessonId = lessonId; }
 
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
-    }
+    public String getSubject() { return subject; }
 
-    public LessonType getLessonType() {
-        return lessonType;
-    }
+    public void setSubject(String subject) { this.subject = subject; }
 
-    public void setLessonType(LessonType lessonType) {
-        this.lessonType = lessonType;
-    }
+    public String getDuration() { return duration; }
 
-    public String getLocation() {
-        return location;
-    }
+    public void setDuration(String duration) { this.duration = duration; }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+    public int getMaxMembers() { return maxMembers; }
 
-    public Float getPrice() {
-        return price;
-    }
+    public void setMaxMembers(int maxMembers) { this.maxMembers = maxMembers; }
 
-    public void setPrice(Float price) {
-        this.price = price;
-    }
+    public int getMinMembers() { return minMembers; }
 
-    public LocalDate getDate() {
-        return date;
-    }
+    public void setMinMembers(int minMembers) { this.minMembers = minMembers; }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+    public String getxCoordinate() { return xCoordinate; }
 
-    public int getDuration() {
-        return duration;
-    }
+    public void setxCoordinate(String xCoordinate) { this.xCoordinate = xCoordinate; }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
+    public String getyCoordinate() { return yCoordinate; }
 
-    public int getMaxParticipants() {
-        return maxParticipants;
-    }
+    public void setyCoordinate(String yCoordinate) { this.yCoordinate = yCoordinate; }
 
-    public void setMaxParticipants(int maxParticipants) {
-        this.maxParticipants = maxParticipants;
-    }
+    public String getLocation() { return location; }
 
-    public int getMinParticipants() {
-        return minParticipants;
-    }
+    public void setLocation(String location) { this.location = location; }
 
-    public void setMinParticipants(int minParticipants) {
-        this.minParticipants = minParticipants;
-    }
+    public LessonType getLessonType() { return lessonType; }
 
-    public LocalDate getRegistrationDeadline() {
-        return registrationDeadline;
-    }
+    public void setLessonType(LessonType lessonType) { this.lessonType = lessonType; }
 
-    public void setRegistrationDeadline(LocalDate registrationDeadline) {
-        this.registrationDeadline = registrationDeadline;
+    public Float getPrice() { return price; }
+
+    public void setPrice(Float price) { this.price = price; }
+
+    public LocalDate getDate() { return date; }
+
+    public void setDate(LocalDate date) { this.date = date; }
+
+    public LocalTime getTime() { return time; }
+
+    public void setTime(LocalTime time) { this.time = time; }
+
+    public LocalDate getRegistrationDeadline() { return registrationDeadline; }
+
+    public void setRegistrationDeadline(LocalDate registrationDeadline) { this.registrationDeadline = registrationDeadline; }
+
+    public Professor getProfessor() { return professor; }
+
+    public void setProfessor(Professor professor) { this.professor = professor; }
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "lessonId=" + lessonId +
+                ", subject='" + subject + '\'' +
+                ", duration='" + duration + '\'' +
+                ", maxMembers=" + maxMembers +
+                ", minMembers=" + minMembers +
+                ", xCoordinate='" + xCoordinate + '\'' +
+                ", yCoordinate='" + yCoordinate + '\'' +
+                ", location='" + location + '\'' +
+                ", lessonType=" + lessonType +
+                ", price=" + price +
+                ", date=" + date +
+                ", time=" + time +
+                ", registrationDeadline=" + registrationDeadline +
+                ", professor=" + professor +
+                ", studentParticipants=" + studentParticipants +
+                '}';
     }
 }
