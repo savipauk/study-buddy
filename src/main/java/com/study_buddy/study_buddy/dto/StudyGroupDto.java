@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public class StudyGroupDto {
     private Long studyGroupId; // Optional for responses
-    private String creatorEmail;    // User ID of the creator
+    private String email;    // User ID of the creator
     private String groupName;
     private String location;
     private String xCoordinate;
@@ -23,7 +23,7 @@ public class StudyGroupDto {
                          String yCoordinate, LocalDate date, LocalTime time, int maxMembers,
                          String description, LocalDate expirationDate) {
         this.studyGroupId = studyGroupId;
-        this.creatorEmail = creatorEmail;
+        this.email = creatorEmail;
         this.groupName = groupName;
         this.location = location;
         this.xCoordinate = xCoordinate;
@@ -40,9 +40,9 @@ public class StudyGroupDto {
 
     public void setStudyGroupId(Long studyGroupId) { this.studyGroupId = studyGroupId; }
 
-    public String getCreatorEmail() { return creatorEmail; }
+    public String getEmail() { return email; }
 
-    public void setCreatorEmail(String creatorEmail) { this.creatorEmail = creatorEmail; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getGroupName() { return groupName; }
 
@@ -84,7 +84,7 @@ public class StudyGroupDto {
     public String toString() {
         return "StudyGroupDto{" +
                 "studyGroupId=" + studyGroupId +
-                ", creatorId=" + creatorEmail +
+                ", creatorId=" + email +
                 ", groupName='" + groupName + '\'' +
                 ", location='" + location + '\'' +
                 ", xCoordinate='" + xCoordinate + '\'' +

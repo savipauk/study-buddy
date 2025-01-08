@@ -1,82 +1,41 @@
-package com.study_buddy.study_buddy.model;
+package com.study_buddy.study_buddy.dto;
+
+import com.study_buddy.study_buddy.model.LessonType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "Lessons")
-public class Lesson {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "lesson_id")
+public class LessonDto {
     private Long lessonId;
-
-    @Column(name = "subject")
+    private String email;    // Email of professor
     private String subject;
-
-    @Column(name = "duration", nullable = false)
     private String duration;
-
-    @Column(name = "max_participants", nullable = false)
     private int maxMembers;
-
-    @Column(name = "min_participants", nullable = false)
     private int minMembers;
-
-    @Column(name = "x_coordinate")
     private String xCoordinate;
-
-    @Column(name = "y_coordinate")
     private String yCoordinate;
-
-    @Column(name = "location")
     private String location;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "lesson_type", nullable = false)
-    private LessonType lessonType;
-
-    @Column(name = "price")
+    private LessonType type;
     private Float price;
-
-    @Column(name = "date", nullable = false)
     private LocalDate date;
-
-    @Column(name = "time", nullable = false)
     private LocalTime time;
 
-    @Column(name = "registration_deadline", nullable = false)
-    private LocalDate registrationDeadline;
+    //private String description;
+    private LocalDate registrationDeadLine;
 
-    // CONNECTING TABLES PROFESSOR-LESSON
-    @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
-    private Professor professor;
-
-    // CONNECTING TABLES STUDENT-LESSONPARTICIPANT
-    @ManyToMany
-    @JoinTable(
-            name = "LessonParticipants",
-            joinColumns = @JoinColumn(name = "lesson_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
-    private List<Professor> studentParticipants;
-
-
-    // Constructors
-    public Lesson() {
-    }
-
-
+    // Constructor
+    public LessonDto(){};
 
     // Getters and setters
+
     public Long getLessonId() { return lessonId; }
 
     public void setLessonId(Long lessonId) { this.lessonId = lessonId; }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
 
     public String getSubject() { return subject; }
 
@@ -106,9 +65,9 @@ public class Lesson {
 
     public void setLocation(String location) { this.location = location; }
 
-    public LessonType getLessonType() { return lessonType; }
+    public LessonType getType() { return type; }
 
-    public void setLessonType(LessonType lessonType) { this.lessonType = lessonType; }
+    public void setType(LessonType type) { this.type = type; }
 
     public Float getPrice() { return price; }
 
@@ -122,18 +81,15 @@ public class Lesson {
 
     public void setTime(LocalTime time) { this.time = time; }
 
-    public LocalDate getRegistrationDeadline() { return registrationDeadline; }
+    public LocalDate getRegistrationDeadLine() { return registrationDeadLine; }
 
-    public void setRegistrationDeadline(LocalDate registrationDeadline) { this.registrationDeadline = registrationDeadline; }
-
-    public Professor getProfessor() { return professor; }
-
-    public void setProfessor(Professor professor) { this.professor = professor; }
+    public void setRegistrationDeadLine(LocalDate registrationDeadLine) { this.registrationDeadLine = registrationDeadLine; }
 
     @Override
     public String toString() {
-        return "Lesson{" +
+        return "LessonDto{" +
                 "lessonId=" + lessonId +
+                ", email='" + email + '\'' +
                 ", subject='" + subject + '\'' +
                 ", duration='" + duration + '\'' +
                 ", maxMembers=" + maxMembers +
@@ -141,13 +97,11 @@ public class Lesson {
                 ", xCoordinate='" + xCoordinate + '\'' +
                 ", yCoordinate='" + yCoordinate + '\'' +
                 ", location='" + location + '\'' +
-                ", lessonType=" + lessonType +
+                ", type=" + type +
                 ", price=" + price +
                 ", date=" + date +
                 ", time=" + time +
-                ", registrationDeadline=" + registrationDeadline +
-                ", professor=" + professor +
-                ", studentParticipants=" + studentParticipants +
+                ", registrationDeadLine=" + registrationDeadLine +
                 '}';
     }
 }
