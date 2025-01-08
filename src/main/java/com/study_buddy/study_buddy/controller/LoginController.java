@@ -143,7 +143,7 @@ public class LoginController {
     @PostMapping(value = "/login", produces = "application/json")
     public Map<String, String> login(@RequestBody Login data) {
         String username = data.getUsername();
-        String rawPassword = data.getHashedPassword().toString();
+        String rawPassword = data.getPassword().toString();
 
         Map<String, String> response;
 
@@ -157,10 +157,18 @@ public class LoginController {
         // Username is unique
         User user = userService.getUserByUsername(username);
         if (!userService.verifyPassword(user, rawPassword)) {
-            response = Map.of("username", username,"email", user.getEmail(),"passwordCheck", "NOT_OK", "message", "Wrong password");
+            response = Map.of("username", username,
+                    "email", user.getEmail(),
+                    "passwordCheck", "NOT_OK",
+                    "message", "Wrong password",
+                    "studyRole", user.getRole().getValue());
 
         } else {
-            response = Map.of("username", username, "email",user.getEmail(),"passwordCheck", "OK", "message", "Successful login");
+            response = Map.of("username", username,
+                    "email",user.getEmail(),
+                    "passwordCheck", "OK",
+                    "message", "Successful login",
+                    "studyRole", user.getRole().getValue());
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
