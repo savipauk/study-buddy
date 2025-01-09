@@ -379,7 +379,7 @@ function RegisterForm() {
           <p className="errorMessage">{errorMessage}</p>
           <div className="buttonDiv">
             <button className="inputButton" type="submit">
-              Kreiraj račun!
+              Kreirajte račun!
             </button>
           </div>
           <div className="oauth">
@@ -395,7 +395,7 @@ function RegisterForm() {
         <div className="redirect">
           <p className="account">Već imate račun?</p>
           <a className="link" href="/users/login">
-            Prijavi se
+            Prijavite se
           </a>
         </div>
       </form>

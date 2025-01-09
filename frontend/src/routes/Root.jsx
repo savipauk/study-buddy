@@ -63,7 +63,7 @@ function SignUpButton() {
   };
   return (
     <button className="signUpButton" onClick={handleClick}>
-      PRIJAVI SE
+      PRIJAVITE SE
     </button>
   );
 }

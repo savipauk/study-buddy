@@ -311,7 +311,7 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
 
         <p className="errorMessage">{validationMessage}</p>
         <button className="EditWindowButton" onClick={handleSaveClick}>
-          Primjeni
+          Primijeni
         </button>
         <button className="EditWindowButton" onClick={onClose}>
           Odbaci
@@ -431,7 +431,7 @@ function PasswordChange({ onSave, onClose, hash }) {
         ></input>
         <p className="errorMessage">{validationMessage}</p>
         <button className="EditWindowButton" onClick={updatePaswword}>
-          Primjeni
+          Primijeni
         </button>
         <button className="EditWindowButton" onClick={onClose}>
           Odbaci

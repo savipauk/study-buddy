@@ -125,7 +125,7 @@ function LoginForm() {
             <div className="redirect">
               <p className="account">Nemate račun?</p>
               <a href="/users/register" className="link">
-                Registriraj se
+                Registrirajte se
               </a>
             </div>
             <div className="oauth">
