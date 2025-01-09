@@ -57,6 +57,18 @@ function CreateStudyGroupForm({ onClose }) {
           lng: event.latLng.lng()
         };
         setLocation(newLocation);
+
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: newLocation }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const locationsName = results[0].address_components.find(
+              (component) => component.types.includes('locality')
+            );
+            if (locationsName) {
+              setLocationName(locationsName.long_name);
+            }
+          }
+        });
       });
     } else if (markerRef.current) {
       markerRef.current.position = location;
@@ -139,6 +151,7 @@ function CreateStudyGroupForm({ onClose }) {
       date: date,
       time: time
     };
+    console.log(data);
     const options = {
       method: 'POST',
       headers: {
