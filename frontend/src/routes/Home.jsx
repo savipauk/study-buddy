@@ -23,7 +23,6 @@ function HomePage() {
     } else {
       document.body.classList.remove('no-scroll');
     }
-    console.log(role);
   }, [createClicked, isProfileSetupComplete]);
   return (
     <>
