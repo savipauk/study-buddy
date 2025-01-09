@@ -99,7 +99,7 @@ function UserForm() {
                 <button className="uploadButton">
                   <i className="fa-solid fa-cloud-arrow-up"></i>
                 </button>
-                <p className="aboutText">About</p>
+                <p className="aboutText">Opis</p>
                 <textarea
                   readOnly
                   className="aboutInput"
@@ -113,9 +113,9 @@ function UserForm() {
           <div className="infoformWrapper">
             <form className="userInfoForm">
               <div className="personalInfoWrapper">
-                <h1 className="personalInfo">Personal Information</h1>
+                <h1 className="personalInfo">Pregled profila</h1>
                 <hr />
-                <p className="categoryText">First Name:</p>
+                <p className="categoryText">Ime</p>
                 <input
                   className="input"
                   name="FirstName"
@@ -123,7 +123,7 @@ function UserForm() {
                   value={userInfoForm.FirstName}
                   readOnly={true}
                 ></input>
-                <p className="categoryText">Last Name:</p>
+                <p className="categoryText">Prezime</p>
                 <input
                   className="input"
                   name="LastName"
@@ -131,7 +131,7 @@ function UserForm() {
                   value={userInfoForm.LastName}
                   readOnly={true}
                 ></input>
-                <p className="categoryText">Username:</p>
+                <p className="categoryText">Korisničko ime</p>
                 <input
                   className="input"
                   name="Username"
@@ -139,7 +139,7 @@ function UserForm() {
                   value={userInfoForm.Username}
                   readOnly={true}
                 ></input>
-                <p className="categoryText">Email:</p>
+                <p className="categoryText">Email</p>
                 <input
                   className="input"
                   name="Email"
@@ -152,7 +152,7 @@ function UserForm() {
                     className="changePassword"
                     onClick={handlePasswordChange}
                   >
-                    Change password
+                    Promijeni lozinku
                   </button>
                 )}
               </div>
@@ -161,7 +161,7 @@ function UserForm() {
         </div>
         <div className="editWrapper">
           <button className="editButton" onClick={handleEditClick}>
-            Edit!
+            Uredi profil!
           </button>
         </div>
         {showEditWindow && (
@@ -226,19 +226,19 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
   function isValid() {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!formData.FirstName) {
-      setValidationMessage('First name is required');
+      setValidationMessage('Ime je obavezno');
       return false;
     }
     if (!formData.LastName) {
-      setValidationMessage('Last name is required');
+      setValidationMessage('Prezime je obavezno');
       return false;
     }
     if (!formData.Username) {
-      setValidationMessage('Username is required');
+      setValidationMessage('Korisničko ime je obavezno');
       return false;
     }
     if (!emailRegex.test(formData.Email) && !oauth) {
-      setValidationMessage('Email is invalid!');
+      setValidationMessage('Email nije ispravan!');
       return false;
     }
     setValidationMessage('');
@@ -252,11 +252,11 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
     } else {
       const message = await handleSaveData();
       if (message == 'USERNAME_EXISTS') {
-        setValidationMessage('Username taken');
+        setValidationMessage('Korisničko ime se već koristi');
         return;
       }
       if (message == 'EMAIL_EXISTS') {
-        setValidationMessage('Email taken');
+        setValidationMessage('Email se već koristi');
         return;
       }
       if (message == 'UPDATE_OK') {
@@ -268,22 +268,22 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
   return (
     <div className="modal">
       <div className="modalContent">
-        <h1 className="editProfileText">Edit Profile</h1>
-        <p>First Name:</p>
+        <h1 className="editProfileText">Uredi profil</h1>
+        <p>Ime</p>
         <input
           className="inputEdit"
           name="FirstName"
           value={formData.FirstName}
           onChange={handleChange}
         />
-        <p>Last Name:</p>
+        <p>Prezime</p>
         <input
           className="inputEdit"
           name="LastName"
           value={formData.LastName}
           onChange={handleChange}
         />
-        <p>Username:</p>
+        <p>Korisničko ime</p>
         <input
           className="inputEdit"
           name="Username"
@@ -301,7 +301,7 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
             />
           </>
         )}
-        <p className="aboutText">About</p>
+        <p className="aboutText">Opis</p>
         <textarea
           className="aboutInput"
           name="Bio"
@@ -311,10 +311,10 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
 
         <p className="errorMessage">{validationMessage}</p>
         <button className="EditWindowButton" onClick={handleSaveClick}>
-          Accept
+          Primjeni
         </button>
         <button className="EditWindowButton" onClick={onClose}>
-          Cancel
+          Odbaci
         </button>
       </div>
     </div>
@@ -348,16 +348,16 @@ function PasswordChange({ onSave, onClose, hash }) {
 
   async function isValid(enteredPassword, hash) {
     if (formData.newPassword !== formData.confirmNewPassword) {
-      setValidationMessage('Passwords do not match');
+      setValidationMessage('Lozinke se ne podudaraju');
       return false;
     }
     if (formData.newPassword.length < 8) {
-      setValidationMessage('Password must be at least 8 characters long');
+      setValidationMessage('Lozinka mora imati najmanje 8 znakova');
       return false;
     }
     const match = await checkHash(enteredPassword, hash);
     if (!match) {
-      setValidationMessage('Password is incorect!');
+      setValidationMessage('Lozinka je netočna!');
       return false;
     } else {
       setValidationMessage('');
@@ -404,8 +404,8 @@ function PasswordChange({ onSave, onClose, hash }) {
   return (
     <div className="modal">
       <div className="modalContent">
-        <h1 className="editProfileText">Change Password</h1>
-        <p>Current password</p>
+        <h1 className="editProfileText">Promjena lozinke</h1>
+        <p>Trenutna lozinka</p>
         <input
           className="inputEdit"
           type="password"
@@ -413,7 +413,7 @@ function PasswordChange({ onSave, onClose, hash }) {
           value={formData.currentPassword}
           onChange={handleChange}
         ></input>
-        <p>New password</p>
+        <p>Nova lozinka</p>
         <input
           className="inputEdit"
           type="password"
@@ -421,7 +421,7 @@ function PasswordChange({ onSave, onClose, hash }) {
           value={formData.newPassword}
           onChange={handleChange}
         ></input>
-        <p>Confirm new password</p>
+        <p>Potvrda nove lozinke</p>
         <input
           className="inputEdit"
           type="password"
@@ -431,10 +431,10 @@ function PasswordChange({ onSave, onClose, hash }) {
         ></input>
         <p className="errorMessage">{validationMessage}</p>
         <button className="EditWindowButton" onClick={updatePaswword}>
-          Accept
+          Primjeni
         </button>
         <button className="EditWindowButton" onClick={onClose}>
-          Cancel
+          Odbaci
         </button>
       </div>
     </div>
