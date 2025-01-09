@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import com.study_buddy.study_buddy.model.Professor;
 import com.study_buddy.study_buddy.model.StudyRole;
-import com.study_buddy.study_buddy.service.JwtService;
-import com.study_buddy.study_buddy.service.StudentService;
-import com.study_buddy.study_buddy.service.UserService;
+import com.study_buddy.study_buddy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.dto.Register;
 import com.study_buddy.study_buddy.model.User;
-import com.study_buddy.study_buddy.service.OAuthService;
 
 @RestController
 @RequestMapping("/login")
@@ -37,6 +35,9 @@ public class LoginController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private ProfessorService professorService;
 
     @PostMapping("/oauth")
     public Map<String, String> oauth(@RequestBody Map<String, String> requestBody) {
@@ -133,6 +134,10 @@ public class LoginController {
         // INSERT INTO TABLE STUDENT
         if (data.getRole().name().equals("STUDENT")) {
             studentService.createStudent(user);
+        }
+        // INSERT INTO TABLE PROFESSOR
+        else if (data.getRole().name().equals("PROFESSOR")) {
+            professorService.createProfessor(user);
         }
 
         return ResponseEntity.ok()

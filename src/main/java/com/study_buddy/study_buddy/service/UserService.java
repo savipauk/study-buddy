@@ -25,6 +25,9 @@ public class UserService {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private ProfessorService professorService;
+
     // Password Encoder
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -141,8 +144,12 @@ public class UserService {
 
         userRepository.save(old_user);
 
+        // ADDING STUDENT AND PROFESSOR INTO TABLES
         if (new_user.getRole() != null && new_user.getRole().name().equals("STUDENT")) {
             studentService.createStudent(old_user);
+        }
+        else if (new_user.getRole() != null && new_user.getRole().name().equals("PROFESSOR")) {
+            professorService.createProfessor(old_user);
         }
 
         return old_user;

@@ -28,23 +28,16 @@ public class Student{
     @ManyToMany(mappedBy = "creators")
     private List<StudyGroup> studyGroups;
 
-    /*@OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private Long user_id;*/
 
-
-   /* @ManyToMany(mappedBy = "participants")
-    private Set<StudyGroup> studyGroups = new HashSet<>();*/
-
+    // Constructors
     public Student() {}
-
 
     public Student(Long student_id, User user) {
         this.studentId = student_id;
         this.user = user;
     }
 
-
+    // Getters and setters
     public User getUser() { return user; }
 
     public void setUser(User user) { this.user = user; }

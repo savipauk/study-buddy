@@ -32,7 +32,6 @@ public class GroupMemberService {
         GroupMember groupMember = new GroupMember(student, studyGroup, LocalDateTime.now());
 
         // Persist the relationship
-        System.out.println(groupMember.toString());
         groupMemberRepository.save(groupMember);
     }
 }

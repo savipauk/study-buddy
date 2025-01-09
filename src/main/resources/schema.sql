@@ -44,9 +44,6 @@ CREATE TABLE Students (
 CREATE TABLE Professors (
     professor_id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL, -- foreign key prema Users
-    date_of_birth DATE,
-    gender ENUM('M', 'F', 'Other'),
-    city VARCHAR(100),
     PRIMARY KEY (professor_id),
     UNIQUE (user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
@@ -58,7 +55,10 @@ CREATE TABLE StudyGroups (
     creator_id INT NOT NULL, -- foreign key prema Users
     group_name VARCHAR(255) NOT NULL,
     location VARCHAR(255),
+    x_coordinate VARCHAR(255),
+    y_coordinate VARCHAR(255),
     date DATE NOT NULL,
+    time TIME NOT NULL,
     max_members INT NOT NULL,
     description TEXT,
     expiration_date DATE NOT NULL,
@@ -69,6 +69,7 @@ CREATE TABLE StudyGroups (
 CREATE TABLE GroupMembers (
     group_id BIGINT NOT NULL,
     member_id BIGINT NOT NULL,
+    join_date TIMESTAMP,
     PRIMARY KEY (group_id, member_id),
     CONSTRAINT fk_group
         FOREIGN KEY (group_id)
@@ -83,21 +84,26 @@ CREATE TABLE GroupMembers (
 CREATE TABLE Lessons (
     lesson_id INT NOT NULL AUTO_INCREMENT,
     professor_id INT NOT NULL, -- foreign key prema Professors
-    lesson_type ENUM('Mass', 'One-on-One') NOT NULL,
-    location VARCHAR(255),
-    price FLOAT,
-    date DATE NOT NULL,
-    duration INT NOT NULL, -- trajanje u minutama
+    subject VARCHAR(255),
+    duration VARCHAR(255 )NOT NULL, -- trajanje u minutama
     max_participants INT NOT NULL,
     min_participants INT NOT NULL,
+    x_coordinate VARCHAR(255),
+    y_coordinate VARCHAR(255),
+    location VARCHAR(255),
+    lesson_type ENUM('MASS', 'ONE_ON_ONE') NOT NULL,
+    price FLOAT,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
     registration_deadline DATE,
     PRIMARY KEY (lesson_id),
     FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
 );
 
 CREATE TABLE LessonParticipants (
-    lesson_id INT NOT NULL, -- foreign key prema Lessons
-    participant_id INT NOT NULL, -- foreign key prema Students
+    lesson_id INT NOT NULL, -- foreign key for Lessons
+    participant_id INT NOT NULL, -- foreign key for Students
+    participation_date TIMESTAMP,
     PRIMARY KEY (lesson_id, participant_id),
     FOREIGN KEY (lesson_id) REFERENCES Lessons(lesson_id) ON DELETE CASCADE,
     FOREIGN KEY (participant_id) REFERENCES Students(student_id) ON DELETE CASCADE
@@ -159,3 +165,32 @@ VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrK
 INSERT INTO Students(user_id)
 VALUES ('1'),
        ('2');
+
+-- Professor entires
+INSERT INTO Professors(user_id)
+VALUES ('3'),
+       ('4');
+
+-- Lessons entries
+INSERT INTO Lessons (professor_id, subject, duration, max_participants, min_participants, x_coordinate, y_coordinate, location, lesson_type, price, date, time, registration_deadline)
+VALUES (1,'Math', '60 minutes', 20, 5, '45.4234', '75.6821', 'Zagreb', 'MASS', 25.00, '2025-01-15', '09:00:00', '2025-01-10'),
+    (2,'Physics', '90 minutes', 15, 3, '45.5243', '75.6910', 'Zadar', 'ONE_ON_ONE', 50.00, '2025-01-16', '14:30:00', '2025-01-14'),
+    (1,'English', '45 minutes', 10, 2, '45.5210', '75.6720', 'Bedekovčina', 'MASS', 20.00, '2025-01-17', '11:00:00', '2025-01-15'),
+    (1,'Chemistry', '120 minutes', 25, 10, '45.5300', '75.6600', 'Zabok', 'MASS', 35.00, '2025-01-18', '15:00:00', '2025-01-16'),
+    (2,'History', '50 minutes', 30, 8, NULL, NULL, 'Split', 'ONE_ON_ONE', 15.00, '2025-01-19', '10:00:00', '2025-01-17');
+
+-- StudyGroups entries
+INSERT INTO StudyGroups (group_name, location, x_coordinate, y_coordinate, date, time, max_members, description, expiration_date, creator_id)
+VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00:00', 15, 'Focus on algebra and calculus', '2025-01-18', 1),
+     ('Physics Enthusiasts', 'Split', '43.5081', '16.4402', '2025-02-05', '14:30:00', 10, 'Discuss quantum mechanics and experiments', '2025-02-01', 2),
+     ('Chemistry Basics', 'Rijeka', '45.3271', '14.4422', '2025-01-25', '16:00:00', 12, 'Introduction to organic and inorganic chemistry', '2025-01-22', 1),
+     ('History Buffs', 'Osijek', '45.5600', '18.6758', '2025-03-01', '09:30:00', 8, 'Exploring World War II topics', '2025-02-28', 2),
+     ('Programming Fundamentals', 'Dubrovnik', '42.6507', '18.0944', '2025-04-10', '11:00:00', 20, 'Learn the basics of Python and Java', '2025-04-05', 1);
+
+-- GroupMembers entries
+INSERT INTO GroupMembers(group_id, member_id, join_date)
+VALUES (1,1, NOW()),
+       (2,2, NOW()),
+       (3,1, NOW()),
+       (4,2, NOW()),
+       (5,1, NOW());

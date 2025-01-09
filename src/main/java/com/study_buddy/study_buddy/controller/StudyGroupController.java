@@ -51,7 +51,7 @@ public class StudyGroupController {
     @PostMapping("/create")
     public ResponseEntity<StudyGroup> createStudyGroup(@RequestBody StudyGroupDto dto) {
         // Creating new studyGroup
-        User creator = userService.getUserByEmail(dto.getCreatorEmail());
+        User creator = userService.getUserByEmail(dto.getEmail());
         Student creatorStudent = studentService.getStudentByUserId(creator.getUserId());
 
         StudyGroup studyGroup = new StudyGroup();
