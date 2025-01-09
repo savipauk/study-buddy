@@ -20,7 +20,7 @@ function Root() {
         <h1 className="text">STUDY BUDDY</h1>
       </div>
       <div className="description">
-        <p>Study smarter, together</p>
+        <p>Vrijeme je za pametno učenje</p>
       </div>
       {isSignedIn ? (
         <>
@@ -52,7 +52,7 @@ export function SignOutButton() {
     navigate('/');
   };
 
-  return <button onClick={handleClick}>Sign out</button>;
+  return <button onClick={handleClick}>Odjavi se</button>;
 }
 
 function SignUpButton() {
@@ -63,7 +63,7 @@ function SignUpButton() {
   };
   return (
     <button className="signUpButton" onClick={handleClick}>
-      SIGN UP
+      PRIJAVITE SE
     </button>
   );
 }

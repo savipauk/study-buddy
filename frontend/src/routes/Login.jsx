@@ -38,10 +38,10 @@ function LoginForm() {
         const message = data.passwordCheck;
         const email = data.email;
         if (message === 'DOESNT_EXIST') {
-          setErrorMessage('User does not exist');
+          setErrorMessage('Korisnik ne postoji');
         }
         if (message === 'NOT_OK') {
-          setErrorMessage('Password incorrect');
+          setErrorMessage('Lozinka neispravna');
         }
         if (message === 'OK') {
           setErrorMessage('');
@@ -98,18 +98,18 @@ function LoginForm() {
       <div className="formWrapper">
         <form className="forms" onSubmit={onSubmit}>
           <div className="formDiv">
-            <h1 className="helloText">Hello!</h1>
+            <h1 className="helloText">Pozdrav!</h1>
             <div className="inputDiv">
               <input
                 className="infoInput"
-                placeholder="Username"
+                placeholder="Korisničko ime"
                 name="username"
                 onChange={onChange}
                 value={loginForm.username}
               />
               <input
                 className="passwordInput"
-                placeholder="Password"
+                placeholder="Lozinka"
                 name="password"
                 onChange={onChange}
                 type="password"
@@ -119,17 +119,17 @@ function LoginForm() {
             <p className="errorMessage">{errorMessage}</p>
             <div className="buttonDiv">
               <button className="inputButton" type="submit">
-                Sign In
+                Prijavi se
               </button>
             </div>
             <div className="redirect">
-              <p className="account">Dont have account?</p>
+              <p className="account">Nemate račun?</p>
               <a href="/users/register" className="link">
-                Register here
+                Registrirajte se
               </a>
             </div>
             <div className="oauth">
-              <p className="signUpText"> Or sign up with... </p>
+              <p className="signUpText"> Ili se prijavite sa... </p>
               <GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {
