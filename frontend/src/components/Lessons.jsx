@@ -41,6 +41,11 @@ function CreateInstructionForm({ onClose }) {
   function onChange(event) {
     const { name, value } = event.target;
     setInstructionInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
+
+    if (name === 'type' && value === 'OneOnOne') {
+      setMaxNum(1);
+      setMinNum(1);
+    }
   }
 
   useEffect(() => {
@@ -94,6 +99,9 @@ function CreateInstructionForm({ onClose }) {
   const changeParticipants = (id, type) => {
     if (type === 0) {
       if (id === 0 && maxNum > 0) {
+        if (maxNum === minNum) {
+          setMinNum(minNum - 1);
+        }
         setMaxNum(maxNum - 1);
       } else if (id === 1) {
         setMaxNum(maxNum + 1);
@@ -268,6 +276,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(0, 0)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-minus"></i>
                 </button>
@@ -275,6 +284,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(1, 0)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-plus"></i>
                 </button>
@@ -288,6 +298,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(0, 1)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-minus"></i>
                 </button>
@@ -295,6 +306,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(1, 1)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-plus"></i>
                 </button>
