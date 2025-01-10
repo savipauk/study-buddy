@@ -128,9 +128,17 @@
   justify-content: center;
   margin-top: 1em;
   padding-bottom: 10px;
+  gap: 1em;  /* izbrisati kasnije */
 }
 
 .editButton {
+  font-size: 1em;
+  background-color: black;
+  color: white;
+}
+
+/* izbrisati kasnije */
+.reportButton {
   font-size: 1em;
   background-color: black;
   color: white;
