@@ -160,6 +160,7 @@
 }
 
 .modalContent {
+  background-color: white;
   padding: 2em;
   border-radius: 5px;
   border: 1px solid black;

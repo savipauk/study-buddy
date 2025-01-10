@@ -37,15 +37,16 @@ function LoginForm() {
         const data = await response.json();
         const message = data.passwordCheck;
         const email = data.email;
+        const role = data.studyRole;
         if (message === 'DOESNT_EXIST') {
-          setErrorMessage('User does not exist');
+          setErrorMessage('Korisnik ne postoji');
         }
         if (message === 'NOT_OK') {
-          setErrorMessage('Password incorrect');
+          setErrorMessage('Lozinka neispravna');
         }
         if (message === 'OK') {
           setErrorMessage('');
-          signIn(email);
+          signIn(email, role);
           navigate('/users/home');
         }
       }
@@ -80,12 +81,13 @@ function LoginForm() {
         const data = await response.json();
         const registration = data.registration;
         const email = data.email;
+        const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
           setIsProfileSetupComplete(false);
         } else if (registration === 'LOGIN_OAUTH_OK') {
           setIsProfileSetupComplete(true);
         }
-        signInWithGoogle(credential, email);
+        signInWithGoogle(credential, email, role);
         navigate('/users/home');
       }
     } catch (error) {
@@ -98,18 +100,18 @@ function LoginForm() {
       <div className="formWrapper">
         <form className="forms" onSubmit={onSubmit}>
           <div className="formDiv">
-            <h1 className="helloText">Hello!</h1>
+            <h1 className="helloText">Pozdrav!</h1>
             <div className="inputDiv">
               <input
                 className="infoInput"
-                placeholder="Username"
+                placeholder="Korisničko ime"
                 name="username"
                 onChange={onChange}
                 value={loginForm.username}
               />
               <input
                 className="passwordInput"
-                placeholder="Password"
+                placeholder="Lozinka"
                 name="password"
                 onChange={onChange}
                 type="password"
@@ -119,17 +121,17 @@ function LoginForm() {
             <p className="errorMessage">{errorMessage}</p>
             <div className="buttonDiv">
               <button className="inputButton" type="submit">
-                Sign In
+                Prijavi se
               </button>
             </div>
             <div className="redirect">
-              <p className="account">Dont have account?</p>
+              <p className="account">Nemate račun?</p>
               <a href="/users/register" className="link">
-                Register here
+                Registrirajte se
               </a>
             </div>
             <div className="oauth">
-              <p className="signUpText"> Or sign up with... </p>
+              <p className="signUpText"> Ili se prijavite sa... </p>
               <GoogleLogin
                 onSuccess={loginWithGoogle}
                 onError={() => {

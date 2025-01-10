@@ -24,7 +24,7 @@ function Header() {
           <i className="fa-solid fa-house"></i>
         </button>
       </div>
-      <h1 className="headerText">Study Buddy</h1>
+      <h1 className="headerText">STUDY BUDDY</h1>
       <div className="headerSide">
         <button className="headerButtons" onClick={handleClickProfile}>
           <i className="fa-solid fa-user"></i>

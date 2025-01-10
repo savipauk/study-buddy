@@ -70,7 +70,6 @@ function RegisterForm() {
       city: registerForm.location,
       dateOfBirth: registerForm.dob
     };
-    console.log(data);
     const endpoint = '/login/register';
     const options = {
       method: 'POST',
@@ -85,16 +84,17 @@ function RegisterForm() {
       if (response.ok) {
         const data = await response.json();
         const message = data.registration;
+        const role = data.studyRole;
         if (message === 'REGISTRATION_OK') {
           setErrorMessage('');
-          signIn(registerForm.email);
+          signIn(registerForm.email, role);
           navigate('/users/home');
         }
         if (message === 'EMAIL_EXISTS') {
-          setErrorMessage('Email already taken');
+          setErrorMessage('Email se već koristi');
         }
         if (message === 'USERNAME_EXISTS') {
-          setErrorMessage('Username already taken');
+          setErrorMessage('Korisničko ime se već koristi');
         }
       }
     } catch (error) {
@@ -123,13 +123,14 @@ function RegisterForm() {
         const data = await response.json();
         const registration = data.registration;
         const email = data.email;
-        console.log(registration);
+        const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
           setIsProfileSetupComplete(false);
+          signInWithGoogle(credential, email, '');
         } else if (registration === 'LOGIN_OAUTH_OK') {
           setIsProfileSetupComplete(true);
+          signInWithGoogle(credential, email, role);
         }
-        signInWithGoogle(credential, email);
         navigate('/users/home');
       }
     } catch (error) {
@@ -155,35 +156,35 @@ function RegisterForm() {
   function isValid() {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (registerForm.password !== registerForm.confirmPassword) {
-      setErrorMessage('Passwords do not match!');
+      setErrorMessage('Lozinke se ne podudaraju!');
       return false;
     }
     if (!emailRegex.test(registerForm.email)) {
-      setErrorMessage('Email is invalid!');
+      setErrorMessage('Email nije ispravan!');
       return false;
     }
     if (registerForm.password.length < 8) {
-      setErrorMessage('Password must be at least 8 letters long');
+      setErrorMessage('Lozinka mora imati najmanje 8 znakova');
       return false;
     }
     if (!registerForm.username) {
-      setErrorMessage('Username is required');
+      setErrorMessage('Korisničko ime je obavezno');
       return false;
     }
     if (!registerForm.password) {
-      setErrorMessage('Password is required');
+      setErrorMessage('Lozinka je obavezna');
       return false;
     }
     if (!registerForm.firstName) {
-      setErrorMessage('First name is required');
+      setErrorMessage('Ime je obavezno');
       return false;
     }
     if (!registerForm.lastName) {
-      setErrorMessage('Last name is required');
+      setErrorMessage('Prezime je obavezno');
       return false;
     }
     if (!registerForm.role) {
-      setErrorMessage('Role is required');
+      setErrorMessage('Uloga je obavezna');
       return false;
     }
     setErrorMessage('');
@@ -194,13 +195,13 @@ function RegisterForm() {
     <div className="formWrapper">
       <form className="forms" onSubmit={onSubmit}>
         <div className="formDiv">
-          <h1 className="helloText">Hello!</h1>
-          <h2 className="createNewText">Create new account</h2>
+          <h1 className="helloText">Pozdrav!</h1>
+          <h2 className="createNewText">Kreirajte novi račun</h2>
           <div className="inputDiv">
             <div className="nameWrapper">
               <input
                 className="nameInfoInput"
-                placeholder="First Name"
+                placeholder="Ime"
                 type="text"
                 name="firstName"
                 value={registerForm.firstName}
@@ -208,7 +209,7 @@ function RegisterForm() {
               ></input>
               <input
                 className="nameInfoInput"
-                placeholder="Last Name"
+                placeholder="Prezime"
                 type="text"
                 name="lastName"
                 value={registerForm.lastName}
@@ -218,7 +219,7 @@ function RegisterForm() {
             <input
               className="infoInput"
               type="text"
-              placeholder="Username"
+              placeholder="Korisničko ime"
               onChange={onChange}
               value={registerForm.username}
               name="username"
@@ -236,7 +237,7 @@ function RegisterForm() {
             <input
               className="passwordInput"
               type="password"
-              placeholder="Password"
+              placeholder="Lozinka"
               onChange={onChange}
               value={registerForm.password}
               name="password"
@@ -244,7 +245,7 @@ function RegisterForm() {
             <input
               className="passwordInput"
               type="password"
-              placeholder="Confirm password"
+              placeholder="Potvrdi lozinku"
               onChange={onChange}
               value={registerForm.confirmPassword}
               name="confirmPassword"
@@ -253,13 +254,13 @@ function RegisterForm() {
           <input
             className="infoInput"
             type="text"
-            placeholder="Location"
+            placeholder="Lokacija"
             onChange={onChange}
             value={registerForm.location}
             name="location"
           ></input>
           <div className="dateOfBirth">
-            <label className="dobTitle">Date of Birth</label>
+            <label className="dobTitle">Datum rođenja</label>
             <div className="dobSelector">
               <div className="dropdown">
                 <select
@@ -268,7 +269,7 @@ function RegisterForm() {
                   value={day}
                   onChange={(e) => handleDOBChange('day', e.target.value)}
                 >
-                  <option value="">Day</option>
+                  <option value="">Dan</option>
                   {Array.from({ length: 31 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -283,20 +284,20 @@ function RegisterForm() {
                   value={month}
                   onChange={(e) => handleDOBChange('month', e.target.value)}
                 >
-                  <option value="">Month</option>
+                  <option value="">Mjesec</option>
                   {[
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                    'August',
-                    'September',
-                    'October',
-                    'November',
-                    'December'
+                    'Siječanj',
+                    'Veljača',
+                    'Ožujak',
+                    'Travanj',
+                    'Svibanj',
+                    'Lipanj',
+                    'Srpanj',
+                    'Kolovoz',
+                    'Rujan',
+                    'Listopad',
+                    'Studeni',
+                    'Prosinac'
                   ].map((month, i) => (
                     <option key={i + 1} value={i + 1}>
                       {month}
@@ -311,7 +312,7 @@ function RegisterForm() {
                   value={year}
                   onChange={(e) => handleDOBChange('year', e.target.value)}
                 >
-                  <option value="">Year</option>
+                  <option value="">Godina</option>
                   {Array.from({ length: 100 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -335,7 +336,7 @@ function RegisterForm() {
               onChange={onChange}
             ></input>
             <label htmlFor="genderMale" className="toggleOption">
-              Male
+              Muško
             </label>
             <input
               className="genderRadioButton"
@@ -347,7 +348,7 @@ function RegisterForm() {
               onChange={onChange}
             ></input>
             <label htmlFor="genderFemale" className="toggleOption">
-              Female
+              Žensko
             </label>
           </div>
           <div className="roleSelection">
@@ -373,17 +374,17 @@ function RegisterForm() {
               onChange={onChange}
             ></input>
             <label htmlFor="roleProfessor" className="toggleOption">
-              Professor
+              Profesor
             </label>
           </div>
           <p className="errorMessage">{errorMessage}</p>
           <div className="buttonDiv">
             <button className="inputButton" type="submit">
-              Create new account!
+              Kreirajte račun!
             </button>
           </div>
           <div className="oauth">
-            <p className="signUpText"> Or sign up with... </p>
+            <p className="signUpText"> Ili se prijavite sa... </p>
             <GoogleLogin
               onSuccess={loginWithGoogle}
               onError={() => {
@@ -393,9 +394,9 @@ function RegisterForm() {
           </div>
         </div>
         <div className="redirect">
-          <p className="account">Already have account?</p>
+          <p className="account">Već imate račun?</p>
           <a className="link" href="/users/login">
-            Sign in
+            Prijavite se
           </a>
         </div>
       </form>

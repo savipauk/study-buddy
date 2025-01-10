@@ -125,7 +125,7 @@ function CreateInstructionForm({ onClose }) {
       return false;
     }
     if (!instructionInfoForm.price.trim()) {
-      setValidationMessage('CIjena je obavezan');
+      setValidationMessage('Cijena je obavezna');
       return false;
     }
     if (!instructionInfoForm.type.trim()) {

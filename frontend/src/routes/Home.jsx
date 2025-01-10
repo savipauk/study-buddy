@@ -5,9 +5,10 @@ import useAuth from '../hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import CreateStudyGroupForm from '../components/StudyGroupForm';
+import Lessons from '../components/Lessons';
 
 function HomePage() {
-  const { isProfileSetupComplete } = useAuth();
+  const { isProfileSetupComplete, role } = useAuth();
   const [createClicked, setCreateClicked] = useState(false);
 
   const handleCreateGroup = () => {
@@ -39,11 +40,14 @@ function HomePage() {
           </button>
         </div>
 
-        <h1 className="someText">HOMEPAGE</h1>
+        <h1 className="someText">AKTIVNO</h1>
       </div>
       {!isProfileSetupComplete && <ProfileSetup />}
-      {createClicked && (
+      {createClicked && role === 'STUDENT' && (
         <CreateStudyGroupForm onClose={handleCloseCreateGroup} />
+      )}
+      {createClicked && role === 'PROFESSOR' && (
+        <Lessons onClose={handleCloseCreateGroup} />
       )}
     </>
   );
@@ -52,7 +56,7 @@ function HomePage() {
 export default HomePage;
 
 function ProfileSetup() {
-  const { setIsProfileSetupComplete } = useAuth();
+  const { setIsProfileSetupComplete, setRole } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
   const [setupForm, setSetupForm] = useState({
     username: '',
@@ -125,9 +129,10 @@ function ProfileSetup() {
       if (response.ok) {
         const data = await response.json();
         if (data.message === 'USERNAME_TAKEN') {
-          setErrorMessage('Username postoji');
+          setErrorMessage('Korisničko ime već postoji');
         } else {
           setIsProfileSetupComplete(true);
+          setRole(data.studyRole);
         }
         return data;
       } else {
@@ -142,19 +147,19 @@ function ProfileSetup() {
 
   function isValid() {
     if (!setupForm.firstName) {
-      setErrorMessage('First name is required');
+      setErrorMessage('Ime je obavezno');
       return false;
     }
     if (!setupForm.lastName) {
-      setErrorMessage('Last name is required');
+      setErrorMessage('Prezime je obavezno');
       return false;
     }
     if (!setupForm.username) {
-      setErrorMessage('Username is required');
+      setErrorMessage('Korisničko ime je obavezno');
       return false;
     }
     if (!setupForm.role) {
-      setErrorMessage('Role is required');
+      setErrorMessage('Uloga je obavezna');
       return false;
     }
     setErrorMessage('');
@@ -172,12 +177,12 @@ function ProfileSetup() {
     <div className="setupWrapper">
       <form className="forms" onSubmit={onSubmit}>
         <div className="formDiv">
-          <h1 className="helloText">Dovrši profil!</h1>
+          <h1 className="helloText">Dovršite profil!</h1>
           <div className="inputDiv">
             <div className="nameWrapper">
               <input
                 className="nameInfoInput"
-                placeholder="First Name"
+                placeholder="Ime"
                 type="text"
                 name="firstName"
                 value={setSetupForm.firstName}
@@ -185,7 +190,7 @@ function ProfileSetup() {
               ></input>
               <input
                 className="nameInfoInput"
-                placeholder="Last Name"
+                placeholder="Prezime"
                 type="text"
                 name="lastName"
                 value={setSetupForm.lastName}
@@ -195,7 +200,7 @@ function ProfileSetup() {
             <input
               className="infoInput"
               type="text"
-              placeholder="Username"
+              placeholder="Korisničko ime"
               onChange={onChange}
               value={setSetupForm.username}
               name="username"
@@ -204,13 +209,13 @@ function ProfileSetup() {
           <input
             className="infoInput"
             type="text"
-            placeholder="Location"
+            placeholder="Lokacija"
             onChange={onChange}
             value={setupForm.location}
             name="location"
           ></input>
           <div className="dateOfBirth">
-            <label className="dobTitle">Date of Birth</label>
+            <label className="dobTitle">Datum rođenja</label>
             <div className="dobSelector">
               <div className="dropdown">
                 <select
@@ -219,7 +224,7 @@ function ProfileSetup() {
                   value={day}
                   onChange={(e) => handleDOBChange('day', e.target.value)}
                 >
-                  <option value="">Day</option>
+                  <option value="">Dan</option>
                   {Array.from({ length: 31 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -234,20 +239,20 @@ function ProfileSetup() {
                   value={month}
                   onChange={(e) => handleDOBChange('month', e.target.value)}
                 >
-                  <option value="">Month</option>
+                  <option value="">Mjesec</option>
                   {[
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                    'August',
-                    'September',
-                    'October',
-                    'November',
-                    'December'
+                    'Siječanj',
+                    'Veljača',
+                    'Ožujak',
+                    'Travanj',
+                    'Svibanj',
+                    'Lipanj',
+                    'Srpanj',
+                    'Kolovoz',
+                    'Rujan',
+                    'Listopad',
+                    'Studeni',
+                    'Prosinac'
                   ].map((month, i) => (
                     <option key={i + 1} value={i + 1}>
                       {month}
@@ -286,7 +291,7 @@ function ProfileSetup() {
               onChange={onChange}
             ></input>
             <label htmlFor="genderMale" className="toggleOption">
-              Male
+              Muško
             </label>
             <input
               className="genderRadioButton"
@@ -298,7 +303,7 @@ function ProfileSetup() {
               onChange={onChange}
             ></input>
             <label htmlFor="genderFemale" className="toggleOption">
-              Female
+              Žensko
             </label>
           </div>
           <div className="roleSelection">
@@ -324,13 +329,13 @@ function ProfileSetup() {
               onChange={onChange}
             ></input>
             <label htmlFor="roleProfessor" className="toggleOption">
-              Professor
+              Profesor
             </label>
           </div>
           <p className="errorMessage">{errorMessage}</p>
           <div className="buttonDiv">
             <button className="inputButton" type="submit">
-              Finish
+              Predaj
             </button>
           </div>
         </div>
