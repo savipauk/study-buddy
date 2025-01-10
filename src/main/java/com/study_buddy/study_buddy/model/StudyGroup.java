@@ -21,10 +21,10 @@ public class StudyGroup {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "x-coordinate")
+    @Column(name = "x_coordinate")
     private String xCoordinate;
 
-    @Column(name = "y-coordinate")
+    @Column(name = "y_coordinate")
     private String yCoordinate;
 
     @Column(name = "date")
@@ -128,4 +128,22 @@ public class StudyGroup {
     public LocalDate getExpirationDate() { return expirationDate; }
 
     public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
+
+    @Override
+    public String toString() {
+        return "StudyGroup{" +
+                "groupId=" + groupId +
+                ", groupName='" + groupName + '\'' +
+                ", location='" + location + '\'' +
+                ", xCoordinate='" + xCoordinate + '\'' +
+                ", yCoordinate='" + yCoordinate + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                ", maxMembers=" + maxMembers +
+                ", description='" + description + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", creator=" + creator +
+                ", creators=" + creators +
+                '}';
+    }
 }
