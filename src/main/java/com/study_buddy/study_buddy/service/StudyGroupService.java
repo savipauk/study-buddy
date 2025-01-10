@@ -25,5 +25,14 @@ public class StudyGroupService {
 
     public StudyGroup getStudyGroupById(Long groupId){ return studyGroupRepository.findByGroupId(groupId);}
 
+    public List<StudyGroup> getAllStudyGroupsByCreator(User user){
+        List<StudyGroup> studyGroups = studyGroupRepository.findByCreator_StudentId(user.getUserId());
+        Student student = studentRepository.findByStudentId(0L);
+        for (StudyGroup group : studyGroups) {
+            group.setCreator(student); // Or set to a placeholder user
+            studyGroupRepository.save(group);
+        }
+        return studyGroups;
+    }
 
 }
