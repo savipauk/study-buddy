@@ -151,7 +151,6 @@ function CreateStudyGroupForm({ onClose }) {
       date: date,
       time: time
     };
-    console.log(data);
     const options = {
       method: 'POST',
       headers: {
