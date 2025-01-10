@@ -23,6 +23,7 @@ function HomePage() {
     } else {
       document.body.classList.remove('no-scroll');
     }
+    console.log(role);
   }, [createClicked, isProfileSetupComplete]);
   return (
     <>
@@ -132,7 +133,7 @@ function ProfileSetup() {
           setErrorMessage('Username postoji');
         } else {
           setIsProfileSetupComplete(true);
-          setRole(setupForm.role);
+          setRole(data.studyRole);
         }
         return data;
       } else {
