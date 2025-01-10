@@ -70,7 +70,6 @@ function RegisterForm() {
       city: registerForm.location,
       dateOfBirth: registerForm.dob
     };
-    console.log(data);
     const endpoint = '/login/register';
     const options = {
       method: 'POST',
@@ -85,9 +84,10 @@ function RegisterForm() {
       if (response.ok) {
         const data = await response.json();
         const message = data.registration;
+        const role = data.studyRole;
         if (message === 'REGISTRATION_OK') {
           setErrorMessage('');
-          signIn(registerForm.email);
+          signIn(registerForm.email, role);
           navigate('/users/home');
         }
         if (message === 'EMAIL_EXISTS') {
@@ -123,13 +123,14 @@ function RegisterForm() {
         const data = await response.json();
         const registration = data.registration;
         const email = data.email;
-        console.log(registration);
+        const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
           setIsProfileSetupComplete(false);
+          signInWithGoogle(credential, email, '');
         } else if (registration === 'LOGIN_OAUTH_OK') {
           setIsProfileSetupComplete(true);
+          signInWithGoogle(credential, email, role);
         }
-        signInWithGoogle(credential, email);
         navigate('/users/home');
       }
     } catch (error) {
