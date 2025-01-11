@@ -9,8 +9,11 @@ import com.study_buddy.study_buddy.repository.StudyGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudyGroupService {
@@ -26,6 +29,19 @@ public class StudyGroupService {
 
     public List<StudyGroup> getStudyGroupsByCreator(Student creator) { return studyGroupRepository.findByCreator(creator); }
 
+    public List<StudyGroup> getActiveStudyGroups() {
+        List<StudyGroup> allStudyGroups = studyGroupRepository.findAll(); // Fetch all study groups
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allStudyGroups.stream()
+                .filter(studyGroup ->
+                        studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
+                )
+                .collect(Collectors.toList());
+    }
+
     public StudyGroup getStudyGroupById(Long groupId){ return studyGroupRepository.findByGroupId(groupId);}
 
     public List<StudyGroup> deleteAllStudyGroupsByCreator(User user){
@@ -38,6 +54,8 @@ public class StudyGroupService {
         }
         return studyGroups;
     }
+
+
 
     public StudyGroupDto convertToDto(StudyGroup studyGroup, String username) {
         StudyGroupDto dto = new StudyGroupDto();

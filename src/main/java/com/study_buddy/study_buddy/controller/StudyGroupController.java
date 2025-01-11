@@ -57,6 +57,20 @@ public class StudyGroupController {
         return ResponseEntity.ok(studyGroupDtos);
     }
 
+    // Get all active studyGroups
+    @GetMapping("/active")
+    public ResponseEntity<List<StudyGroupDto>> getAllActiveStudyGroups() {
+        List<StudyGroup> activeStudyGroups = studyGroupService.getActiveStudyGroups();
+        if (activeStudyGroups.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<StudyGroupDto> activeStudyGroupDtos = activeStudyGroups.stream()
+                .map(studyGroup -> studyGroupService.convertToDto(studyGroup, null))
+                .toList();
+        return ResponseEntity.ok(activeStudyGroupDtos);
+
+    }
+
     // Get a study group by ID
     @GetMapping("/{id}")
     public ResponseEntity<StudyGroup> getStudyGroupById(@PathVariable Long id) {
