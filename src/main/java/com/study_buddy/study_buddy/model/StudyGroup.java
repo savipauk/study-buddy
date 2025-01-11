@@ -21,10 +21,10 @@ public class StudyGroup {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "x-coordinate")
+    @Column(name = "x_coordinate")
     private String xCoordinate;
 
-    @Column(name = "y-coordinate")
+    @Column(name = "y_coordinate")
     private String yCoordinate;
 
     @Column(name = "date")
