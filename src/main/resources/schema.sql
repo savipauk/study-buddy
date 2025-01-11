@@ -63,7 +63,10 @@ CREATE TABLE StudyGroups (
     description TEXT,
     expiration_date DATE NOT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES Students(student_id)
+
+    --Use this if want to completely delete all studyGroup created by student with creator_id
+    -- FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (
@@ -97,7 +100,10 @@ CREATE TABLE Lessons (
     time TIME NOT NULL,
     registration_deadline DATE,
     PRIMARY KEY (lesson_id),
-    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
+    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
+
+    --Use this if we want to completely delete all lessons created by professor with professor_id
+    -- FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
 );
 
 CREATE TABLE LessonParticipants (
@@ -207,5 +213,5 @@ INSERT INTO Students(student_id, user_id)
     VALUES (0,0);
 
 -- Insert default professor with profesor_id = 0
-INSERT INTO Professor(professor_id, user_id)
+INSERT INTO Professors(professor_id, user_id)
     VALUES (0,0);
