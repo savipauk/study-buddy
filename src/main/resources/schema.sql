@@ -24,7 +24,7 @@ CREATE TABLE Users (
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
     date_of_birth DATE,
-    gender ENUM('M', 'F', 'Other'),
+    gender ENUM('M', 'F', 'NOTDEFINED'),
     city VARCHAR(100),
     role ENUM('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -194,3 +194,18 @@ VALUES (1,1, NOW()),
        (3,1, NOW()),
        (4,2, NOW()),
        (5,1, NOW());
+
+-- Insert default user with ID = 0
+INSERT INTO Users (user_id, email, password, oauth_provider, oauth_id, first_name, last_name, username, profile_picture, description,
+        access_token, refresh_token, date_of_birth, gender, city, role)
+    VALUES ( 0, 'default@example.com', '', 'NONE', '0', 'Default', 'User', 'default', NULL, NULL,
+        NULL, NULL, NULL, 'NOTDEFINED', NULL, 'UNASSIGNED'
+);
+
+-- Insert default student with student_id = 0
+INSERT INTO Students(student_id, user_id)
+    VALUES (0,0);
+
+-- Insert default professor with profesor_id = 0
+INSERT INTO Professor(professor_id, user_id)
+    VALUES (0,0);
