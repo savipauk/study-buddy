@@ -51,7 +51,7 @@ public class StudyGroupController {
 
         List<StudyGroup> studyGroups = studyGroupService.getStudyGroupsByCreator(creator);
         List<StudyGroupDto> studyGroupDtos = studyGroups.stream()
-                .map(studyGroup -> studyGroupService.convertToDto(studyGroup, user.getUsername()))
+                .map(studyGroupService::convertToDto)
                 .toList();
 
         return ResponseEntity.ok(studyGroupDtos);
@@ -65,7 +65,7 @@ public class StudyGroupController {
             return ResponseEntity.noContent().build();
         }
         List<StudyGroupDto> activeStudyGroupDtos = activeStudyGroups.stream()
-                .map(studyGroup -> studyGroupService.convertToDto(studyGroup, null))
+                .map(studyGroupService::convertToDto)
                 .toList();
         return ResponseEntity.ok(activeStudyGroupDtos);
 

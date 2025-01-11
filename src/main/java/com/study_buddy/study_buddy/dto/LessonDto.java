@@ -20,6 +20,7 @@ public class LessonDto {
     private Float price;
     private LocalDate date;
     private LocalTime time;
+    private String username;
 
     //private String description;
     private LocalDate registrationDeadLine;
@@ -84,6 +85,10 @@ public class LessonDto {
     public LocalDate getRegistrationDeadLine() { return registrationDeadLine; }
 
     public void setRegistrationDeadLine(LocalDate registrationDeadLine) { this.registrationDeadLine = registrationDeadLine; }
+
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 
     @Override
     public String toString() {

@@ -57,7 +57,7 @@ public class StudyGroupService {
 
 
 
-    public StudyGroupDto convertToDto(StudyGroup studyGroup, String username) {
+    public StudyGroupDto convertToDto(StudyGroup studyGroup) {
         StudyGroupDto dto = new StudyGroupDto();
         dto.setStudyGroupId(studyGroup.getGroupId());
         dto.setEmail(studyGroup.getCreator().getUser().getEmail()); // Assuming the creator's User is linked
@@ -70,7 +70,7 @@ public class StudyGroupService {
         dto.setMaxMembers(studyGroup.getMaxMembers());
         dto.setDescription(studyGroup.getDescription());
         dto.setExpirationDate(studyGroup.getExpirationDate());
-        dto.setUsername(username);
+        dto.setUsername(studyGroup.getCreator().getUser().getUsername());
         return dto;
     }
 

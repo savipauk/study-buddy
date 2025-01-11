@@ -38,6 +38,35 @@ public class LessonController {
         return lessonService.getAllLessons();
     }
 
+    // Get all lessons created by one professor
+    @GetMapping("/createdBy/{email}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("email") String email) {
+        User user = userService.getUserByEmail(email);
+        Professor professor = professorService.getProfessorByUserId(user.getUserId());
+        if (professor == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Lesson> lessons = lessonService.getAllLessonsByProfessor(professor);
+        List<LessonDto> lessonDtos = lessons.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(lessonDtos);
+    }
+
+    // Get all active lessons
+    @GetMapping("/active")
+    public ResponseEntity<List<LessonDto>> getAllActiveLessons() {
+        List<Lesson> activeLessons = lessonService.getAllActiveLessons();
+        if (activeLessons.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<LessonDto> lessonDtos = activeLessons.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(lessonDtos);
+    }
+
     // Get a study group by ID
     @GetMapping("/{id}")
     public ResponseEntity<Lesson> getLessonById(@PathVariable Long id) {
@@ -48,7 +77,6 @@ public class LessonController {
     // Create a new study group
     @PostMapping("/create")
     public ResponseEntity<Lesson> createLesson(@RequestBody LessonDto dto) {
-        // Creating new studyGroup
         User creator = userService.getUserByEmail(dto.getEmail());
         Professor creatorProfessor = professorService.getProfessorByUserId(creator.getUserId());
 
