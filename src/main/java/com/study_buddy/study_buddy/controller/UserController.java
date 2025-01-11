@@ -46,8 +46,6 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    // TODO: fix updateUser - currently not in use
-
     // Update an existing user
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
@@ -57,15 +55,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
+
+
     // Delete a user
     @DeleteMapping("/delete/{email}")
     public ResponseEntity<Void> deleteUser(@PathVariable("email") String email) {
         userService.deleteUser(email);
         return ResponseEntity.noContent().build();
     }
-
-
 
 
 
