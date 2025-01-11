@@ -40,6 +40,23 @@ public class StudyGroupController {
         return studyGroupService.getAllStudyGroups();
     }
 
+    // Get all study groups created by one user
+    @GetMapping("/createdBy/{email}")
+    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("email") String email) {
+        User user = userService.getUserByEmail(email);
+        Student creator = studentService.getStudentByUserId(user.getUserId());
+        if (creator == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<StudyGroup> studyGroups = studyGroupService.getStudyGroupsByCreator(creator);
+        List<StudyGroupDto> studyGroupDtos = studyGroups.stream()
+                .map(studyGroup -> studyGroupService.convertToDto(studyGroup, user.getUsername()))
+                .toList();
+
+        return ResponseEntity.ok(studyGroupDtos);
+    }
+
     // Get a study group by ID
     @GetMapping("/{id}")
     public ResponseEntity<StudyGroup> getStudyGroupById(@PathVariable Long id) {
@@ -113,4 +130,7 @@ public class StudyGroupController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }*/
+
+
+
 }

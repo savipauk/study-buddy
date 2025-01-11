@@ -1,5 +1,6 @@
 package com.study_buddy.study_buddy.service;
 
+import com.study_buddy.study_buddy.dto.StudyGroupDto;
 import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.StudyGroup;
 import com.study_buddy.study_buddy.model.User;
@@ -23,6 +24,8 @@ public class StudyGroupService {
 
     public List<StudyGroup> getAllStudyGroups(){ return studyGroupRepository.findAll();}
 
+    public List<StudyGroup> getStudyGroupsByCreator(Student creator) { return studyGroupRepository.findByCreator(creator); }
+
     public StudyGroup getStudyGroupById(Long groupId){ return studyGroupRepository.findByGroupId(groupId);}
 
     public List<StudyGroup> deleteAllStudyGroupsByCreator(User user){
@@ -34,6 +37,23 @@ public class StudyGroupService {
             studyGroupRepository.save(group);
         }
         return studyGroups;
+    }
+
+    public StudyGroupDto convertToDto(StudyGroup studyGroup, String username) {
+        StudyGroupDto dto = new StudyGroupDto();
+        dto.setStudyGroupId(studyGroup.getGroupId());
+        dto.setEmail(studyGroup.getCreator().getUser().getEmail()); // Assuming the creator's User is linked
+        dto.setGroupName(studyGroup.getGroupName());
+        dto.setLocation(studyGroup.getLocation());
+        dto.setxCoordinate(studyGroup.getxCoordinate());
+        dto.setyCoordinate(studyGroup.getyCoordinate());
+        dto.setDate(studyGroup.getDate());
+        dto.setTime(studyGroup.getTime());
+        dto.setMaxMembers(studyGroup.getMaxMembers());
+        dto.setDescription(studyGroup.getDescription());
+        dto.setExpirationDate(studyGroup.getExpirationDate());
+        dto.setUsername(username);
+        return dto;
     }
 
 }
