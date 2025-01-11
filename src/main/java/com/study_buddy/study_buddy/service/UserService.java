@@ -28,6 +28,9 @@ public class UserService {
     @Autowired
     private ProfessorService professorService;
 
+    @Autowired
+    private StudyGroupService studyGroupService;
+
     // Password Encoder
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -90,9 +93,12 @@ public class UserService {
         }
     }
 
-    // Delete a user by ID
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    // Delete a user by Email
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email);
+        // Handle special cases for STUDENT or PROFESSOR roles
+        studyGroupService.getAllStudyGroupsByCreator(user);
+        userRepository.deleteById(user.getUserId());
     }
 
 
