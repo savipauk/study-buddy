@@ -41,6 +41,11 @@ function CreateInstructionForm({ onClose }) {
   function onChange(event) {
     const { name, value } = event.target;
     setInstructionInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
+
+    if (name === 'type' && value === 'OneOnOne') {
+      setMaxNum(1);
+      setMinNum(1);
+    }
   }
 
   useEffect(() => {
@@ -60,6 +65,18 @@ function CreateInstructionForm({ onClose }) {
           lng: event.latLng.lng()
         };
         setLocation(newLocation);
+
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: newLocation }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const locationsName = results[0].address_components.find(
+              (component) => component.types.includes('locality')
+            );
+            if (locationsName) {
+              setLocationName(locationsName.long_name);
+            }
+          }
+        });
       });
     } else if (markerRef.current) {
       markerRef.current.position = location;
@@ -82,6 +99,9 @@ function CreateInstructionForm({ onClose }) {
   const changeParticipants = (id, type) => {
     if (type === 0) {
       if (id === 0 && maxNum > 0) {
+        if (maxNum === minNum) {
+          setMinNum(minNum - 1);
+        }
         setMaxNum(maxNum - 1);
       } else if (id === 1) {
         setMaxNum(maxNum + 1);
@@ -256,6 +276,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(0, 0)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-minus"></i>
                 </button>
@@ -263,6 +284,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(1, 0)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-plus"></i>
                 </button>
@@ -276,6 +298,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(0, 1)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-minus"></i>
                 </button>
@@ -283,6 +306,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(1, 1)}
+                  disabled={instructionInfoForm.type === 'OneOnOne'}
                 >
                   <i className="fa-solid fa-circle-plus"></i>
                 </button>
