@@ -37,6 +37,7 @@ function LoginForm() {
         const data = await response.json();
         const message = data.passwordCheck;
         const email = data.email;
+        const role = data.studyRole;
         if (message === 'DOESNT_EXIST') {
           setErrorMessage('Korisnik ne postoji');
         }
@@ -45,7 +46,7 @@ function LoginForm() {
         }
         if (message === 'OK') {
           setErrorMessage('');
-          signIn(email);
+          signIn(email, role);
           navigate('/users/home');
         }
       }
@@ -80,12 +81,13 @@ function LoginForm() {
         const data = await response.json();
         const registration = data.registration;
         const email = data.email;
+        const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
           setIsProfileSetupComplete(false);
         } else if (registration === 'LOGIN_OAUTH_OK') {
           setIsProfileSetupComplete(true);
         }
-        signInWithGoogle(credential, email);
+        signInWithGoogle(credential, email, role);
         navigate('/users/home');
       }
     } catch (error) {

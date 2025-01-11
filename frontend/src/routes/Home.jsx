@@ -5,9 +5,10 @@ import useAuth from '../hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import CreateStudyGroupForm from '../components/StudyGroupForm';
+import Lessons from '../components/Lessons';
 
 function HomePage() {
-  const { isProfileSetupComplete } = useAuth();
+  const { isProfileSetupComplete, role } = useAuth();
   const [createClicked, setCreateClicked] = useState(false);
 
   const handleCreateGroup = () => {
@@ -42,8 +43,11 @@ function HomePage() {
         <h1 className="someText">AKTIVNO</h1>
       </div>
       {!isProfileSetupComplete && <ProfileSetup />}
-      {createClicked && (
+      {createClicked && role === 'STUDENT' && (
         <CreateStudyGroupForm onClose={handleCloseCreateGroup} />
+      )}
+      {createClicked && role === 'PROFESSOR' && (
+        <Lessons onClose={handleCloseCreateGroup} />
       )}
     </>
   );
@@ -52,7 +56,7 @@ function HomePage() {
 export default HomePage;
 
 function ProfileSetup() {
-  const { setIsProfileSetupComplete } = useAuth();
+  const { setIsProfileSetupComplete, setRole } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
   const [setupForm, setSetupForm] = useState({
     username: '',
@@ -128,6 +132,7 @@ function ProfileSetup() {
           setErrorMessage('Korisničko ime već postoji');
         } else {
           setIsProfileSetupComplete(true);
+          setRole(data.studyRole);
         }
         return data;
       } else {

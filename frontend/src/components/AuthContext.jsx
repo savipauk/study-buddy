@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isProfileSetupComplete, setIsProfileSetupComplete] = useState(true);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -18,20 +19,22 @@ export const AuthProvider = ({ children }) => {
     setIsSignedIn(true);
   }, []);
 
-  const signInWithGoogle = (credential, email) => {
+  const signInWithGoogle = (credential, email, role) => {
     localStorage.setItem('is_logged_in_with_google', 'true');
     localStorage.setItem('access_token', credential);
-    signIn(email);
+    signIn(email, role);
   };
 
-  const signIn = (info) => {
+  const signIn = (info, role) => {
     // Maybe track this in the database
     localStorage.setItem('user_email', info);
+    setRole(role);
     setIsSignedIn(true);
   };
   const signOut = () => {
     // Maybe track this in the database
     setIsSignedIn(false);
+    setRole(null);
     localStorage.clear();
   };
 
@@ -43,7 +46,9 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         isProfileSetupComplete,
-        setIsProfileSetupComplete
+        setIsProfileSetupComplete,
+        role,
+        setRole
       }}
     >
       {children}
