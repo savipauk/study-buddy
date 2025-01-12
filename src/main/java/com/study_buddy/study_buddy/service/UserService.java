@@ -28,6 +28,12 @@ public class UserService {
     @Autowired
     private ProfessorService professorService;
 
+    @Autowired
+    private StudyGroupService studyGroupService;
+
+    @Autowired
+    private LessonService lessonService;
+
     // Password Encoder
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -90,9 +96,20 @@ public class UserService {
         }
     }
 
-    // Delete a user by ID
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    // Delete a user by Email
+    public void deleteUser(String email) {
+        User user = userRepository.findByEmail(email);
+
+        // Handle special cases for STUDENT or PROFESSOR roles
+        // To completely delete all studyGroups and Lessons created by deleted student and professor comment this if
+        if (user.getRole().getValue().equals("STUDENT") ){
+            // Delete all related StudyGroups
+            studyGroupService.deleteAllStudyGroupsByCreator(user);
+        } else if(user.getRole().getValue().equals("PROFESSOR")){
+            // Delete all related Lessons
+            lessonService.deleteAllLessonsByProfessor(user);
+        }
+        userRepository.deleteById(user.getUserId());
     }
 
 

@@ -36,7 +36,7 @@ function HomePage() {
         <Header></Header>
         <div className="newStudyGroup">
           <button className="newStudyGroupButton" onClick={handleCreateGroup}>
-            Kreiraj StudyGroup
+            {role === 'STUDENT' ? 'Kreiraj StudyGroup' : 'Kreiraj Instrukcije'}
           </button>
         </div>
 

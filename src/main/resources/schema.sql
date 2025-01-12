@@ -24,7 +24,7 @@ CREATE TABLE Users (
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
     date_of_birth DATE,
-    gender ENUM('M', 'F', 'Other'),
+    gender ENUM('M', 'F', 'NOTDEFINED'),
     city VARCHAR(100),
     role ENUM('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -63,7 +63,10 @@ CREATE TABLE StudyGroups (
     description TEXT,
     expiration_date DATE NOT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES Students(student_id)
+
+    --Use this if want to completely delete all studyGroup created by student with creator_id
+    -- FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (
@@ -97,7 +100,10 @@ CREATE TABLE Lessons (
     time TIME NOT NULL,
     registration_deadline DATE,
     PRIMARY KEY (lesson_id),
-    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
+    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
+
+    --Use this if we want to completely delete all lessons created by professor with professor_id
+    -- FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
 );
 
 CREATE TABLE LessonParticipants (
@@ -194,3 +200,18 @@ VALUES (1,1, NOW()),
        (3,1, NOW()),
        (4,2, NOW()),
        (5,1, NOW());
+
+-- Insert default user with ID = 0
+INSERT INTO Users (user_id, email, password, oauth_provider, oauth_id, first_name, last_name, username, profile_picture, description,
+        access_token, refresh_token, date_of_birth, gender, city, role)
+    VALUES ( 0, 'default@example.com', '', 'NONE', '0', 'Default', 'User', 'default', NULL, NULL,
+        NULL, NULL, NULL, 'NOTDEFINED', NULL, 'UNASSIGNED'
+);
+
+-- Insert default student with student_id = 0
+INSERT INTO Students(student_id, user_id)
+    VALUES (0,0);
+
+-- Insert default professor with profesor_id = 0
+INSERT INTO Professors(professor_id, user_id)
+    VALUES (0,0);
