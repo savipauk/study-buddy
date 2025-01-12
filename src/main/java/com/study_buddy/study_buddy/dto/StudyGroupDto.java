@@ -15,6 +15,7 @@ public class StudyGroupDto {
     private int maxMembers;
     private String description;
     private LocalDate expirationDate;
+    private String username;
 
     // Constructors
     public StudyGroupDto() {}
@@ -79,6 +80,10 @@ public class StudyGroupDto {
     public LocalDate getExpirationDate() { return expirationDate; }
 
     public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
+
+    public String getUsername() { return username; }
+
+    public void setUsername(String username) { this.username = username; }
 
     @Override
     public String toString() {
