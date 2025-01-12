@@ -101,7 +101,7 @@ function HomePage() {
           ))
         )}
         {lessons.length === 0 ? (
-          <p>Trenutno nema aktivnih instukcija</p>
+          <p>Trenutno nema aktivnih instrukcija</p>
         ) : (
           lessons.map((lesson, index) => (
             <ActiveLesson key={index} lesson={lesson} />
