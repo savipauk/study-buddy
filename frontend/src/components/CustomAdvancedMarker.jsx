@@ -6,12 +6,13 @@ import PropTypes from 'prop-types';
 
 function CustomAdvancedMarker({ lat, lng }) {
   const map = useGoogleMap();
-  const location = {
-    lat: parseFloat(lat),
-    lng: parseFloat(lng)
-  };
   useEffect(() => {
     if (!map) return;
+
+    const location = {
+      lat: parseFloat(lat),
+      lng: parseFloat(lng)
+    };
     const markerElement = new google.maps.marker.AdvancedMarkerElement({
       map,
       position: location
@@ -19,7 +20,7 @@ function CustomAdvancedMarker({ lat, lng }) {
     return () => {
       markerElement.map = null;
     };
-  }, [map, location]);
+  }, [map, lat, lng]);
 
   return null;
 }
