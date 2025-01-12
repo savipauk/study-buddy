@@ -6,10 +6,14 @@ import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import CreateStudyGroupForm from '../components/StudyGroupForm';
 import Lessons from '../components/Lessons';
+import ActiveGroup from '../components/ActiveGroup';
+import ActiveLesson from '../components/AcitveLesson';
 
 function HomePage() {
   const { isProfileSetupComplete, role } = useAuth();
   const [createClicked, setCreateClicked] = useState(false);
+  const [groups, setGroups] = useState([]);
+  const [lessons, setLessons] = useState([]);
 
   const handleCreateGroup = () => {
     setCreateClicked(true);
@@ -17,6 +21,20 @@ function HomePage() {
   const handleCloseCreateGroup = () => {
     setCreateClicked(false);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getActiveGroups('studyGroup');
+        await getActiveGroups('lesson');
+      } catch (error) {
+        console.error('Error fetching groups:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   useEffect(() => {
     if (createClicked || !isProfileSetupComplete) {
       document.body.classList.add('no-scroll');
@@ -24,6 +42,31 @@ function HomePage() {
       document.body.classList.remove('no-scroll');
     }
   }, [createClicked, isProfileSetupComplete]);
+
+  async function getActiveGroups(type) {
+    const endpoint = `/${type}/active`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        if (type === 'lesson') {
+          setLessons(data);
+        } else if (type === 'studyGroup') {
+          setGroups(data);
+        }
+      } else {
+        console.log('response error');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
       <div
@@ -49,6 +92,22 @@ function HomePage() {
       {createClicked && role === 'PROFESSOR' && (
         <Lessons onClose={handleCloseCreateGroup} />
       )}
+      <div className="activeLessons">
+        {groups.length === 0 ? (
+          <p>Treutno nema aktivnih studyGrupa</p>
+        ) : (
+          groups.map((group, index) => (
+            <ActiveGroup key={index} group={group} />
+          ))
+        )}
+        {lessons.length === 0 ? (
+          <p>Trenutno nema aktivnih instukcija</p>
+        ) : (
+          lessons.map((lesson, index) => (
+            <ActiveLesson key={index} lesson={lesson} />
+          ))
+        )}
+      </div>
     </>
   );
 }

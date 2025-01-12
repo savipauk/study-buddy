@@ -47,3 +47,13 @@ body.no-scroll {
   background-color: black;
   color: white;
 }
+
+.activeLessons {
+  margin-top: 2em;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+}
