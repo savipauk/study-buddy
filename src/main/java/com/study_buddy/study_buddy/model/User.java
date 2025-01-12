@@ -7,6 +7,7 @@ import org.springframework.expression.spel.ast.NullLiteral;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,13 +73,21 @@ public class User {
     @Column(name = "city", length = 100)
     private String city;
 
-    // CONNECTING TABLES USER-STUDENT
+    // CONNECTING TABLES USERS-STUDENTS
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;
 
-    // CONNECTING TABLES USER-PROFESSOR
+    // CONNECTING TABLES USERS-PROFESSORS
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Professor professor;
+
+    // CONNECTING TABLES USERS-REPORTS (user is the reporter)
+    @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reportsSubmitted = new ArrayList<>();
+
+    // CONNECTING TABLES USERS-REPORTS (user is the reported user)
+    @OneToMany(mappedBy = "reportedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reportsReceived = new ArrayList<>();
 
 
 
