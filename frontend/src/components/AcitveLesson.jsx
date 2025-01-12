@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../styles/ActiveGroups.css';
-import LessonInfo from './LessonsInfo';
+import LessonInfo from './LessonInfo';
 import PropTypes from 'prop-types';
 
 function ActiveLesson({ lesson }) {
@@ -9,27 +9,27 @@ function ActiveLesson({ lesson }) {
   return (
     <>
       {!showInfo && (
-        <div className='activeGroupsWrapper'>
-          <div className='rightWrapper'>
-            <div className='groupType'>
+        <div className="activeGroupsWrapper">
+          <div className="rightWrapper">
+            <div className="groupType">
               <label>{'Instrukcije'}</label>
             </div>
-            <div className='wrapper'>
-              <div className='basicInfoWrapper'>
-                <div className='infoSubject'>
+            <div className="wrapper">
+              <div className="basicInfoWrapper">
+                <div className="infoSubject">
                   <label>{lesson.subject}</label>
                 </div>
-                <div className='info'>
+                <div className="info">
                   <label>{lesson.date}</label>
                 </div>
-                <div className='info'>
+                <div className="info">
                   <label>{lesson.username}</label>
                 </div>
               </div>
             </div>
           </div>
-          <div className='leftWrapper'>
-            <div className='joinGroup'>
+          <div className="leftWrapper">
+            <div className="joinGroup">
               <button
                 onClick={() => {
                   setShowInfo(true);
