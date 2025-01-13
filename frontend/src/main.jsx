@@ -11,6 +11,7 @@ import HomePage from './routes/Home';
 import Profile from './routes/Profile';
 import { AuthProvider } from './components/AuthContext';
 import ProfileInfo from './routes/ProfileInfo';
+import AdminPage from './routes/Admin';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,11 @@ const router = createBrowserRouter([
   {
     path: 'users/profile',
     element: <ProfileInfo />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: 'admin',
+    element: <AdminPage />,
     errorElement: <ErrorPage />
   }
 ]);
