@@ -9,6 +9,7 @@ public class ReportDto {
     private String reporterUsername;
     private String reportedUsername;
     private Status status;
+    private Long reportId;
 
     // Constructors
     public ReportDto(){};
@@ -43,4 +44,8 @@ public class ReportDto {
     public Status getStatus() { return status; }
 
     public void setStatus(Status status) { this.status = status; }
+
+    public Long getReportId() { return reportId; }
+
+    public void setReportId(Long reportId) { this.reportId = reportId; }
 }

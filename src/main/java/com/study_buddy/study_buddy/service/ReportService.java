@@ -18,11 +18,14 @@ public class ReportService {
         this.reportRepository = reportRepository;
     }
 
-    public Report createReport(Report report){ return reportRepository.save(report);}
+    public Report getReportByReportId(Long reportId) { return reportRepository.findById(reportId).get();}
+
+    public Report createOrUpdateReport(Report report){ return reportRepository.save(report);}
 
     public List<Report> getAllReports() { return reportRepository.findAll();}
 
     public List<Report> getAllByReportStatus(Status status) { return reportRepository.findByStatus(status);}
+
 
     public ReportDto convertToDto(Report report) {
         ReportDto dto = new ReportDto();
@@ -32,6 +35,7 @@ public class ReportService {
         dto.setReportedUsername(report.getReportedUser().getUsername());
         dto.setReason(report.getReason());
         dto.setStatus(report.getStatus());
+        dto.setReportId(report.getReportId());
         return dto;
     }
 }

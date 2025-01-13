@@ -36,6 +36,7 @@ public class AdminController {
         return ResponseEntity.ok(reportDtos);
     };
 
+    // Getting reports depending on status
     @GetMapping("/allStatusReports/{status}")
     public ResponseEntity<List<ReportDto>> getAllOpenReports(@PathVariable("status") Status status){
         List<Report> reports = reportService.getAllByReportStatus(status);
@@ -45,6 +46,14 @@ public class AdminController {
         return ResponseEntity.ok(reportDtos);
     };
 
+    // Changing status of report to rejected
+    @PostMapping("/rejectedReport/{reportId}")
+    public ResponseEntity<String> changeStatusToRejected(@PathVariable("reportId") Long reportId){
+        Report report = reportService.getReportByReportId(reportId);
+        report.setStatus(Status.REJECTED);
+        reportService.createOrUpdateReport(report);
+        return ResponseEntity.ok("UPDATED");
+    }
 
 
     // Creating report
@@ -67,7 +76,7 @@ public class AdminController {
         report.setReason(dto.getReason());
         report.setStatus(Status.OPEN);
 
-        reportService.createReport(report);
+        reportService.createOrUpdateReport(report);
 
         return ResponseEntity.ok("REPORT_CREATED");
     }
