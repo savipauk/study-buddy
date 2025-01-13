@@ -1,15 +1,39 @@
+/*global google */
 import { GoogleMap, LoadScriptNext } from '@react-google-maps/api';
 import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const librariesHardcode = ['places', 'marker'];
 
 function StudyGroupInfo({ group, onClose }) {
+  const navigate = useNavigate();
   const mapLocation = {
     lat: parseFloat(group.xCoordinate),
     lng: parseFloat(group.yCoordinate)
   };
+  const [locationName, setLocationName, setUsername] = useState();
+
+  const getLocation = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: mapLocation }, (results, status) => {
+      if (status === 'OK') {
+        console.log('ok');
+        if (results[0]) {
+          setLocationName(results[0].formatted_address);
+        }
+      }
+    });
+  };
+
+  const handleGoToProfileClick = () => {
+    setLocationName(false);
+    setUsername(group.username);
+    navigate('/users/profile');
+  };
+
   return (
     <div className="groupInfoWrapper">
       <div className="exit">
@@ -32,7 +56,12 @@ function StudyGroupInfo({ group, onClose }) {
             <label>{group.username}</label>
           </div>
           <div className="lablesWrapper">
-            <i className="fa-regular fa-user"></i>
+            <button
+              className="goToProfileButton"
+              onClick={handleGoToProfileClick}
+            >
+              <i className="fa-regular fa-user"></i>
+            </button>
           </div>
         </div>
         <div className="infoGroup">
@@ -66,7 +95,7 @@ function StudyGroupInfo({ group, onClose }) {
       <div className="mapsLocation">
         <div className="locationName">
           <label>Lokacija:</label>
-          <label>{group.location}</label>
+          <label>{locationName}</label>
         </div>
         <div className="maps">
           <LoadScriptNext
@@ -76,6 +105,7 @@ function StudyGroupInfo({ group, onClose }) {
             <GoogleMap
               center={mapLocation}
               zoom={15}
+              onLoad={getLocation}
               options={{
                 mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
                 streetViewControl: false,
@@ -105,7 +135,7 @@ StudyGroupInfo.propTypes = {
     time: PropTypes.string,
     location: PropTypes.string,
     type: PropTypes.string,
-    maxMembers: PropTypes.string,
+    maxMembers: PropTypes.number,
     groupName: PropTypes.string
   }).isRequired,
   onClose: PropTypes.func.isRequired
