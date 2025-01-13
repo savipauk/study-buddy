@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 
 const librariesHardcode = ['places', 'marker'];
 
-function CreateStudyGroupForm({ onClose }) {
+function CreateStudyGroupForm({ onClose, onCreateClick }) {
   const mapLocation = {
     //Zagreb
     lat: 45.815,
@@ -57,23 +57,26 @@ function CreateStudyGroupForm({ onClose }) {
           lng: event.latLng.lng()
         };
         setLocation(newLocation);
-
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ location: newLocation }, (results, status) => {
-          if (status === 'OK' && results[0]) {
-            const locationsName = results[0].address_components.find(
-              (component) => component.types.includes('locality')
-            );
-            if (locationsName) {
-              setLocationName(locationsName.long_name);
-            }
-          }
-        });
       });
     } else if (markerRef.current) {
       markerRef.current.position = location;
     }
+    findLocationName();
   }, [location]);
+
+  const findLocationName = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const locationsName = results[0].address_components.find((component) =>
+          component.types.includes('locality')
+        );
+        if (locationsName) {
+          setLocationName(locationsName.long_name);
+        }
+      }
+    });
+  };
 
   const handlePlaceSelect = () => {
     const place = searchBoxRef.current.getPlaces()[0];
@@ -83,9 +86,9 @@ function CreateStudyGroupForm({ onClose }) {
         lng: place.geometry.location.lng()
       };
       setLocation(newLocation);
-      setLocationName(place.name);
       mapRef.current.panTo(newLocation);
     }
+    findLocationName();
   };
 
   const changeParticipants = (id) => {
@@ -133,6 +136,7 @@ function CreateStudyGroupForm({ onClose }) {
       return;
     } else {
       await createStudyGroup();
+      onCreateClick();
       onClose();
     }
   }
@@ -147,7 +151,7 @@ function CreateStudyGroupForm({ onClose }) {
       maxMembers: maxNum,
       xCoordinate: location.lat,
       yCoordinate: location.lng,
-      location: locationName,
+      location: locationName || 'Zagreb',
       date: date,
       time: time
     };
@@ -161,9 +165,7 @@ function CreateStudyGroupForm({ onClose }) {
 
     try {
       const response = await serverFetch(endpoint, options);
-      if (response.ok) {
-        onClose();
-      } else {
+      if (!response.ok) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
@@ -288,7 +290,8 @@ function CreateStudyGroupForm({ onClose }) {
   );
 }
 CreateStudyGroupForm.propTypes = {
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  onCreateClick: PropTypes.func.isRequired
 };
 
 export default CreateStudyGroupForm;

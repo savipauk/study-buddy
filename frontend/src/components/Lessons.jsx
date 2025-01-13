@@ -14,7 +14,7 @@ import { serverFetch } from '../hooks/serverUtils';
 
 const librariesHardcode = ['places', 'marker'];
 
-function CreateInstructionForm({ onClose }) {
+function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapLocation = {
     //Zagreb
     lat: 45.815,
@@ -42,7 +42,7 @@ function CreateInstructionForm({ onClose }) {
     const { name, value } = event.target;
     setInstructionInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
 
-    if (name === 'type' && value === 'OneOnOne') {
+    if (name === 'type' && value === 'ONE_ON_ONE') {
       setMaxNum(1);
       setMinNum(1);
     }
@@ -65,23 +65,12 @@ function CreateInstructionForm({ onClose }) {
           lng: event.latLng.lng()
         };
         setLocation(newLocation);
-
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ location: newLocation }, (results, status) => {
-          if (status === 'OK' && results[0]) {
-            const locationsName = results[0].address_components.find(
-              (component) => component.types.includes('locality')
-            );
-            if (locationsName) {
-              setLocationName(locationsName.long_name);
-            }
-          }
-        });
       });
     } else if (markerRef.current) {
       markerRef.current.position = location;
     }
-  }, [location]);
+    findLocationName();
+  }, [location, findLocationName]);
 
   const handlePlaceSelect = () => {
     const place = searchBoxRef.current.getPlaces()[0];
@@ -91,7 +80,6 @@ function CreateInstructionForm({ onClose }) {
         lng: place.geometry.location.lng()
       };
       setLocation(newLocation);
-      setLocationName(place.name);
       mapRef.current.panTo(newLocation);
     }
   };
@@ -155,11 +143,26 @@ function CreateInstructionForm({ onClose }) {
     return true;
   };
 
+  const findLocationName = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const locationsName = results[0].address_components.find((component) =>
+          component.types.includes('locality')
+        );
+        if (locationsName) {
+          setLocationName(locationsName.long_name);
+        }
+      }
+    });
+  };
+
   async function onSubmit() {
     if (!isValid()) {
       return;
     } else {
       await createNewLesson();
+      onCreateClick();
       onClose();
     }
   }
@@ -191,9 +194,7 @@ function CreateInstructionForm({ onClose }) {
 
     try {
       const response = await serverFetch(endpoint, options);
-      if (response.ok) {
-        onClose();
-      } else {
+      if (!response.ok) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
@@ -276,7 +277,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(0, 0)}
-                  disabled={instructionInfoForm.type === 'OneOnOne'}
+                  disabled={instructionInfoForm.type === 'ONE_ON_ONE'}
                 >
                   <i className="fa-solid fa-circle-minus"></i>
                 </button>
@@ -284,7 +285,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(1, 0)}
-                  disabled={instructionInfoForm.type === 'OneOnOne'}
+                  disabled={instructionInfoForm.type === 'ONE_ON_ONE'}
                 >
                   <i className="fa-solid fa-circle-plus"></i>
                 </button>
@@ -298,7 +299,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(0, 1)}
-                  disabled={instructionInfoForm.type === 'OneOnOne'}
+                  disabled={instructionInfoForm.type === 'ONE_ON_ONE'}
                 >
                   <i className="fa-solid fa-circle-minus"></i>
                 </button>
@@ -306,7 +307,7 @@ function CreateInstructionForm({ onClose }) {
                 <button
                   className="numButton"
                   onClick={() => changeParticipants(1, 1)}
-                  disabled={instructionInfoForm.type === 'OneOnOne'}
+                  disabled={instructionInfoForm.type === 'ONE_ON_ONE'}
                 >
                   <i className="fa-solid fa-circle-plus"></i>
                 </button>
@@ -323,9 +324,9 @@ function CreateInstructionForm({ onClose }) {
               className="typeRadioButton"
               type="radio"
               name="type"
-              value={'OneOnOne'}
+              value={'ONE_ON_ONE'}
               id="typeOne"
-              checked={instructionInfoForm.type === 'OneOnOne'}
+              checked={instructionInfoForm.type === 'ONE_ON_ONE'}
               onChange={onChange}
             ></input>
             <label htmlFor="typeOne" className="toggleOptionType">
@@ -335,9 +336,9 @@ function CreateInstructionForm({ onClose }) {
               className="typeRadioButton"
               type="radio"
               name="type"
-              value={'Massive'}
+              value={'MASS'}
               id="typeMassive"
-              checked={instructionInfoForm.type === 'Massive'}
+              checked={instructionInfoForm.type === 'MASS'}
               onChange={onChange}
             ></input>
             <label htmlFor="typeMassive" className="toggleOptionType">
@@ -391,7 +392,8 @@ function CreateInstructionForm({ onClose }) {
   );
 }
 CreateInstructionForm.propTypes = {
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  onCreateClick: PropTypes.func.isRequired
 };
 
 export default CreateInstructionForm;
