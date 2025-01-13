@@ -72,6 +72,20 @@ public class UserController {
         return profile.profileResponse("PROFILE_LOADED");
     }
 
+    // GET /profile - Fetch the user's profile
+    @GetMapping(value = "/profileByUsername/{username}", produces = "application/json")
+    public Map<String ,String> getProfileByUsername(@PathVariable("username") String username) {
+        Optional<User> userOpt = Optional.ofNullable(userService.getUserByUsername(username));
+        if (userOpt.isEmpty()) {
+            return Map.of("message", "PROFILE_DOESNT_EXIST");
+        }
+
+        User user = userOpt.get();
+        Profile profile = userService.buildProfileResponse(user);
+
+        return profile.profileResponse("PROFILE_LOADED");
+    }
+
 
 
     // POST /profile - Update the user's profile
