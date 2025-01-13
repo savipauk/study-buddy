@@ -76,12 +76,12 @@ function StudyGroupInfo({ group, onClose }) {
           </div>
         </div>
         <div className="joinGroupButton">
-          <button>Pridruzi se!</button>
+          <button>Pridružite se!</button>
         </div>
       </div>
       <div className="mapsLocation">
         <div className="locationName">
-          <label>Lokacija:</label>
+          <label>Lokacija: </label>
           <label>{group.location}</label>
         </div>
         <div className="maps">

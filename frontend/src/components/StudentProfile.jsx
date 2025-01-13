@@ -34,9 +34,9 @@ function StudentProfile({ onClose, username }) {
       if (response.ok) {
         const data = await response.json();
         setUserInfoForm({
-          FirstName: data.firstName || '',
-          LastName: data.lastName || '',
-          Bio: data.description || '',
+          FirstName: data.firstName || '-',
+          LastName: data.lastName || '-',
+          Bio: data.description || '-',
           Email: data.email || ''
         });
       } else {
@@ -53,7 +53,7 @@ function StudentProfile({ onClose, username }) {
 
   return (
     <div className="wholePage">
-      <div className="profile">
+      <div className="profileContainer">
         <div className="profile-container">
           <div className="profile-header">
             <div className="profile-picture"></div>
@@ -61,14 +61,19 @@ function StudentProfile({ onClose, username }) {
               <p>Ime: {userInfoForm.FirstName}</p>
               <p>Prezime: {userInfoForm.LastName}</p>
               <p>Opis: {userInfoForm.Bio}</p>
+              <div className="link">
+                <a>Prikaži popis StudyGroup-a</a>
+              </div>
             </div>
           </div>
-          <button className="report-button" onClick={handleReportUser}>
-            Prijavite korisnika!
-          </button>
-          <button className="close-button" onClick={onClose}>
-            Zatvori
-          </button>
+          <div className="buttons">
+            <button className="report-button" onClick={handleReportUser}>
+              Prijavite korisnika!
+            </button>
+            <button className="close-button" onClick={onClose}>
+              Zatvori
+            </button>
+          </div>
         </div>
         {showReportWindow && (
           <ReportForm
