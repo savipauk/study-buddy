@@ -31,6 +31,7 @@ public class ReportService {
         dto.setReportedEmail(report.getReportedUser().getEmail());
         dto.setReportedUsername(report.getReportedUser().getUsername());
         dto.setReason(report.getReason());
+        dto.setStatus(report.getStatus());
         return dto;
     }
 }
