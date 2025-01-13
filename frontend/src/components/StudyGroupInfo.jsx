@@ -1,15 +1,29 @@
+import { useState } from 'react';
 import { GoogleMap, LoadScriptNext } from '@react-google-maps/api';
 import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
+import StudentProfile from './StudentProfile';
 
 const librariesHardcode = ['places', 'marker'];
 
 function StudyGroupInfo({ group, onClose }) {
+  const [showProfile, setShowProfile] = useState(false);
+  const test = true;
+
   const mapLocation = {
     lat: parseFloat(group.xCoordinate),
     lng: parseFloat(group.yCoordinate)
   };
+
+  const handleProfileClick = () => {
+    setShowProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setShowProfile(false);
+  };
+
   return (
     <div className="groupInfoWrapper">
       <div className="exit">
@@ -32,7 +46,9 @@ function StudyGroupInfo({ group, onClose }) {
             <label>{group.username}</label>
           </div>
           <div className="lablesWrapper">
-            <i className="fa-regular fa-user"></i>
+            <button className="profileInfo" onClick={handleProfileClick}>
+              <i className="fa-regular fa-user"></i>
+            </button>
           </div>
         </div>
         <div className="infoGroup">
@@ -91,6 +107,12 @@ function StudyGroupInfo({ group, onClose }) {
           </LoadScriptNext>
         </div>
       </div>
+      {showProfile && (
+        <StudentProfile
+          onClose={handleCloseProfile}
+          username={group.username}
+        />
+      )}
     </div>
   );
 }
