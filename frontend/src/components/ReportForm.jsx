@@ -52,13 +52,16 @@ function ReportForm({ onClose, userEmail, reportedUserEmail }) {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        console.log('Report submitted successfully');
+        alert('Uspješno ste prijavili korisnika');
         onClose();
       } else {
-        console.log('Failed to fetch data', response.statusText);
+        alert(
+          `Prijava nije zaprimljena. 
+      Status pogreške: ${response.status} - ${response.statusText}`
+        );
       }
     } catch (error) {
-      console.log('Error:', error);
+      alert(`Pogreška: ${error.message}`);
     }
   }
 
