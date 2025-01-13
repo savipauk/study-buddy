@@ -1,11 +1,15 @@
 package com.study_buddy.study_buddy.dto;
 
+import com.study_buddy.study_buddy.model.Status;
+
 public class ReportDto {
     private String reporterEmail;
     private String reportedEmail;
     private String reason;
     private String reporterUsername;
     private String reportedUsername;
+    private Status status;
+    private Long reportId;
 
     // Constructors
     public ReportDto(){};
@@ -36,4 +40,12 @@ public class ReportDto {
     public String getReportedUsername() { return reportedUsername; }
 
     public void setReportedUsername(String reportedUsername) { this.reportedUsername = reportedUsername; }
+
+    public Status getStatus() { return status; }
+
+    public void setStatus(Status status) { this.status = status; }
+
+    public Long getReportId() { return reportId; }
+
+    public void setReportId(Long reportId) { this.reportId = reportId; }
 }
