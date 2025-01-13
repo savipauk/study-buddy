@@ -61,8 +61,8 @@ function StudentProfile({ onClose, username }) {
               <p>Ime: {userInfoForm.FirstName}</p>
               <p>Prezime: {userInfoForm.LastName}</p>
               <p>Opis: {userInfoForm.Bio}</p>
-              <div className="link">
-                <a>Prikaži popis StudyGroup-a</a>
+              <div className="showProfile">
+                <button className="showProfileButton">Prikaži Profil</button>
               </div>
             </div>
           </div>
