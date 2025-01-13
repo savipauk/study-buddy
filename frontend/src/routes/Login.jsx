@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import '../styles/Login.css';
 import useAuth from '../hooks/useAuth';
@@ -8,8 +8,14 @@ import { serverFetch } from '../hooks/serverUtils';
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle, setIsProfileSetupComplete } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (localStorage.getItem('isSignedIn') === 'true') {
+      navigate('/users/home');
+    }
+  });
 
   function onChange(event) {
     const { name, value } = event.target;
@@ -35,6 +41,7 @@ function LoginForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
+
         const message = data.passwordCheck;
         const email = data.email;
         const role = data.studyRole;
@@ -47,7 +54,12 @@ function LoginForm() {
         if (message === 'OK') {
           setErrorMessage('');
           signIn(email, role);
-          navigate('/users/home');
+          if (role === 'ADMIN') {
+            navigate('/admin');
+          } else {
+            console.log('krivi', role);
+            navigate('/users/home');
+          }
         }
       }
     } catch (error) {
@@ -83,9 +95,9 @@ function LoginForm() {
         const email = data.email;
         const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
-          setIsProfileSetupComplete(false);
+          localStorage.setItem('isProfileSetupComplete', false);
         } else if (registration === 'LOGIN_OAUTH_OK') {
-          setIsProfileSetupComplete(true);
+          localStorage.setItem('isProfileSetupComplete', true);
         }
         signInWithGoogle(credential, email, role);
         navigate('/users/home');
