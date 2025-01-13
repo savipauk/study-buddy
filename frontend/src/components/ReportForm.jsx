@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import '../styles/ReportForm.css';
+import PropTypes from 'prop-types';
 
 function ReportForm({ onClose, userEmail, reportedUserEmail }) {
   const [validationMessage, setValidationMessage] = useState('');
@@ -94,5 +95,11 @@ function ReportForm({ onClose, userEmail, reportedUserEmail }) {
     </div>
   );
 }
+
+ReportForm.propType = {
+  reporterEmail: PropTypes.string,
+  reportedEmail: PropTypes.string,
+  reason: PropTypes.string
+};
 
 export default ReportForm;
