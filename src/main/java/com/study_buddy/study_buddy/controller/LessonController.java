@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lesson")
@@ -66,7 +66,7 @@ public class LessonController {
         return ResponseEntity.ok(lessonDtos);
     }
 
-    // Get all active mass lessons
+    // Get all active mass or one_on_one lessons
     @GetMapping("/active/{lessonType}")
     public ResponseEntity<List<LessonDto>> getAllActiveMassLessons(@PathVariable("lessonType") LessonType lessonType) {
         List<Lesson> activeLessons = lessonService.getAllActiveMassLessons(lessonType);
@@ -79,6 +79,39 @@ public class LessonController {
                 .toList();
         return ResponseEntity.ok(lessonDtos);
     }
+
+    // Get all filtered lessons
+    @GetMapping("/filter/{input}")
+    public ResponseEntity<List<LessonDto>> getAllFilteredLessons(@PathVariable("input") String input) {
+        // Check if subject or location LIKE%:input
+        List<Lesson> filteredLessons = lessonService.getAllFilteredLessons(input);
+
+        // Check if professor's username LIKE%:input
+        List<User> users = userService.getUserByCompareUsername(input);
+        List<Professor> professors = users.stream()
+                .map(user -> professorService.getProfessorByUserId(user.getUserId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        List<Lesson> usernameLessons = professors.stream()
+                        .flatMap(professor -> lessonService.getAllLessonsByProfessor(professor).stream())
+                .collect(Collectors.toList());;
+
+
+        // Get only unique lessons
+        List<Lesson> combinedLessons = new ArrayList<>();
+        Set<Lesson> uniqueLessons = new HashSet<>(filteredLessons);
+        uniqueLessons.addAll(usernameLessons);
+        combinedLessons.addAll(uniqueLessons);
+
+
+        List<LessonDto> lessonDtos = combinedLessons.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(lessonDtos);
+    }
+
+
 
     // Get a study group by ID
     @GetMapping("/{id}")

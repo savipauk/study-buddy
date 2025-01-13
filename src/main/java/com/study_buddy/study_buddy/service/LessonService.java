@@ -47,6 +47,17 @@ public class LessonService {
                 .filter(lesson -> lesson.getDate().isAfter(today) ||
                         (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
                 ).collect(Collectors.toList());
+    }
+
+    public List<Lesson> getAllFilteredLessons(String parametar){
+        List<Lesson> allLessons = lessonRepository.findBySubjectOrLocationIgnoreCase(parametar);
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allLessons.stream()
+                .filter(lesson -> lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                ).collect(Collectors.toList());
 
     }
 
