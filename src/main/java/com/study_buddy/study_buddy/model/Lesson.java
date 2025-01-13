@@ -3,6 +3,7 @@ package com.study_buddy.study_buddy.model;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.*;
 
@@ -150,4 +151,18 @@ public class Lesson {
                 ", studentParticipants=" + studentParticipants +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lesson lesson = (Lesson) o;
+        return Objects.equals(lessonId, lesson.getLessonId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lessonId);
+    }
+
 }
