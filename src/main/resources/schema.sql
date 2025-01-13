@@ -121,6 +121,7 @@ CREATE TABLE Reports (
     reported_user_id INT NOT NULL, -- ID korisnika koji je prijavljen
     reason VARCHAR(255) NOT NULL, -- Razlog prijave
     report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM ('OPEN', 'CLOSED', 'IN_PROGRESS', 'REJECTED'),
     PRIMARY KEY (report_id),
     FOREIGN KEY (reporter_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (reported_user_id) REFERENCES Users(user_id) ON DELETE CASCADE
@@ -215,3 +216,11 @@ INSERT INTO Students(student_id, user_id)
 -- Insert default professor with profesor_id = 0
 INSERT INTO Professors(professor_id, user_id)
     VALUES (0,0);
+
+-- Reports entries
+INSERT INTO Reports (reporter_id, reported_user_id, reason, status)
+VALUES  (1, 2, 'Spamming in the forum', 'OPEN'),
+    (3, 4, 'Inappropriate language', 'IN_PROGRESS'),
+    (1, 2, 'Harassment', 'CLOSED'),
+    (2, 3, 'Sharing false information', 'REJECTED'),
+    (4, 1, 'Violation of community guidelines', 'OPEN');

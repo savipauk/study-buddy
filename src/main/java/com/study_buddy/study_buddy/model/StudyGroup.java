@@ -47,7 +47,7 @@ public class StudyGroup {
     @JoinColumn(name = "creator_id", nullable = false)
     private Student creator;
 
-    // CONNECTING TABLES STUDYGROUP-GROUPMEMBERS
+    // CONNECTING TABLES STUDENT-STUDYGROUP -> GROUPMEMBERS
     @ManyToMany
     @JoinTable(
             name = "GroupMembers",
