@@ -39,9 +39,9 @@ public class LessonController {
     }
 
     // Get all lessons created by one professor
-    @GetMapping("/createdBy/{email}")
-    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("email") String email) {
-        User user = userService.getUserByEmail(email);
+    @GetMapping("/createdBy/{username}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
         Professor professor = professorService.getProfessorByUserId(user.getUserId());
         if (professor == null) {
             return ResponseEntity.notFound().build();
@@ -125,7 +125,6 @@ public class LessonController {
     public ResponseEntity<Lesson> createLesson(@RequestBody LessonDto dto) {
         User creator = userService.getUserByEmail(dto.getEmail());
         Professor creatorProfessor = professorService.getProfessorByUserId(creator.getUserId());
-
         // Create lesson and store it into database
         Lesson lesson = new Lesson();
         lesson.setProfessor(creatorProfessor);

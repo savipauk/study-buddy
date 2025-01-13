@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -29,13 +28,23 @@ public class AdminController {
 
     // Getting reports
     @GetMapping("/allReports")
-    public List<Report> getAllReports(){ return reportService.getAllReports();};
+    public ResponseEntity<List<ReportDto>> getAllReports(){
+        List<Report> reports = reportService.getAllReports();
+        List<ReportDto> reportDtos = reports.stream()
+                .map(reportService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(reportDtos);
+    };
 
-    @GetMapping("/allOpenReports")
-    public List<Report> getAllOpenReports(){ return reportService.getAllByReportStatus(Status.OPEN);};
+    @GetMapping("/allStatusReports/{status}")
+    public ResponseEntity<List<ReportDto>> getAllOpenReports(@PathVariable("status") Status status){
+        List<Report> reports = reportService.getAllByReportStatus(status);
+        List<ReportDto> reportDtos = reports.stream()
+                .map(reportService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(reportDtos);
+    };
 
-    @GetMapping("/allInProgressReports")
-    public List<Report> getAllInProgressReports(){ return reportService.getAllByReportStatus(Status.IN_PROGRESS);};
 
 
     // Creating report
