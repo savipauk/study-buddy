@@ -1,6 +1,7 @@
 package com.study_buddy.study_buddy.repository;
 
 import com.study_buddy.study_buddy.model.Lesson;
+import com.study_buddy.study_buddy.model.LessonType;
 import com.study_buddy.study_buddy.model.Professor;
 import com.study_buddy.study_buddy.model.StudyGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     Lesson findByLessonId(Long lesson_id);
     List<Lesson> findByProfessor_ProfessorId(Long professor_id);
     List<Lesson> findByProfessor(Professor professor);
+    List<Lesson> findByLessonType(LessonType lesson_type);
 }

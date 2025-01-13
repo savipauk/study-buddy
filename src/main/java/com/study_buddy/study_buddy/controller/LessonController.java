@@ -60,6 +60,19 @@ public class LessonController {
         if (activeLessons.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+        List<LessonDto> lessonDtos = activeLessons.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(lessonDtos);
+    }
+
+    // Get all active mass lessons
+    @GetMapping("/active/{lessonType}")
+    public ResponseEntity<List<LessonDto>> getAllActiveMassLessons(@PathVariable("lessonType") LessonType lessonType) {
+        List<Lesson> activeLessons = lessonService.getAllActiveMassLessons(lessonType);
+        if (activeLessons.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
         List<LessonDto> lessonDtos = activeLessons.stream()
                 .map(lessonService::convertToDto)
