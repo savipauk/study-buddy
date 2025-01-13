@@ -1,6 +1,7 @@
 package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.dto.StudyGroupDto;
+import com.study_buddy.study_buddy.model.Lesson;
 import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.StudyGroup;
 import com.study_buddy.study_buddy.model.User;
@@ -40,6 +41,17 @@ public class StudyGroupService {
                                 (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
                 )
                 .collect(Collectors.toList());
+    }
+
+    public List<StudyGroup> getAllFilteredStudyGroups(String parameter){
+        List<StudyGroup> allStudyGroups = studyGroupRepository.findByGroupNameOrLocationOrDescriptionIgnoreCase(parameter);
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allStudyGroups.stream()
+                .filter(studyGroup -> studyGroup.getDate().isAfter(today) ||
+                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now))
+                ).collect(Collectors.toList());
     }
 
     public StudyGroup getStudyGroupById(Long groupId){ return studyGroupRepository.findByGroupId(groupId);}

@@ -204,3 +204,13 @@
   white-space: normal;
   padding-right: 0.5em;
 }
+
+.goToProfileButton{
+	padding: 0;
+	background-color: transparent;
+	border: 0px;
+}
+
+.goToProfileButton:hover{
+	transform: scale(1.3);
+}

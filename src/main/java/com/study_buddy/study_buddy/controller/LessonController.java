@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lesson")
@@ -39,9 +39,9 @@ public class LessonController {
     }
 
     // Get all lessons created by one professor
-    @GetMapping("/createdBy/{email}")
-    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("email") String email) {
-        User user = userService.getUserByEmail(email);
+    @GetMapping("/createdBy/{username}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
         Professor professor = professorService.getProfessorByUserId(user.getUserId());
         if (professor == null) {
             return ResponseEntity.notFound().build();
@@ -60,12 +60,58 @@ public class LessonController {
         if (activeLessons.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
+        List<LessonDto> lessonDtos = activeLessons.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(lessonDtos);
+    }
+
+    // Get all active mass or one_on_one lessons
+    @GetMapping("/active/{lessonType}")
+    public ResponseEntity<List<LessonDto>> getAllActiveMassLessons(@PathVariable("lessonType") LessonType lessonType) {
+        List<Lesson> activeLessons = lessonService.getAllActiveMassLessons(lessonType);
+        if (activeLessons.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
 
         List<LessonDto> lessonDtos = activeLessons.stream()
                 .map(lessonService::convertToDto)
                 .toList();
         return ResponseEntity.ok(lessonDtos);
     }
+
+    // Get all filtered lessons
+    @GetMapping("/filter/{input}")
+    public ResponseEntity<List<LessonDto>> getAllFilteredLessons(@PathVariable("input") String input) {
+        // Check if subject or location LIKE%:input
+        List<Lesson> filteredLessons = lessonService.getAllFilteredLessons(input);
+
+        // Check if professor's username LIKE%:input
+        List<User> users = userService.getUserByCompareUsername(input);
+        List<Professor> professors = users.stream()
+                .map(user -> professorService.getProfessorByUserId(user.getUserId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        List<Lesson> usernameLessons = professors.stream()
+                        .flatMap(professor -> lessonService.getAllLessonsByProfessor(professor).stream())
+                .collect(Collectors.toList());;
+
+
+        // Get only unique lessons
+        List<Lesson> combinedLessons = new ArrayList<>();
+        Set<Lesson> uniqueLessons = new HashSet<>(filteredLessons);
+        uniqueLessons.addAll(usernameLessons);
+        combinedLessons.addAll(uniqueLessons);
+
+
+        List<LessonDto> lessonDtos = combinedLessons.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(lessonDtos);
+    }
+
+
 
     // Get a study group by ID
     @GetMapping("/{id}")
@@ -79,7 +125,6 @@ public class LessonController {
     public ResponseEntity<Lesson> createLesson(@RequestBody LessonDto dto) {
         User creator = userService.getUserByEmail(dto.getEmail());
         Professor creatorProfessor = professorService.getProfessorByUserId(creator.getUserId());
-
         // Create lesson and store it into database
         Lesson lesson = new Lesson();
         lesson.setProfessor(creatorProfessor);

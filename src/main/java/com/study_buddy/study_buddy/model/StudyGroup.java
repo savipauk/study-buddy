@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table(name = "StudyGroups")
@@ -128,4 +129,17 @@ public class StudyGroup {
     public LocalDate getExpirationDate() { return expirationDate; }
 
     public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StudyGroup sg = (StudyGroup) o;
+        return Objects.equals(groupId, sg.getGroupId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(groupId);
+    }
 }

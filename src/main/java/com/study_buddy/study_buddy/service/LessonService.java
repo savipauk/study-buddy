@@ -1,10 +1,7 @@
 package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.dto.LessonDto;
-import com.study_buddy.study_buddy.model.Lesson;
-import com.study_buddy.study_buddy.model.Professor;
-import com.study_buddy.study_buddy.model.StudyGroup;
-import com.study_buddy.study_buddy.model.User;
+import com.study_buddy.study_buddy.model.*;
 import com.study_buddy.study_buddy.repository.LessonRepository;
 import com.study_buddy.study_buddy.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,29 @@ public class LessonService {
 
     public List<Lesson> getAllActiveLessons(){
         List<Lesson> allLessons = lessonRepository.findAll();
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allLessons.stream()
+                .filter(lesson -> lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                ).collect(Collectors.toList());
+
+    }
+
+    public List<Lesson> getAllActiveMassLessons(LessonType lessonType){
+        List<Lesson> allLessons = lessonRepository.findByLessonType(lessonType);
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allLessons.stream()
+                .filter(lesson -> lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                ).collect(Collectors.toList());
+    }
+
+    public List<Lesson> getAllFilteredLessons(String parametar){
+        List<Lesson> allLessons = lessonRepository.findBySubjectOrLocationIgnoreCase(parametar);
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
 

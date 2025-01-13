@@ -53,6 +53,9 @@ public class UserService {
     // Fetch a user by username
     public User getUserByUsername(String username) { return userRepository.findByUsername(username);}
 
+    // Fetch a user by username if exists
+    public List<User> getUserByCompareUsername(String username) { return userRepository.findByUsernameIgnoreCase(username);}
+
     // Check if user exists by username
     public boolean userExistsByUsername(String username) { return userRepository.findByUsername(username)!=null;}
 

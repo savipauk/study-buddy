@@ -4,6 +4,8 @@ public class ReportDto {
     private String reporterEmail;
     private String reportedEmail;
     private String reason;
+    private String reporterUsername;
+    private String reportedUsername;
 
     // Constructors
     public ReportDto(){};
@@ -26,4 +28,12 @@ public class ReportDto {
     public String getReason() { return reason; }
 
     public void setReason(String reason) { this.reason = reason; }
+
+    public String getReporterUsername() { return reporterUsername; }
+
+    public void setReporterUsername(String reporterUsername) { this.reporterUsername = reporterUsername; }
+
+    public String getReportedUsername() { return reportedUsername; }
+
+    public void setReportedUsername(String reportedUsername) { this.reportedUsername = reportedUsername; }
 }

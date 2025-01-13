@@ -1,9 +1,8 @@
 package com.study_buddy.study_buddy.controller;
 
+import com.study_buddy.study_buddy.dto.LessonDto;
 import com.study_buddy.study_buddy.dto.StudyGroupDto;
-import com.study_buddy.study_buddy.model.Student;
-import com.study_buddy.study_buddy.model.StudyGroup;
-import com.study_buddy.study_buddy.model.User;
+import com.study_buddy.study_buddy.model.*;
 import com.study_buddy.study_buddy.service.GroupMemberService;
 import com.study_buddy.study_buddy.service.StudentService;
 import com.study_buddy.study_buddy.service.StudyGroupService;
@@ -13,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/studyGroup")
@@ -41,9 +40,9 @@ public class StudyGroupController {
     }
 
     // Get all study groups created by one user
-    @GetMapping("/createdBy/{email}")
-    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("email") String email) {
-        User user = userService.getUserByEmail(email);
+    @GetMapping("/createdBy/{username}")
+    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
         Student creator = studentService.getStudentByUserId(user.getUserId());
         if (creator == null) {
             return ResponseEntity.notFound().build();
@@ -68,7 +67,37 @@ public class StudyGroupController {
                 .map(studyGroupService::convertToDto)
                 .toList();
         return ResponseEntity.ok(activeStudyGroupDtos);
+    }
 
+    // Get all filtered lessons
+    @GetMapping("/filter/{input}")
+    public ResponseEntity<List<StudyGroupDto>> getAllFilteredStudyGroups(@PathVariable("input") String input) {
+        // Check if groupName or location or description LIKE%:input
+        List<StudyGroup> filteredStudyGroup = studyGroupService.getAllFilteredStudyGroups(input);
+
+        // Check if creator's username LIKE%:input
+        List<User> users = userService.getUserByCompareUsername(input);
+        List<Student> students = users.stream()
+                .map(user -> studentService.getStudentByUserId(user.getUserId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        List<StudyGroup> usernameStudyGroups = students.stream()
+                .flatMap(student -> studyGroupService.getStudyGroupsByCreator(student).stream())
+                .collect(Collectors.toList());;
+
+
+        // Get only unique lessons
+        List<StudyGroup> combinedStudyGroups = new ArrayList<>();
+        Set<StudyGroup> uniqueStudyGroups = new HashSet<>(filteredStudyGroup);
+        uniqueStudyGroups.addAll(usernameStudyGroups);
+        combinedStudyGroups.addAll(uniqueStudyGroups);
+
+
+        List<StudyGroupDto> activeStudyGroupDtos = combinedStudyGroups.stream()
+                .map(studyGroupService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(activeStudyGroupDtos);
     }
 
     // Get a study group by ID
