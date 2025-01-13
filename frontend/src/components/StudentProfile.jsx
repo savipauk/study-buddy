@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getUserData } from '../hooks/serverUtils';
+import { serverFetch } from '../hooks/serverUtils';
 import ReportForm from './ReportForm';
+import '../styles/StudentProfile.css';
+import PropTypes from 'prop-types';
 
-function StudentProfile({ onClose }) {
+function StudentProfile({ onClose, username }) {
   const [userInfoForm, setUserInfoForm] = useState({
     FirstName: '',
     LastName: '',
     Bio: '',
-    studyGroups: []
+    Email: ''
   });
 
   const [showReportWindow, setShowReportWindow] = useState(false);
@@ -18,70 +20,49 @@ function StudentProfile({ onClose }) {
 
   const handleReportUser = () => setShowReportWindow(true);
 
-  const fetchUserData = async () => {
-    const otherUserEmail = localStorage.getItem('other_user_email'); //provjeri ovo sa backom za ispravan dohvat podataka
-    const userData = await getUserData(otherUserEmail);
-    if (userData) {
-      setUserInfoForm({
-        FirstName: userData.firstName,
-        LastName: userData.lastName, //dodati mozda email?
-        Bio: userData.description,
-        studyGroups: userData.studyGroups || [] // Add this
-      });
+  const getStudentProfile = async (username) => {
+    const endpoint = `/users/profileByUsername/${username}`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        setUserInfoForm({
+          FirstName: data.firstName || '',
+          LastName: data.lastName || '',
+          Bio: data.description || '',
+          Email: data.email || ''
+        });
+      } else {
+        console.error('Failed to fetch user profile');
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
     }
   };
 
-  const loadMoreGroups = async () => {
-    const moreGroups = await fetchAdditionalGroups(); // generirao chat
-    setUserInfoForm((prev) => ({
-      ...prev,
-      studyGroups: [...prev.studyGroups, ...moreGroups]
-    }));
-  };
-
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    getStudentProfile(username);
+  }, [username]);
 
   return (
-    <>
+    <div className="wholePage">
       <div className="profile">
         <div className="profile-container">
           <div className="profile-header">
             <div className="profile-picture"></div>
             <div className="profile-info">
-              <p>
-                <strong>Ime</strong> {userInfoForm.FirstName}
-              </p>
-              <p>
-                <strong>Prezime</strong> {userInfoForm.LastName}
-              </p>
-              <p>
-                <strong>Opis</strong> {userInfoForm.Bio}
-              </p>
+              <p>Ime: {userInfoForm.FirstName}</p>
+              <p>Prezime: {userInfoForm.LastName}</p>
+              <p>Opis: {userInfoForm.Bio}</p>
             </div>
           </div>
-
-          <div className="study-groups">
-            <h2>Popis Study Group-a</h2>
-            {userInfoForm.studyGroups.map((group, index) => (
-              <div key={index} className="study-group">
-                <span>{group.name}</span>
-                {group.isActive ? (
-                  <span className="active">Aktivno</span>
-                ) : (
-                  <span className="expired">Isteklo</span>
-                )}
-                {group.isActive && (
-                  <button className="join-button">Pridruži se!</button>
-                )}
-              </div>
-            ))}
-            <button className="load-more" onClick={loadMoreGroups}>
-              Učitaj još...
-            </button>
-          </div>
-
           <button className="report-button" onClick={handleReportUser}>
             Prijavite korisnika!
           </button>
@@ -97,8 +78,15 @@ function StudentProfile({ onClose }) {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }
+
+StudentProfile.propTypes = {
+  FirstName: PropTypes.string,
+  LastName: PropTypes.string,
+  Bio: PropTypes.string,
+  Email: PropTypes.string
+};
 
 export default StudentProfile;
