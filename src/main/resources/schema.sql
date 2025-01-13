@@ -179,11 +179,11 @@ VALUES ('3'),
 
 -- Lessons entries
 INSERT INTO Lessons (professor_id, subject, duration, max_participants, min_participants, x_coordinate, y_coordinate, location, lesson_type, price, date, time, registration_deadline)
-VALUES (1,'Math', '60 minutes', 20, 5, '45.4234', '75.6821', 'Zagreb', 'MASS', 25.00, '2025-01-15', '09:00:00', '2025-01-10'),
-    (2,'Physics', '90 minutes', 15, 3, '45.5243', '75.6910', 'Zadar', 'ONE_ON_ONE', 50.00, '2025-01-16', '14:30:00', '2025-01-14'),
-    (1,'English', '45 minutes', 10, 2, '45.5210', '75.6720', 'Bedekovčina', 'MASS', 20.00, '2025-01-17', '11:00:00', '2025-01-15'),
-    (1,'Chemistry', '120 minutes', 25, 10, '45.5300', '75.6600', 'Zabok', 'MASS', 35.00, '2025-01-18', '15:00:00', '2025-01-16'),
-    (2,'History', '50 minutes', 30, 8, NULL, NULL, 'Split', 'ONE_ON_ONE', 15.00, '2025-01-19', '10:00:00', '2025-01-17');
+VALUES (1,'Math', '60 minutes', 20, 5, '45.8132', '15.9770', 'Zagreb', 'MASS', 25.00, '2025-01-29', '09:00:00', '2025-01-27'),
+    (2,'Physics', '90 minutes', 15, 3, '43.5081', ' 16.4402', 'Split', 'ONE_ON_ONE', 50.00, '2025-01-28', '14:30:00', '2025-01-26'),
+    (1,'English', '45 minutes', 10, 2, '42.6410', '18.1106', 'Dubrovnik', 'MASS', 20.00, '2025-01-27', '11:00:00', '2025-01-25'),
+    (1,'Chemistry', '120 minutes', 25, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', 35.00, '2025-01-26', '15:00:00', '2025-01-24'),
+    (2,'History', '50 minutes', 30, 8, '44.1178', '15.2272', 'Zadar', 'ONE_ON_ONE', 15.00, '2025-01-25', '10:00:00', '2025-01-23');
 
 -- StudyGroups entries
 INSERT INTO StudyGroups (group_name, location, x_coordinate, y_coordinate, date, time, max_members, description, expiration_date, creator_id)
