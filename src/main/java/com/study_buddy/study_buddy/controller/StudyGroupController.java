@@ -41,9 +41,9 @@ public class StudyGroupController {
     }
 
     // Get all study groups created by one user
-    @GetMapping("/createdBy/{email}")
-    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("email") String email) {
-        User user = userService.getUserByEmail(email);
+    @GetMapping("/createdBy/{username}")
+    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
         Student creator = studentService.getStudentByUserId(user.getUserId());
         if (creator == null) {
             return ResponseEntity.notFound().build();
