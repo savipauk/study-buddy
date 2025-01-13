@@ -8,12 +8,17 @@ import CreateStudyGroupForm from '../components/StudyGroupForm';
 import Lessons from '../components/Lessons';
 import ActiveGroup from '../components/ActiveGroup';
 import ActiveLesson from '../components/AcitveLesson';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
-  const { isProfileSetupComplete, role } = useAuth();
   const [createClicked, setCreateClicked] = useState(false);
   const [groups, setGroups] = useState([]);
   const [lessons, setLessons] = useState([]);
+  const role = localStorage.getItem('role');
+  const isProfileSetupComplete = localStorage.getItem('isProfileSetupComplete');
+  const [hasRefreshed, setHasRefreshed] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleCreateGroup = () => {
     setCreateClicked(true);
@@ -21,6 +26,12 @@ function HomePage() {
   const handleCloseCreateGroup = () => {
     setCreateClicked(false);
   };
+
+  useEffect(() => {
+    if (role === 'ADMIN') {
+      navigate('admin');
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,9 +42,8 @@ function HomePage() {
         console.error('Error fetching groups:', error);
       }
     };
-
     fetchData();
-  }, []);
+  }, [hasRefreshed]);
 
   useEffect(() => {
     if (createClicked || !isProfileSetupComplete) {
@@ -87,7 +97,10 @@ function HomePage() {
       </div>
       {!isProfileSetupComplete && <ProfileSetup />}
       {createClicked && role === 'STUDENT' && (
-        <CreateStudyGroupForm onClose={handleCloseCreateGroup} />
+        <CreateStudyGroupForm
+          onClose={handleCloseCreateGroup}
+          onCreateClick={() => setHasRefreshed(!hasRefreshed)}
+        />
       )}
       {createClicked && role === 'PROFESSOR' && (
         <Lessons onClose={handleCloseCreateGroup} />

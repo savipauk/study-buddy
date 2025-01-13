@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import ReportedUser from '../components/ReportedUser';
 import '../styles/Admin.css';
+import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 
 function AdminPage() {
   const [allReports, setAllReports] = useState([]);
@@ -11,6 +14,20 @@ function AdminPage() {
   const [rejectedReports, setRejectReports] = useState([]);
   const [selectedOption, setSelectedOption] = useState('allReports');
   const [refreshReports, setRefreshReports] = useState(false);
+
+  const { isSignedIn } = useAuth();
+  const navigate = useNavigate();
+  const role = localStorage.getItem('role');
+
+  useEffect(() => {
+    if (role !== 'ADMIN') {
+      if (!isSignedIn) {
+        navigate('/users/login');
+      } else {
+        navigate('/users/home');
+      }
+    }
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,9 +77,10 @@ function AdminPage() {
   }
 
   return (
-    <div className="adminWrapper">
+    <div className='adminWrapper'>
+      <Header />
       <h1>Admin</h1>
-      <div className="toggleSwitch">
+      <div className='toggleSwitch'>
         <button
           onClick={() => setSelectedOption('allReports')}
           className={selectedOption === 'allReports' ? 'active' : ''}
@@ -88,11 +106,11 @@ function AdminPage() {
           Zatvoreni
         </button>
       </div>
-      <div className="allReportsWrapper">
+      <div className='allReportsWrapper'>
         {selectedOption === 'allReports' && (
-          <div className="reportsWrapper">
+          <div className='reportsWrapper'>
             <label>Svi reportovi</label>
-            <div className="reports">
+            <div className='reports'>
               {allReports.map((report, index) => (
                 <ReportedUser
                   reportedUser={report}
@@ -106,9 +124,9 @@ function AdminPage() {
           </div>
         )}
         {selectedOption === 'openReports' && (
-          <div className="reportsWrapper">
+          <div className='reportsWrapper'>
             <label>Otvoreni reportovi</label>
-            <div className="reports">
+            <div className='reports'>
               {openReports.map((openReport, index) => (
                 <ReportedUser
                   reportedUser={openReport}
@@ -122,9 +140,9 @@ function AdminPage() {
           </div>
         )}
         {selectedOption === 'inProgressReports' && (
-          <div className="reportsWrapper">
+          <div className='reportsWrapper'>
             <label>U tijeku</label>
-            <div className="reports">
+            <div className='reports'>
               {inProgressReports.map((inProgressReport, index) => (
                 <ReportedUser
                   reportedUser={inProgressReport}
@@ -138,9 +156,9 @@ function AdminPage() {
           </div>
         )}
         {selectedOption === 'closedReports' && (
-          <div className="reportsWrapper">
+          <div className='reportsWrapper'>
             <label>Zatvoreni</label>
-            <div className="reports">
+            <div className='reports'>
               {[...closedReports, ...rejectedReports].map(
                 (closedReport, index) => (
                   <ReportedUser

@@ -26,18 +26,18 @@ function ReportedUser({ reportedUser, onButtonClick }) {
   }
 
   return (
-    <div className="reportedUserWrapper">
-      <div className="reportCard">
-        <label className="labelInfo">Korisnicko ime</label>
+    <div className='reportedUserWrapper'>
+      <div className='reportCard'>
+        <label className='labelInfo'>Korisnicko ime</label>
         <label>{reportedUser.reportedUsername}</label>
       </div>
-      <div className="reportCard">
-        <label className="labelInfo">Razlog</label>
+      <div className='reportCard'>
+        <label className='labelInfo'>Razlog</label>
         <label>{reportedUser.reason}</label>
       </div>
       {(reportedUser.status === 'OPEN' ||
         reportedUser.status === 'IN_PROGRESS') && (
-        <div className="decisionButtons">
+        <div className='decisionButtons'>
           <button
             onClick={async () =>
               takeAction('users', 'delete', reportedUser.reportedEmail)
@@ -56,8 +56,8 @@ function ReportedUser({ reportedUser, onButtonClick }) {
       )}
       {(reportedUser.status === 'CLOSED' ||
         reportedUser.status === 'REJECTED') && (
-        <div className="reportCard">
-          <label className="labelInfo">Status</label>
+        <div className='reportCard'>
+          <label className='labelInfo'>Status</label>
           <label>{reportedUser.status}</label>
         </div>
       )}

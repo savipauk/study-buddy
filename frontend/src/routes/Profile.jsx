@@ -8,7 +8,6 @@ import {
   checkHash
 } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
-import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 function Profile() {
@@ -18,7 +17,6 @@ function Profile() {
     </>
   );
 }
-
 function UserForm() {
   const navigate = useNavigate();
   const [userInfoForm, setUserInfoForm] = useState({
@@ -33,7 +31,7 @@ function UserForm() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
 
-  const { isProfileSetupComplete } = useAuth();
+  const isProfileSetupComplete = localStorage.getItem('isProfileSetupComplete');
 
   const loggedInWithOAUTH =
     localStorage.getItem('is_logged_in_with_google') === 'true' || false;
