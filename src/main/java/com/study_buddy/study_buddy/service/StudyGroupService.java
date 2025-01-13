@@ -1,5 +1,6 @@
 package com.study_buddy.study_buddy.service;
 
+import com.study_buddy.study_buddy.dto.StudyGroupDto;
 import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.StudyGroup;
 import com.study_buddy.study_buddy.model.User;
@@ -8,8 +9,11 @@ import com.study_buddy.study_buddy.repository.StudyGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudyGroupService {
@@ -23,6 +27,21 @@ public class StudyGroupService {
 
     public List<StudyGroup> getAllStudyGroups(){ return studyGroupRepository.findAll();}
 
+    public List<StudyGroup> getStudyGroupsByCreator(Student creator) { return studyGroupRepository.findByCreator(creator); }
+
+    public List<StudyGroup> getActiveStudyGroups() {
+        List<StudyGroup> allStudyGroups = studyGroupRepository.findAll(); // Fetch all study groups
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allStudyGroups.stream()
+                .filter(studyGroup ->
+                        studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
+                )
+                .collect(Collectors.toList());
+    }
+
     public StudyGroup getStudyGroupById(Long groupId){ return studyGroupRepository.findByGroupId(groupId);}
 
     public List<StudyGroup> deleteAllStudyGroupsByCreator(User user){
@@ -34,6 +53,25 @@ public class StudyGroupService {
             studyGroupRepository.save(group);
         }
         return studyGroups;
+    }
+
+
+
+    public StudyGroupDto convertToDto(StudyGroup studyGroup) {
+        StudyGroupDto dto = new StudyGroupDto();
+        dto.setStudyGroupId(studyGroup.getGroupId());
+        dto.setEmail(studyGroup.getCreator().getUser().getEmail()); // Assuming the creator's User is linked
+        dto.setGroupName(studyGroup.getGroupName());
+        dto.setLocation(studyGroup.getLocation());
+        dto.setxCoordinate(studyGroup.getxCoordinate());
+        dto.setyCoordinate(studyGroup.getyCoordinate());
+        dto.setDate(studyGroup.getDate());
+        dto.setTime(studyGroup.getTime());
+        dto.setMaxMembers(studyGroup.getMaxMembers());
+        dto.setDescription(studyGroup.getDescription());
+        dto.setExpirationDate(studyGroup.getExpirationDate());
+        dto.setUsername(studyGroup.getCreator().getUser().getUsername());
+        return dto;
     }
 
 }
