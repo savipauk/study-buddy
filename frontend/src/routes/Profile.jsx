@@ -318,6 +318,7 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
     </div>
   );
 }
+
 EditWindow.propTypes = {
   userInfo: PropTypes.shape({
     FirstName: PropTypes.string,
@@ -438,6 +439,7 @@ function PasswordChange({ onSave, onClose, hash }) {
     </div>
   );
 }
+
 PasswordChange.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

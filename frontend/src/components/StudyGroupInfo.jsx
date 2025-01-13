@@ -5,16 +5,18 @@ import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import StudentProfile from './StudentProfile';
 
 const librariesHardcode = ['places', 'marker'];
 
 function StudyGroupInfo({ group, onClose }) {
+  const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
   const mapLocation = {
     lat: parseFloat(group.xCoordinate),
     lng: parseFloat(group.yCoordinate)
   };
-  const [locationName, setLocationName, setUsername] = useState();
+  const [locationName, setLocationName] = useState();
 
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
@@ -28,10 +30,12 @@ function StudyGroupInfo({ group, onClose }) {
     });
   };
 
-  const handleGoToProfileClick = () => {
-    setLocationName(false);
-    setUsername(group.username);
-    navigate('/users/profile');
+  const handleProfileClick = () => {
+    setShowProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setShowProfile(false);
   };
 
   return (
@@ -56,10 +60,7 @@ function StudyGroupInfo({ group, onClose }) {
             <label>{group.username}</label>
           </div>
           <div className="lablesWrapper">
-            <button
-              className="goToProfileButton"
-              onClick={handleGoToProfileClick}
-            >
+            <button className="profileInfo" onClick={handleProfileClick}>
               <i className="fa-regular fa-user"></i>
             </button>
           </div>
@@ -89,7 +90,7 @@ function StudyGroupInfo({ group, onClose }) {
           </div>
         </div>
         <div className="joinGroupButton">
-          <button>Pridruzi se!</button>
+          <button>Pridružite se!</button>
         </div>
       </div>
       <div className="mapsLocation">
@@ -121,6 +122,12 @@ function StudyGroupInfo({ group, onClose }) {
           </LoadScriptNext>
         </div>
       </div>
+      {showProfile && (
+        <StudentProfile
+          onClose={handleCloseProfile}
+          username={group.username}
+        />
+      )}
     </div>
   );
 }

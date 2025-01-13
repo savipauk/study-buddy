@@ -1,0 +1,78 @@
+.reportWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    height: 25vw;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    padding: 2em;
+    gap: 1.5em;
+}
+
+.wholeWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.reportTitle {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 1em;
+    color: #222;
+    text-align: center;
+    width: 100%;
+}
+
+.smallInputsWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5em;
+}
+
+.reason {
+    width: 100%;
+    height: 100px;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    resize: vertical;
+}
+
+.submitReportButton {
+    width: 100%;
+    display: flex;
+    padding-top: 15px;
+    justify-content: space-evenly;
+    gap: 1em;
+}
+
+.submitReportButton button {
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.validationMessage {
+    color: red;
+    font-size: 0.9em;
+    text-align: center;
+}
