@@ -57,7 +57,6 @@ function LoginForm() {
           if (role === 'ADMIN') {
             navigate('/admin');
           } else {
-            console.log('krivi', role);
             navigate('/users/home');
           }
         }
@@ -96,10 +95,11 @@ function LoginForm() {
         const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
           signInWithGoogle(credential, email, role, 'false');
+          navigate('/users/home');
         } else if (registration === 'LOGIN_OAUTH_OK') {
           signInWithGoogle(credential, email, role, 'true');
+          navigate('/users/home');
         }
-        navigate('/users/home');
       }
     } catch (error) {
       console.log(error);
