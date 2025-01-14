@@ -60,8 +60,9 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "profile_picture", length = 255)
-    private String profilePicture;
+    @Lob // Marks this column as a Large Object (BLOB)
+    @Column(name = "profile_picture", nullable = true)
+    private byte[] profilePicture;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
@@ -208,9 +209,9 @@ public class User {
 
     public void setUsername(String username) { this.username = username;}
 
-    public String getProfilePicture() {return profilePicture; }
+    public byte[] getProfilePicture() { return profilePicture; }
 
-    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+    public void setProfilePicture(byte[] profilePicture) { this.profilePicture = profilePicture; }
 
     public LocalDate getDateOfBirth() { return dateOfBirth; }
 
