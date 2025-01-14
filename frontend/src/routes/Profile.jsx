@@ -101,7 +101,9 @@ function UserForm() {
           `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
           {
             method: 'GET',
-            body: formData
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
         );
         if (updatedResponse.ok) {
