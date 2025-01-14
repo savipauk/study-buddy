@@ -31,10 +31,9 @@ function UserForm() {
   const [userHash, setUserHash] = useState('');
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
-  const [profilePictureUrl, setProfilePictureUrl] = useState(
-    'https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'
-  );
 
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
   );
@@ -73,8 +72,34 @@ function UserForm() {
           Email: userData.email,
           Bio: userData.description
         });
+
+        try {
+          const response = await fetch(
+            `http://localhost:8080/users/profile-picture/${userData.username}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+
+          if (response.ok) {
+            const blob = await response.blob();
+            if (blob.size > 0) {
+              setProfilePictureUrl(URL.createObjectURL(blob));
+            } else {
+              setProfilePictureUrl(
+                'https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'
+              );
+            }
+          }
+        } catch (error) {
+          console.error('Greška pri dohvaćanju profilne slike:', error);
+        }
       }
     };
+
     if (isProfileSetupComplete) {
       fetchUserData();
     } else {
