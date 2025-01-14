@@ -391,6 +391,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
     </div>
   );
 }
+
 CreateInstructionForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCreateClick: PropTypes.func.isRequired

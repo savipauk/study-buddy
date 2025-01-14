@@ -289,6 +289,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     </div>
   );
 }
+
 CreateStudyGroupForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCreateClick: PropTypes.func.isRequired
