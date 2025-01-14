@@ -245,6 +245,18 @@ function ProfileSetup({ finishSetup }) {
       setErrorMessage('Uloga je obavezna');
       return false;
     }
+    if (!setupForm.dob) {
+      setErrorMessage('Datum rođenja je obavezan');
+      return false;
+    }
+    if (!setupForm.gender) {
+      setErrorMessage('Spol je obavezan');
+      return false;
+    }
+    if (!setupForm.location) {
+      setErrorMessage('Mjesto stanovanja je obavezna');
+      return false;
+    }
     setErrorMessage('');
     return true;
   }
