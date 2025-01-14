@@ -42,7 +42,7 @@ public class Lesson {
     private LessonType lessonType;
 
     @Column(name = "price")
-    private Float price;
+    private String price;
 
     @Column(name = "date", nullable = false)
     private LocalDate date;
@@ -111,9 +111,9 @@ public class Lesson {
 
     public void setLessonType(LessonType lessonType) { this.lessonType = lessonType; }
 
-    public Float getPrice() { return price; }
+    public String getPrice() { return price; }
 
-    public void setPrice(Float price) { this.price = price; }
+    public void setPrice(String price) { this.price = price; }
 
     public LocalDate getDate() { return date; }
 
