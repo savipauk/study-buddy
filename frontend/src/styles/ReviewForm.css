@@ -49,17 +49,17 @@
     color: black;
 }
 
-form {
+.review-input {
     display: flex;
     flex-direction: column;
 }
 
-label {
+.description-label {
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-textarea {
+.comment-section {
     width: 100%;
     height: 80px;
     margin-bottom: 15px;
@@ -70,7 +70,7 @@ textarea {
     font-family: Arial, sans-serif;
 }
 
-button {
+.submitReportButton button {
     background-color: #000;
     color: #fff;
     border: none;
@@ -80,6 +80,3 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #333;
-}
