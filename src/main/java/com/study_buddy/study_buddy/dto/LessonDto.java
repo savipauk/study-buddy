@@ -17,7 +17,7 @@ public class LessonDto {
     private String yCoordinate;
     private String location;
     private LessonType type;
-    private Float price;
+    private String price;
     private LocalDate date;
     private LocalTime time;
     private String username;
@@ -70,9 +70,9 @@ public class LessonDto {
 
     public void setType(LessonType type) { this.type = type; }
 
-    public Float getPrice() { return price; }
+    public String getPrice() { return price; }
 
-    public void setPrice(Float price) { this.price = price; }
+    public void setPrice(String price) { this.price = price; }
 
     public LocalDate getDate() { return date; }
 
