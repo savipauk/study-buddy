@@ -1,13 +1,11 @@
 /*global google */
 
-import { GoogleMap, LoadScriptNext } from '@react-google-maps/api';
+import { GoogleMap } from '@react-google-maps/api';
 import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import ProfessorProfile from './ProfessorProfile';
-
-const librariesHardcode = ['places', 'marker'];
 
 function LessonInfo({ lesson, onClose }) {
   const mapLocation = {
@@ -132,27 +130,22 @@ function LessonInfo({ lesson, onClose }) {
           <label>{locationName}</label>
         </div>
         <div className="maps">
-          <LoadScriptNext
-            googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
-            libraries={librariesHardcode}
+          <GoogleMap
+            center={mapLocation}
+            zoom={15}
+            onLoad={getLocation}
+            options={{
+              mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
+              streetViewControl: false,
+              mapTypeControl: false
+            }}
+            mapContainerStyle={{ width: '100%', height: '100%' }}
           >
-            <GoogleMap
-              center={mapLocation}
-              zoom={15}
-              onLoad={getLocation}
-              options={{
-                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
-                streetViewControl: false,
-                mapTypeControl: false
-              }}
-              mapContainerStyle={{ width: '100%', height: '100%' }}
-            >
-              <CustomAdvancedMarker
-                lat={lesson.xCoordinate}
-                lng={lesson.yCoordinate}
-              />
-            </GoogleMap>
-          </LoadScriptNext>
+            <CustomAdvancedMarker
+              lat={lesson.xCoordinate}
+              lng={lesson.yCoordinate}
+            />
+          </GoogleMap>
         </div>
       </div>
       {showProfile && (

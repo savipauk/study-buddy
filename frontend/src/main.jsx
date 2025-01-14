@@ -12,6 +12,9 @@ import Profile from './routes/Profile';
 import { AuthProvider } from './components/AuthContext';
 import ProfileInfo from './routes/ProfileInfo';
 import AdminPage from './routes/Admin';
+import { LoadScriptNext } from '@react-google-maps/api';
+
+const librariesHardcode = ['places', 'marker'];
 
 const router = createBrowserRouter([
   {
@@ -52,11 +55,16 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById('root')).render(
-  <GoogleOAuthProvider clientId='4143611273-h8v79jdefdqr65l0n23efpg84r5vospr.apps.googleusercontent.com'>
-    <AuthProvider>
-      <StrictMode>
-        <RouterProvider router={router} />
-      </StrictMode>
-    </AuthProvider>
+  <GoogleOAuthProvider clientId="4143611273-h8v79jdefdqr65l0n23efpg84r5vospr.apps.googleusercontent.com">
+    <LoadScriptNext
+      googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
+      libraries={librariesHardcode}
+    >
+      <AuthProvider>
+        <StrictMode>
+          <RouterProvider router={router} />
+        </StrictMode>
+      </AuthProvider>
+    </LoadScriptNext>
   </GoogleOAuthProvider>
 );
