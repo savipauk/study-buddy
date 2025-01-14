@@ -1,18 +1,12 @@
 /* global google */
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  GoogleMap,
-  LoadScriptNext,
-  StandaloneSearchBox
-} from '@react-google-maps/api';
+import { GoogleMap, StandaloneSearchBox } from '@react-google-maps/api';
 import '../styles/StudyGroupLessons.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { serverFetch } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
-
-const librariesHardcode = ['places', 'marker'];
 
 function CreateStudyGroupForm({ onClose, onCreateClick }) {
   const mapLocation = {
@@ -40,6 +34,20 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     setGroupInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
 
+  const findLocationName = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const locationsName = results[0].address_components.find((component) =>
+          component.types.includes('locality')
+        );
+        if (locationsName) {
+          setLocationName(locationsName.long_name);
+        }
+      }
+    });
+  };
+
   useEffect(() => {
     if (mapRef.current && !markerRef.current) {
       const { AdvancedMarkerElement } = google.maps.marker;
@@ -62,21 +70,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
       markerRef.current.position = location;
     }
     findLocationName();
-  }, [location]);
-
-  const findLocationName = () => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: location }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        const locationsName = results[0].address_components.find((component) =>
-          component.types.includes('locality')
-        );
-        if (locationsName) {
-          setLocationName(locationsName.long_name);
-        }
-      }
-    });
-  };
+  }, [location, findLocationName]);
 
   const handlePlaceSelect = () => {
     const place = searchBoxRef.current.getPlaces()[0];
@@ -249,33 +243,28 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
             <label className="inputLabel">Lokacija</label>
           </div>
           <div className="mapsWrapper">
-            <LoadScriptNext
-              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
-              libraries={librariesHardcode}
+            <StandaloneSearchBox
+              onLoad={(ref) => (searchBoxRef.current = ref)}
+              onPlacesChanged={handlePlaceSelect}
             >
-              <StandaloneSearchBox
-                onLoad={(ref) => (searchBoxRef.current = ref)}
-                onPlacesChanged={handlePlaceSelect}
-              >
-                <input
-                  className="searchBar"
-                  placeholder="Upišite lokaciju"
-                  type="text"
-                />
-              </StandaloneSearchBox>
-              <GoogleMap
-                onLoad={(map) => (mapRef.current = map)}
-                center={location}
-                zoom={15}
-                options={{
-                  mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
-                  streetViewControl: false,
-                  mapTypeControl: false,
-                  draggableCursor: true
-                }}
-                mapContainerStyle={{ width: '100%', height: '100%' }}
-              ></GoogleMap>
-            </LoadScriptNext>
+              <input
+                className="searchBar"
+                placeholder="Upišite lokaciju"
+                type="text"
+              />
+            </StandaloneSearchBox>
+            <GoogleMap
+              onLoad={(map) => (mapRef.current = map)}
+              center={location}
+              zoom={15}
+              options={{
+                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
+                streetViewControl: false,
+                mapTypeControl: false,
+                draggableCursor: true
+              }}
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+            ></GoogleMap>
           </div>
         </div>
         <div className="validationMessage">
