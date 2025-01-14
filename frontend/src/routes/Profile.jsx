@@ -55,7 +55,6 @@ function UserForm() {
     e.preventDefault();
     setShowPasswordWindow(true);
   };
-
   const handlePasswordSave = (hash) => {
     setUserHash(hash);
     setShowPasswordWindow(false);
