@@ -31,8 +31,9 @@ function UserForm() {
   const [userHash, setUserHash] = useState('');
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
-  const [profilePictureUrl, setProfilePictureUrl] = useState('');
 
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
   );
