@@ -147,9 +147,10 @@ public class LessonController {
     }
 
     // Add a student to a lesson
-    @PostMapping("/{lessonId}/add-student/{studentId}")
-    public ResponseEntity<String> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("studentId") Long studentId) {
-        Student student = studentService.getStudentById(studentId);
+    @PostMapping("/{lessonId}/add-student/{username}")
+    public ResponseEntity<String> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        Student student = studentService.getStudentByUserId(user.getUserId());
         Lesson lesson = lessonService.getLessonById(lessonId);
 
         lessonParticipantService.addStudentToLesson(student, lesson);
