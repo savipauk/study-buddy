@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import ProfessorProfile from './ProfessorProfile';
+import StudentProfile from './StudentProfile.jsx';
 
 const librariesHardcode = ['places', 'marker'];
 
@@ -17,6 +19,7 @@ function LessonInfo({ lesson, onClose }) {
     lng: parseFloat(lesson.yCoordinate)
   };
   const [locationName, setLocationName] = useState('');
+  const [showProfile, setShowProfile] = useState(false);
   const { setMyProfile, setUsername } = useAuth();
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
@@ -29,112 +32,111 @@ function LessonInfo({ lesson, onClose }) {
     });
   };
 
-  const handleGoToProfileClick = () => {
-    setMyProfile(false);
-    setUsername(lesson.username);
-    navigate('/users/profile');
+  const handleProfileClick = () => {
+    setShowProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setShowProfile(false);
   };
 
   return (
-    <div className='groupInfoWrapper'>
-      <div className='exit'>
+    <div className="groupInfoWrapper">
+      <div className="exit">
         <button onClick={onClose}>
-          <i className='fa-regular fa-circle-xmark'></i>
+          <i className="fa-regular fa-circle-xmark"></i>
         </button>
       </div>
-      <div className='allGroupInfoWrapper'>
-        <div className='infoGroup'>
-          <div className='groupTitle'>
+      <div className="allGroupInfoWrapper">
+        <div className="infoGroup">
+          <div className="groupTitle">
             <label>{'Instrukcije'}</label>
             <h2>{lesson.subject}</h2>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Organizator</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.username}</label>
           </div>
-          <div className='lablesWrapper'>
-            <button
-              className='goToProfileButton'
-              onClick={handleGoToProfileClick}
-            >
-              <i className='fa-regular fa-user'></i>
+          <div className="lablesWrapper">
+            <button className="profileInfo" onClick={handleProfileClick}>
+              <i className="fa-regular fa-user"></i>
             </button>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Datum</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.date}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Vrijeme</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.time}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Cijena</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.price}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Tip</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.type}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Trajanje</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.duration}</label>
           </div>
         </div>
         {lesson.type === 'Masivne' && (
-          <div className='infoGroup'>
-            <div className='lablesWrapper'>
-              <label>Maksimalan broj clanova</label>
+          <div className="infoGroup">
+            <div className="lablesWrapper">
+              <label>Maksimalan broj članova</label>
             </div>
-            <div className='lablesWrapperLesson'>
+            <div className="lablesWrapperLesson">
               <label>{lesson.maxMembers}</label>
             </div>
           </div>
         )}
         {lesson.type === 'Masivne' && (
-          <div className='infoGroup'>
-            <div className='lablesWrapper'>
-              <label>Minimalan broj clanova</label>
+          <div className="infoGroup">
+            <div className="lablesWrapper">
+              <label>Minimalan broj članova</label>
             </div>
-            <div className='lablesWrapperLesson'>
+            <div className="lablesWrapperLesson">
               <label>{lesson.minMembers}</label>
             </div>
           </div>
         )}
-        <div className='joinGroupButton'>
-          <button>Pridruzi se!</button>
+        <div className="joinGroupButton">
+          <button>Pridružite se!</button>
         </div>
       </div>
-      <div className='mapsLocation'>
-        <div className='locationName'>
+      <div className="mapsLocation">
+        <div className="locationName">
           <label>Lokacija:</label>
           <label>{locationName}</label>
         </div>
-        <div className='maps'>
+        <div className="maps">
           <LoadScriptNext
             googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
             libraries={librariesHardcode}
@@ -158,6 +160,12 @@ function LessonInfo({ lesson, onClose }) {
           </LoadScriptNext>
         </div>
       </div>
+      {showProfile && (
+        <ProfessorProfile
+          onClose={handleCloseProfile}
+          username={group.username}
+        />
+      )}
     </div>
   );
 }
