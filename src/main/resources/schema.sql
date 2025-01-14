@@ -19,7 +19,7 @@ CREATE TABLE Users (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     username VARCHAR(100) NOT NULL,
-    profile_picture BLOB,
+    profile_picture VARCHAR(255),
     description TEXT,
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
@@ -95,7 +95,7 @@ CREATE TABLE Lessons (
     y_coordinate VARCHAR(255),
     location VARCHAR(255),
     lesson_type ENUM('MASS', 'ONE_ON_ONE') NOT NULL,
-    price VARCHAR(255),
+    price FLOAT,
     date DATE NOT NULL,
     time TIME NOT NULL,
     registration_deadline DATE,
@@ -144,6 +144,9 @@ CREATE TABLE Materials (
     user_id INT NOT NULL, -- ID korisnika koji je postavio materijal
     group_id INT, -- Ako je materijal postavljen za grupu
     lesson_id INT, -- Ako je materijal postavljen za lekciju
+    file_data BLOB,
+    file_name VARCHAR(250),
+    mime_type VARCHAR(250),
     description TEXT,
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (material_id),
@@ -154,16 +157,14 @@ CREATE TABLE Materials (
 
 -- User entries
 INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city)
-VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'F', '2003-06-20', 'Zagreb'),
-    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'M', '2003-06-03', 'Zagreb'),
-    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','F', '1974-01-15', 'Zagreb'),
-    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb'),
-    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb'),
-    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb'),
-    ('student3@example.com', '$2a$10$K.2FEUx5RNYnfs6VeO79aedlChH.uFru9lh0DdyFcXrJ9gR7hmJiO', 'student3','','','Štefica', 'Štefić','Žena, majka, kraljica', 'accessToken3', 'refreshToken3', 'STUDENT', 'F', '1970-04-01', 'Bedekovčina');
+VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb'),
+    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb'),
+    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb'),
+    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','F', '1971-11-12', 'Zagreb'),
+    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'M', '1965-12-02', 'Zagreb'),
+    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'F', '1980-03-04', 'Zagreb');
 -- student1 password: 'password123'
 -- student2 password: 'password345'
--- student3 password: '12345678i'
 -- professor1 password: 'password789'
 -- professor2 password: 'password012'
 -- admin1 password: 'password345'
@@ -173,8 +174,7 @@ VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrK
 -- Student entires
 INSERT INTO Students(user_id)
 VALUES ('1'),
-       ('2'),
-       ('7');
+       ('2');
 
 -- Professor entires
 INSERT INTO Professors(user_id)
@@ -183,11 +183,11 @@ VALUES ('3'),
 
 -- Lessons entries
 INSERT INTO Lessons (professor_id, subject, duration, max_participants, min_participants, x_coordinate, y_coordinate, location, lesson_type, price, date, time, registration_deadline)
-VALUES (1,'Math', '60 minutes', 20, 5, '45.8132', '15.9770', 'Zagreb', 'MASS', '25.00', '2025-01-29', '09:00:00', '2025-01-27'),
-    (2,'Physics', '90 minutes', 15, 3, '43.5081', ' 16.4402', 'Split', 'ONE_ON_ONE', '50.00', '2025-01-28', '14:30:00', '2025-01-26'),
-    (1,'English', '45 minutes', 10, 2, '42.6410', '18.1106', 'Dubrovnik', 'MASS', '20.00', '2025-01-27', '11:00:00', '2025-01-25'),
-    (1,'Chemistry', '120 minutes', 25, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', '35.00', '2025-01-26', '15:00:00', '2025-01-24'),
-    (2,'History', '50 minutes', 30, 8, '44.1178', '15.2272', 'Zadar', 'ONE_ON_ONE', '15.00', '2025-01-25', '10:00:00', '2025-01-23');
+VALUES (1,'Math', '60 minutes', 20, 5, '45.8132', '15.9770', 'Zagreb', 'MASS', 25.00, '2025-01-29', '09:00:00', '2025-01-27'),
+    (2,'Physics', '90 minutes', 15, 3, '43.5081', ' 16.4402', 'Split', 'ONE_ON_ONE', 50.00, '2025-01-28', '14:30:00', '2025-01-26'),
+    (1,'English', '45 minutes', 10, 2, '42.6410', '18.1106', 'Dubrovnik', 'MASS', 20.00, '2025-01-27', '11:00:00', '2025-01-25'),
+    (1,'Chemistry', '120 minutes', 25, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', 35.00, '2025-01-26', '15:00:00', '2025-01-24'),
+    (2,'History', '50 minutes', 30, 8, '44.1178', '15.2272', 'Zadar', 'ONE_ON_ONE', 15.00, '2025-01-25', '10:00:00', '2025-01-23');
 
 -- StudyGroups entries
 INSERT INTO StudyGroups (group_name, location, x_coordinate, y_coordinate, date, time, max_members, description, expiration_date, creator_id)
@@ -228,13 +228,14 @@ VALUES  (1, 2, 'Spamming in the forum', 'OPEN'),
     (2, 3, 'Sharing false information', 'REJECTED'),
     (4, 1, 'Violation of community guidelines', 'OPEN');
 
--- Reviews entries
-INSERT INTO Reviews (student_id, professor_id, rating, comment, review_date)
-VALUES (1, 1, 5, 'Amazing professor, very clear explanations!', '2025-01-10 10:30:00'),
-     (2, 1, 4, 'Great teaching, but needs to slow down a bit.', '2025-01-11 15:45:00'),
-     (1, 2, 3, 'Average experience, could be more interactive.', '2025-01-12 12:00:00'),
-     (2, 2, 2, 'Had difficulties understanding the material.', '2025-01-13 09:15:00'),
-     (3, 2, 5, 'Najboljši.', '2025-01-14 08:20:00');
+-- Materials entries
+INSERT INTO Materials (user_id, group_id, lesson_id, file_name, mime_type, description, upload_date)
+VALUES
+(1, 1, NULL, 'sample1.pdf', 'application/pdf', 'Sample PDF for Group 1, Lesson 1', NOW()),
 
+(2, NULL, 2, 'sample2.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Word document for Lesson 2', NOW()),
 
+(3, 2, NULL, 'sample3.png', 'image/png', 'Image uploaded for Group 2', NOW()),
+
+(4, NULL, 1, 'sample4.txt', 'text/plain', 'General text file uploaded by user 4', NOW());
 
