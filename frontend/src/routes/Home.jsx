@@ -211,7 +211,7 @@ function ProfileSetup({ finishSetup }) {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-        if (data.message === 'USERNAME_TAKEN') {
+        if (data.message === 'USERNAME_EXISTS') {
           setErrorMessage('Korisničko ime već postoji');
         } else {
           finishSetup();
