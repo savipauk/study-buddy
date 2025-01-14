@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import ReportForm from './ReportForm';
+import ReviewForm from './ReviewForm';
 import '../styles/ProfessorProfile.css';
 import PropTypes from 'prop-types';
 
 function ProfessorProfile({ onClose, username }) {
+  const role = localStorage.getItem('role');
   const [userInfoForm, setUserInfoForm] = useState({
     FirstName: '',
     LastName: '',
@@ -13,12 +15,15 @@ function ProfessorProfile({ onClose, username }) {
   });
 
   const [showReportWindow, setShowReportWindow] = useState(false);
+  const [showReviewWindow, setShowReviewWindow] = useState(false);
 
   const handleCloseWindow = () => {
     setShowReportWindow(false);
+    setShowReviewWindow(false);
   };
 
   const handleReportUser = () => setShowReportWindow(true);
+  const handleReviewUser = () => setShowReviewWindow(true);
 
   const getProfessorProfile = async (username) => {
     const endpoint = `/users/profileByUsername/${username}`;
@@ -67,6 +72,11 @@ function ProfessorProfile({ onClose, username }) {
             </div>
           </div>
           <div className="buttons">
+            {role === 'STUDENT' && (
+              <button className="review-button" onClick={handleReviewUser}>
+                Ocijenite korisnika!
+              </button>
+            )}
             <button className="report-button" onClick={handleReportUser}>
               Prijavite korisnika!
             </button>
@@ -80,6 +90,13 @@ function ProfessorProfile({ onClose, username }) {
             onClose={handleCloseWindow}
             userEmail={localStorage.getItem('user_email')}
             reportedUserEmail={userInfoForm.Email}
+          />
+        )}
+        {showReviewWindow && (
+          <ReviewForm
+            onClose={handleCloseWindow}
+            studentUsername={localStorage.getItem('user_email')}
+            professorUsername={userInfoForm.Email}
           />
         )}
       </div>
