@@ -135,9 +135,10 @@ public class StudyGroupController {
     }
 
     // Add a student to a study group
-    @PostMapping("/{groupId}/add-student/{studentId}")
-    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("studentId") Long studentId) {
-        Student student = studentService.getStudentById(studentId);
+    @PostMapping("/{groupId}/add-student/{username}")
+    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        Student student = studentService.getStudentByUserId(user.getUserId());
         StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
 
         groupMemberService.addStudentToGroup(student, studyGroup);
