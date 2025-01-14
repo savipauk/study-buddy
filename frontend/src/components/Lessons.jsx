@@ -1,18 +1,12 @@
 /* global google */
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  GoogleMap,
-  LoadScriptNext,
-  StandaloneSearchBox
-} from '@react-google-maps/api';
+import { GoogleMap, StandaloneSearchBox } from '@react-google-maps/api';
 import '../styles/StudyGroupLessons.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import PropTypes from 'prop-types';
 import { serverFetch } from '../hooks/serverUtils';
-
-const librariesHardcode = ['places', 'marker'];
 
 function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapLocation = {
@@ -47,6 +41,20 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       setMinNum(1);
     }
   }
+
+  const findLocationName = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const locationsName = results[0].address_components.find((component) =>
+          component.types.includes('locality')
+        );
+        if (locationsName) {
+          setLocationName(locationsName.long_name);
+        }
+      }
+    });
+  };
 
   useEffect(() => {
     if (mapRef.current && !markerRef.current) {
@@ -141,20 +149,6 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       return false;
     }
     return true;
-  };
-
-  const findLocationName = () => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: location }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        const locationsName = results[0].address_components.find((component) =>
-          component.types.includes('locality')
-        );
-        if (locationsName) {
-          setLocationName(locationsName.long_name);
-        }
-      }
-    });
   };
 
   async function onSubmit() {
@@ -351,33 +345,28 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
             <label className="inputLabel">Lokacija</label>
           </div>
           <div className="mapsWrapper">
-            <LoadScriptNext
-              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
-              libraries={librariesHardcode}
+            <StandaloneSearchBox
+              onLoad={(ref) => (searchBoxRef.current = ref)}
+              onPlacesChanged={handlePlaceSelect}
             >
-              <StandaloneSearchBox
-                onLoad={(ref) => (searchBoxRef.current = ref)}
-                onPlacesChanged={handlePlaceSelect}
-              >
-                <input
-                  className="searchBar"
-                  placeholder="Upišite lokaciju"
-                  type="text"
-                />
-              </StandaloneSearchBox>
-              <GoogleMap
-                onLoad={(map) => (mapRef.current = map)}
-                center={location}
-                zoom={15}
-                options={{
-                  mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
-                  streetViewControl: false,
-                  mapTypeControl: false,
-                  draggableCursor: true
-                }}
-                mapContainerStyle={{ width: '100%', height: '100%' }}
-              ></GoogleMap>
-            </LoadScriptNext>
+              <input
+                className="searchBar"
+                placeholder="Upišite lokaciju"
+                type="text"
+              />
+            </StandaloneSearchBox>
+            <GoogleMap
+              onLoad={(map) => (mapRef.current = map)}
+              center={location}
+              zoom={15}
+              options={{
+                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
+                streetViewControl: false,
+                mapTypeControl: false,
+                draggableCursor: true
+              }}
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+            ></GoogleMap>
           </div>
         </div>
         <div className="validationMessage">
