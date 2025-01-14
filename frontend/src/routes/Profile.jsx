@@ -17,6 +17,7 @@ function Profile() {
     </>
   );
 }
+
 function UserForm() {
   const navigate = useNavigate();
   const [userInfoForm, setUserInfoForm] = useState({
@@ -30,6 +31,9 @@ function UserForm() {
   const [userHash, setUserHash] = useState('');
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
+  const [profilePictureUrl, setProfilePictureUrl] = useState(
+    'https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'
+  );
 
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
@@ -51,7 +55,6 @@ function UserForm() {
     e.preventDefault();
     setShowPasswordWindow(true);
   };
-
   const handlePasswordSave = (hash) => {
     setUserHash(hash);
     setShowPasswordWindow(false);
@@ -79,6 +82,40 @@ function UserForm() {
     }
   }, [isProfileSetupComplete, navigate]);
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await fetch(
+        `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+
+      if (response.ok) {
+        console.log('Profilna slika uspješno dodana.');
+        const updatedResponse = await fetch(
+          `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        if (updatedResponse.ok) {
+          const blob = await updatedResponse.blob();
+          setProfilePictureUrl(URL.createObjectURL(blob));
+        }
+      } else {
+        console.error('Profilna slika nije uspješno dodana', response.status);
+      }
+    }
+  };
+
   function onChange(event) {
     const { name, value } = event.target;
     setUserInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
@@ -91,14 +128,18 @@ function UserForm() {
         <div className="allInfoWrapper">
           <div className="profilePictureWrapper">
             <div className="profilePicture">
-              <img
-                src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
-                className="image"
-              ></img>
+              <img src={profilePictureUrl} className="image" />
               <div className="wrapper">
-                <button className="uploadButton">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="fileUpload"
+                  style={{ display: 'none' }}
+                  onChange={handleImageUpload}
+                />
+                <label htmlFor="fileUpload" className="uploadButton">
                   <i className="fa-solid fa-cloud-arrow-up"></i>
-                </button>
+                </label>
                 <p className="aboutText">Opis</p>
                 <textarea
                   readOnly
