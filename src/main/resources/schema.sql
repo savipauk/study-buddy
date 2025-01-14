@@ -19,7 +19,7 @@ CREATE TABLE Users (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     username VARCHAR(100) NOT NULL,
-    profile_picture VARCHAR(255),
+    profile_picture BLOB,
     description TEXT,
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
