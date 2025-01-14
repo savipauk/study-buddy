@@ -26,7 +26,7 @@ public class Review {
     private String comment;
 
     @Column(name = "review_date")
-    private LocalDateTime reviewDate;
+    private LocalDateTime reviewDateTime;
 
     public Review () {}
 
@@ -36,7 +36,7 @@ public class Review {
         this.professor = professor;
         this.rating = rating;
         this.comment = comment;
-        this.reviewDate = reviewDate;
+        this.reviewDateTime = reviewDate;
     }
 
     public Long getReviewId() {
@@ -79,11 +79,11 @@ public class Review {
         this.comment = comment;
     }
 
-    public LocalDateTime getReviewDate() {
-        return reviewDate;
+    public LocalDateTime getReviewDateTime() {
+        return reviewDateTime;
     }
 
-    public void setReviewDate(LocalDateTime reviewDate) {
-        this.reviewDate = reviewDate;
+    public void setReviewDateTime(LocalDateTime reviewDateTime) {
+        this.reviewDateTime = reviewDateTime;
     }
 }
