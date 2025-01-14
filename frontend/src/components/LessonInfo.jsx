@@ -162,7 +162,7 @@ function LessonInfo({ lesson, onClose }) {
       {showProfile && (
         <ProfessorProfile
           onClose={handleCloseProfile}
-          username={group.username}
+          username={lesson.username}
         />
       )}
     </div>
