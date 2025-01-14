@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import '../styles/ReviewForm.css';
-import PropTypes from 'prop-types';
 
 function ReviewForm({ onClose, studentUsername, professorUsername }) {
   const [validationMessage, setValidationMessage] = useState('');
@@ -67,7 +66,7 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
   return (
     <div className="whole-page">
       <div className="review-form">
-        <h2>Dodaj recenziju!</h2>
+        <h2>Dodajte recenziju!</h2>
         <div className="stars">
           {[1, 2, 3, 4, 5].map((star) => (
             <span
@@ -79,9 +78,12 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
             </span>
           ))}
         </div>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="comment">Opis</label>
+        <form className="review-input" onSubmit={handleSubmit}>
+          <label className="description-label" htmlFor="comment">
+            Opis
+          </label>
           <textarea
+            className="comment-section"
             id="comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
