@@ -65,38 +65,40 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
   }
 
   return (
-    <div className="review-form">
-      <h2>Dodaj recenziju!</h2>
-      <div className="stars">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span
-            key={star}
-            className={star <= rating ? 'star filled' : 'star'}
-            onClick={() => handleRatingClick(star)}
-          >
-            ★
-          </span>
-        ))}
-      </div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="comment">Opis</label>
-        <textarea
-          id="comment"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-        ></textarea>
-        {validationMessage && (
-          <div className="validationMessage">
-            <label>{validationMessage}</label>
-          </div>
-        )}
-        <div className="submitReportButton">
-          <button type="button" onClick={onClose}>
-            Prekini
-          </button>
-          <button type="submit">Podnesi</button>
+    <div className="whole-page">
+      <div className="review-form">
+        <h2>Dodaj recenziju!</h2>
+        <div className="stars">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span
+              key={star}
+              className={star <= rating ? 'star filled' : 'star'}
+              onClick={() => handleRatingClick(star)}
+            >
+              ★
+            </span>
+          ))}
         </div>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="comment">Opis</label>
+          <textarea
+            id="comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          ></textarea>
+          {validationMessage && (
+            <div className="validationMessage">
+              <label>{validationMessage}</label>
+            </div>
+          )}
+          <div className="submitReportButton">
+            <button type="button" onClick={onClose}>
+              Prekini
+            </button>
+            <button type="submit">Podnesi</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
