@@ -5,13 +5,11 @@ import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import ProfessorProfile from './ProfessorProfile';
 
 const librariesHardcode = ['places', 'marker'];
 
 function LessonInfo({ lesson, onClose }) {
-  const navigate = useNavigate();
   const mapLocation = {
     lat: parseFloat(lesson.xCoordinate),
     lng: parseFloat(lesson.yCoordinate)

@@ -88,10 +88,8 @@ function StudentProfile({ onClose, username }) {
 }
 
 StudentProfile.propTypes = {
-  FirstName: PropTypes.string,
-  LastName: PropTypes.string,
-  Bio: PropTypes.string,
-  Email: PropTypes.string
+  onClose: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired
 };
 
 export default StudentProfile;

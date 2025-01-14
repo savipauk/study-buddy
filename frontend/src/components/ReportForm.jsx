@@ -99,10 +99,10 @@ function ReportForm({ onClose, userEmail, reportedUserEmail }) {
   );
 }
 
-ReportForm.propType = {
-  reporterEmail: PropTypes.string,
-  reportedEmail: PropTypes.string,
-  reason: PropTypes.string
+ReportForm.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  userEmail: PropTypes.string.isRequired,
+  reportedUserEmail: PropTypes.string.isRequired
 };
 
 export default ReportForm;
