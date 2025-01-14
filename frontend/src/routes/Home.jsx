@@ -1,7 +1,6 @@
 import '../styles/HomePage.css';
 import '../styles/Login.css';
 import Header from '../components/Header';
-import useAuth from '../hooks/useAuth';
 import { useState, useEffect } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import CreateStudyGroupForm from '../components/StudyGroupForm';
@@ -9,14 +8,18 @@ import Lessons from '../components/Lessons';
 import ActiveGroup from '../components/ActiveGroup';
 import ActiveLesson from '../components/AcitveLesson';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function HomePage() {
   const [createClicked, setCreateClicked] = useState(false);
   const [groups, setGroups] = useState([]);
   const [lessons, setLessons] = useState([]);
   const role = localStorage.getItem('role');
-  const isProfileSetupComplete = localStorage.getItem('isProfileSetupComplete');
+
   const [hasRefreshed, setHasRefreshed] = useState(false);
+  const [isProfileSetupComplete, setIsProfileSetupComplete] = useState(() =>
+    JSON.parse(localStorage.getItem('isProfileSetupComplete'))
+  );
 
   const navigate = useNavigate();
 
@@ -25,6 +28,11 @@ function HomePage() {
   };
   const handleCloseCreateGroup = () => {
     setCreateClicked(false);
+  };
+
+  const handleProfileSetupComplete = () => {
+    localStorage.setItem('isProfileSetupComplete', true);
+    setIsProfileSetupComplete(true); // Trigger re-render
   };
 
   useEffect(() => {
@@ -87,15 +95,17 @@ function HomePage() {
         }`}
       >
         <Header></Header>
-        <div className='newStudyGroup'>
-          <button className='newStudyGroupButton' onClick={handleCreateGroup}>
+        <div className="newStudyGroup">
+          <button className="newStudyGroupButton" onClick={handleCreateGroup}>
             {role === 'STUDENT' ? 'Kreiraj StudyGroup' : 'Kreiraj Instrukcije'}
           </button>
         </div>
 
-        <h1 className='someText'>AKTIVNO</h1>
+        <h1 className="someText">AKTIVNO</h1>
       </div>
-      {!isProfileSetupComplete && <ProfileSetup />}
+      {!isProfileSetupComplete && (
+        <ProfileSetup finishSetup={handleProfileSetupComplete} />
+      )}
       {createClicked && role === 'STUDENT' && (
         <CreateStudyGroupForm
           onClose={handleCloseCreateGroup}
@@ -108,7 +118,7 @@ function HomePage() {
           onCreateClick={() => setHasRefreshed(!hasRefreshed)}
         />
       )}
-      <div className='activeLessons'>
+      <div className="activeLessons">
         {groups.length === 0 ? (
           <p>Treutno nema aktivnih studyGrupa</p>
         ) : (
@@ -130,8 +140,7 @@ function HomePage() {
 
 export default HomePage;
 
-function ProfileSetup() {
-  const { setIsProfileSetupComplete, setRole } = useAuth();
+function ProfileSetup({ finishSetup }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [setupForm, setSetupForm] = useState({
     username: '',
@@ -205,8 +214,8 @@ function ProfileSetup() {
         if (data.message === 'USERNAME_TAKEN') {
           setErrorMessage('Korisničko ime već postoji');
         } else {
-          setIsProfileSetupComplete(true);
-          setRole(data.studyRole);
+          finishSetup();
+          localStorage.setItem('role', data.studyRole);
         }
         return data;
       } else {
@@ -248,57 +257,57 @@ function ProfileSetup() {
   }
 
   return (
-    <div className='setupWrapper'>
-      <form className='forms' onSubmit={onSubmit}>
-        <div className='formDiv'>
-          <h1 className='helloText'>Dovršite profil!</h1>
-          <div className='inputDiv'>
-            <div className='nameWrapper'>
+    <div className="setupWrapper">
+      <form className="forms" onSubmit={onSubmit}>
+        <div className="formDiv">
+          <h1 className="helloText">Dovršite profil!</h1>
+          <div className="inputDiv">
+            <div className="nameWrapper">
               <input
-                className='nameInfoInput'
-                placeholder='Ime'
-                type='text'
-                name='firstName'
-                value={setSetupForm.firstName}
+                className="nameInfoInput"
+                placeholder="Ime"
+                type="text"
+                name="firstName"
+                value={setupForm.firstName}
                 onChange={onChange}
               ></input>
               <input
-                className='nameInfoInput'
-                placeholder='Prezime'
-                type='text'
-                name='lastName'
-                value={setSetupForm.lastName}
+                className="nameInfoInput"
+                placeholder="Prezime"
+                type="text"
+                name="lastName"
+                value={setupForm.lastName}
                 onChange={onChange}
               ></input>
             </div>
             <input
-              className='infoInput'
-              type='text'
-              placeholder='Korisničko ime'
+              className="infoInput"
+              type="text"
+              placeholder="Korisničko ime"
               onChange={onChange}
-              value={setSetupForm.username}
-              name='username'
+              value={setupForm.username}
+              name="username"
             ></input>
           </div>
           <input
-            className='infoInput'
-            type='text'
-            placeholder='Lokacija'
+            className="infoInput"
+            type="text"
+            placeholder="Lokacija"
             onChange={onChange}
             value={setupForm.location}
-            name='location'
+            name="location"
           ></input>
-          <div className='dateOfBirth'>
-            <label className='dobTitle'>Datum rođenja</label>
-            <div className='dobSelector'>
-              <div className='dropdown'>
+          <div className="dateOfBirth">
+            <label className="dobTitle">Datum rođenja</label>
+            <div className="dobSelector">
+              <div className="dropdown">
                 <select
-                  name='day'
-                  className='dobSelect'
+                  name="day"
+                  className="dobSelect"
                   value={day}
                   onChange={(e) => handleDOBChange('day', e.target.value)}
                 >
-                  <option value=''>Dan</option>
+                  <option value="">Dan</option>
                   {Array.from({ length: 31 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -306,14 +315,14 @@ function ProfileSetup() {
                   ))}
                 </select>
               </div>
-              <div className='dropdown'>
+              <div className="dropdown">
                 <select
-                  name='month'
-                  className='dobSelect'
+                  name="month"
+                  className="dobSelect"
                   value={month}
                   onChange={(e) => handleDOBChange('month', e.target.value)}
                 >
-                  <option value=''>Mjesec</option>
+                  <option value="">Mjesec</option>
                   {[
                     'Siječanj',
                     'Veljača',
@@ -334,14 +343,14 @@ function ProfileSetup() {
                   ))}
                 </select>
               </div>
-              <div className='dropdown'>
+              <div className="dropdown">
                 <select
-                  name='year'
-                  className='dobSelect'
+                  name="year"
+                  className="dobSelect"
                   value={year}
                   onChange={(e) => handleDOBChange('year', e.target.value)}
                 >
-                  <option value=''>Year</option>
+                  <option value="">Year</option>
                   {Array.from({ length: 100 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -354,61 +363,61 @@ function ProfileSetup() {
               </div>
             </div>
           </div>
-          <div className='genderSelection'>
+          <div className="genderSelection">
             <input
-              className='genderRadioButton'
-              type='radio'
-              name='gender'
+              className="genderRadioButton"
+              type="radio"
+              name="gender"
               value={'M'}
-              id='genderMale'
+              id="genderMale"
               checked={setupForm.gender === 'M'}
               onChange={onChange}
             ></input>
-            <label htmlFor='genderMale' className='toggleOption'>
+            <label htmlFor="genderMale" className="toggleOption">
               Muško
             </label>
             <input
-              className='genderRadioButton'
-              type='radio'
-              name='gender'
+              className="genderRadioButton"
+              type="radio"
+              name="gender"
               value={'F'}
-              id='genderFemale'
+              id="genderFemale"
               checked={setupForm.gender === 'F'}
               onChange={onChange}
             ></input>
-            <label htmlFor='genderFemale' className='toggleOption'>
+            <label htmlFor="genderFemale" className="toggleOption">
               Žensko
             </label>
           </div>
-          <div className='roleSelection'>
+          <div className="roleSelection">
             <input
-              className='roleRadioButton'
-              type='radio'
-              name='role'
+              className="roleRadioButton"
+              type="radio"
+              name="role"
               value={'Student'}
-              id='roleStudent'
+              id="roleStudent"
               checked={setupForm.role === 'Student'}
               onChange={onChange}
             ></input>
-            <label htmlFor='roleStudent' className='toggleOption'>
+            <label htmlFor="roleStudent" className="toggleOption">
               Student
             </label>
             <input
-              className='roleRadioButton'
-              type='radio'
-              name='role'
+              className="roleRadioButton"
+              type="radio"
+              name="role"
               value={'Professor'}
-              id='roleProfessor'
+              id="roleProfessor"
               checked={setupForm.role === 'Professor'}
               onChange={onChange}
             ></input>
-            <label htmlFor='roleProfessor' className='toggleOption'>
+            <label htmlFor="roleProfessor" className="toggleOption">
               Profesor
             </label>
           </div>
-          <p className='errorMessage'>{errorMessage}</p>
-          <div className='buttonDiv'>
-            <button className='inputButton' type='submit'>
+          <p className="errorMessage">{errorMessage}</p>
+          <div className="buttonDiv">
+            <button className="inputButton" type="submit">
               Predaj
             </button>
           </div>
@@ -417,3 +426,7 @@ function ProfileSetup() {
     </div>
   );
 }
+
+ProfileSetup.propTypes = {
+  finishSetup: PropTypes.func.isRequired
+};

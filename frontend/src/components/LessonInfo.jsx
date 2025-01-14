@@ -5,7 +5,6 @@ import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import useAuth from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import ProfessorProfile from './ProfessorProfile';
 
@@ -19,7 +18,6 @@ function LessonInfo({ lesson, onClose }) {
   };
   const [locationName, setLocationName] = useState('');
   const [showProfile, setShowProfile] = useState(false);
-  const { setMyProfile, setUsername } = useAuth();
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: mapLocation }, (results, status) => {

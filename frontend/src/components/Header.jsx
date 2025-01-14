@@ -20,23 +20,23 @@ function Header() {
   };
 
   return (
-    <header className='header'>
+    <header className="header">
       {role !== 'ADMIN' && (
-        <div className='headerSide'>
-          <button className='headerButtons' onClick={handleClickHome}>
-            <i className='fa-solid fa-house'></i>
+        <div className="headerSide">
+          <button className="headerButtons" onClick={handleClickHome}>
+            <i className="fa-solid fa-house"></i>
           </button>
         </div>
       )}
-      <h1 className='headerText'>STUDY BUDDY</h1>
-      <div className='headerSide'>
+      <h1 className="headerText">STUDY BUDDY</h1>
+      <div className="headerSide">
         {role !== 'ADMIN' && (
-          <button className='headerButtons' onClick={handleClickProfile}>
-            <i className='fa-solid fa-user'></i>
+          <button className="headerButtons" onClick={handleClickProfile}>
+            <i className="fa-solid fa-user"></i>
           </button>
         )}
-        <button className='headerButtonSignOut' onClick={handleClickSignOut}>
-          <i className='fa-solid fa-arrow-right-from-bracket'></i>
+        <button className="headerButtonSignOut" onClick={handleClickSignOut}>
+          <i className="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
       </div>
     </header>

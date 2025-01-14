@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = (info, role) => {
     // Maybe track this in the database
-    localStorage.setItem('isProfileSetupComplete', true);
+    localStorage.setItem('isProfileSetupComplete', false);
     localStorage.setItem('user_email', info);
     localStorage.setItem('role', role);
     setIsSignedIn(true);

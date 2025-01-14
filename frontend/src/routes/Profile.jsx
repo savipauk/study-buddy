@@ -31,7 +31,9 @@ function UserForm() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
 
-  const isProfileSetupComplete = localStorage.getItem('isProfileSetupComplete');
+  const isProfileSetupComplete = JSON.parse(
+    localStorage.getItem('isProfileSetupComplete')
+  );
 
   const loggedInWithOAUTH =
     localStorage.getItem('is_logged_in_with_google') === 'true' || false;
