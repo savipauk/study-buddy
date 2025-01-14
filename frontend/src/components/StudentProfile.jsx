@@ -12,6 +12,8 @@ function StudentProfile({ onClose, username }) {
     Email: ''
   });
 
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+
   const [showReportWindow, setShowReportWindow] = useState(false);
 
   const handleCloseWindow = () => {
@@ -42,8 +44,30 @@ function StudentProfile({ onClose, username }) {
       } else {
         console.error('Failed to fetch user profile');
       }
+
+      const imageResponse = await fetch(
+        `http://localhost:8080/users/profile-picture/${username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      if (imageResponse.ok) {
+        const blob = await imageResponse.blob();
+        if (blob.size > 0) {
+          setProfilePictureUrl(URL.createObjectURL(blob));
+        } else {
+          setProfilePictureUrl(
+            'https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'
+          );
+        }
+      } else {
+        console.error('Greška pri dohvaćanju profilne slike');
+      }
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error('Greška:', error);
     }
   };
 
@@ -56,7 +80,9 @@ function StudentProfile({ onClose, username }) {
       <div className="profileContainer">
         <div className="profile-container">
           <div className="profile-header">
-            <div className="profile-picture"></div>
+            <div className="profile-picture">
+              <img src={profilePictureUrl} />
+            </div>
             <div className="profile-info">
               <p>Ime: {userInfoForm.FirstName}</p>
               <p>Prezime: {userInfoForm.LastName}</p>
