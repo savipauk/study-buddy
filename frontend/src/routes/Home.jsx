@@ -211,7 +211,7 @@ function ProfileSetup({ finishSetup }) {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-        if (data.message === 'USERNAME_TAKEN') {
+        if (data.message === 'USERNAME_EXISTS') {
           setErrorMessage('Korisničko ime već postoji');
         } else {
           finishSetup();
@@ -243,6 +243,18 @@ function ProfileSetup({ finishSetup }) {
     }
     if (!setupForm.role) {
       setErrorMessage('Uloga je obavezna');
+      return false;
+    }
+    if (!setupForm.dob) {
+      setErrorMessage('Datum rođenja je obavezan');
+      return false;
+    }
+    if (!setupForm.gender) {
+      setErrorMessage('Spol je obavezan');
+      return false;
+    }
+    if (!setupForm.location) {
+      setErrorMessage('Mjesto stanovanja je obavezna');
       return false;
     }
     setErrorMessage('');

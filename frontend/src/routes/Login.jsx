@@ -53,11 +53,10 @@ function LoginForm() {
         }
         if (message === 'OK') {
           setErrorMessage('');
-          signIn(email, role);
+          signIn(email, role, 'true');
           if (role === 'ADMIN') {
             navigate('/admin');
           } else {
-            console.log('krivi', role);
             navigate('/users/home');
           }
         }
@@ -95,12 +94,12 @@ function LoginForm() {
         const email = data.email;
         const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
-          localStorage.setItem('isProfileSetupComplete', false);
+          signInWithGoogle(credential, email, role, 'false');
+          navigate('/users/home');
         } else if (registration === 'LOGIN_OAUTH_OK') {
-          localStorage.setItem('isProfileSetupComplete', true);
+          signInWithGoogle(credential, email, role, 'true');
+          navigate('/users/home');
         }
-        signInWithGoogle(credential, email, role);
-        navigate('/users/home');
       }
     } catch (error) {
       console.log(error);
