@@ -105,10 +105,8 @@ function ProfessorProfile({ onClose, username }) {
 }
 
 ProfessorProfile.propTypes = {
-  FirstName: PropTypes.string,
-  LastName: PropTypes.string,
-  Bio: PropTypes.string,
-  Email: PropTypes.string
+  onClose: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired
 };
 
 export default ProfessorProfile;

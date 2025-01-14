@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import '../styles/ReviewForm.css';
+import PropTypes from 'prop-types';
 
 function ReviewForm({ onClose, studentUsername, professorUsername }) {
   const [validationMessage, setValidationMessage] = useState('');
@@ -104,5 +105,11 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
     </div>
   );
 }
+
+ReviewForm.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  studentUsername: PropTypes.string.isRequired,
+  professorUsername: PropTypes.string.isRequired
+};
 
 export default ReviewForm;

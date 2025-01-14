@@ -4,14 +4,12 @@ import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import StudentProfile from './StudentProfile';
 
 const librariesHardcode = ['places', 'marker'];
 
 function StudyGroupInfo({ group, onClose }) {
   const [showProfile, setShowProfile] = useState(false);
-  const navigate = useNavigate();
   const mapLocation = {
     lat: parseFloat(group.xCoordinate),
     lng: parseFloat(group.yCoordinate)
