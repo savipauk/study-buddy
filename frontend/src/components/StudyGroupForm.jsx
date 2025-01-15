@@ -24,6 +24,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const markerRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [groupInfoForm, setGroupInfoForm] = useState({
     name: '',
     description: ''
@@ -33,6 +34,13 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     const { name, value } = event.target;
     setGroupInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+    }
+  };
 
   const findLocationName = () => {
     const geocoder = new google.maps.Geocoder();
@@ -128,12 +136,51 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
   async function onSubmit() {
     if (!isValid()) {
       return;
-    } else {
-      await createStudyGroup();
+    }
+    try {
+      const data2 = await createStudyGroup();
+      if (!data2 || !data2.studyGroupId) {
+        console.error('Greška: Nije moguće dobiti groupId iz odgovora.');
+        return;
+      }
+      if (file) {
+        await handleUpload(data2.studyGroupId);
+      }
       onCreateClick();
       onClose();
+    } catch (error) {
+      console.error('Greška prilikom podnošenja:', error);
     }
   }
+
+  const handleUpload = async (studyGroupId) => {
+    if (file) {
+      const formData = new FormData();
+      const email = localStorage.getItem('user_email');
+      formData.append('email', email);
+      formData.append('group_id', studyGroupId);
+      formData.append('file', file);
+      formData.append('description', 'This is a sample file');
+
+      try {
+        const response = await fetch('http://localhost:8080/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Učitavanje datoteke uspješno:', data);
+      } catch (error) {
+        console.error('Greška prilikom učitavanja datoteke:', error);
+      }
+    } else {
+      console.log('Niste odabrali file');
+    }
+  };
 
   async function createStudyGroup() {
     const email = localStorage.getItem('user_email');
@@ -163,6 +210,9 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
+      const data2 = await response.json();
+      console.log('Odgovor sa servera:', data2);
+      return data2;
     } catch (error) {
       console.log(error);
       return null;
@@ -237,16 +287,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
             value={groupInfoForm.description}
             onChange={onChange}
           ></textarea>
-          <input
-            type="file"
-            accept="*"
-            id="fileUpload"
-            style={{ display: 'none' }}
-          />
-          <label htmlFor="fileUpload" className="upload-button">
-            Učitajte datoteke
-            <i className="fa-solid fa-cloud-arrow-up"></i>
-          </label>
+          <input id="file" type="file" onChange={handleFileChange} />
         </div>
         <div className="inputWrapper">
           <div className="inputs">
