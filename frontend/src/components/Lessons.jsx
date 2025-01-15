@@ -314,30 +314,44 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
             <label className="inputLabel">Tip instrukcija</label>
           </div>
           <div className="typeWrapper">
-            <input
-              className="typeRadioButton"
-              type="radio"
-              name="type"
-              value={'ONE_ON_ONE'}
-              id="typeOne"
-              checked={instructionInfoForm.type === 'ONE_ON_ONE'}
-              onChange={onChange}
-            ></input>
-            <label htmlFor="typeOne" className="toggleOptionType">
-              Jedan na jedan
-            </label>
-            <input
-              className="typeRadioButton"
-              type="radio"
-              name="type"
-              value={'MASS'}
-              id="typeMassive"
-              checked={instructionInfoForm.type === 'MASS'}
-              onChange={onChange}
-            ></input>
-            <label htmlFor="typeMassive" className="toggleOptionType">
-              Masivne
-            </label>
+            <div className="lessonType">
+              <input
+                className="typeRadioButton"
+                type="radio"
+                name="type"
+                value={'ONE_ON_ONE'}
+                id="typeOne"
+                checked={instructionInfoForm.type === 'ONE_ON_ONE'}
+                onChange={onChange}
+              ></input>
+              <label htmlFor="typeOne" className="toggleOptionType">
+                Jedan na jedan
+              </label>
+              <input
+                className="typeRadioButton"
+                type="radio"
+                name="type"
+                value={'MASS'}
+                id="typeMassive"
+                checked={instructionInfoForm.type === 'MASS'}
+                onChange={onChange}
+              ></input>
+              <label htmlFor="typeMassive" className="toggleOptionType">
+                Masivne
+              </label>
+            </div>
+            <div className="uploadFile">
+              <input
+                type="file"
+                accept="*"
+                id="fileUpload"
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="fileUpload" className="upload-button">
+                Učitajte datoteke
+                <i className="fa-solid fa-cloud-arrow-up"></i>
+              </label>
+            </div>
           </div>
         </div>
         <div className="inputWrapper">
