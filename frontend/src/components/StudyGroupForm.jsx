@@ -24,6 +24,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const markerRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [groupInfoForm, setGroupInfoForm] = useState({
     name: '',
     description: ''
@@ -33,6 +34,40 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     const { name, value } = event.target;
     setGroupInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+    }
+  };
+  const handleUpload = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append('user_id', localStorage.getItem('user_id'));
+      formData.append('group_id', 2); // Ako postoji, dodaj ID grupe
+      formData.append('file', file); // Dodaj datoteku
+      formData.append('description', 'This is a sample file'); // Dodaj opis
+
+      try {
+        const response = await fetch('http://localhost:8080/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Upload successful:', data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    } else {
+      console.log('No file selected');
+    }
+  };
 
   const findLocationName = () => {
     const geocoder = new google.maps.Geocoder();
@@ -237,16 +272,12 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
             value={groupInfoForm.description}
             onChange={onChange}
           ></textarea>
-          <input
-            type="file"
-            accept="*"
-            id="fileUpload"
-            style={{ display: 'none' }}
-          />
-          <label htmlFor="fileUpload" className="upload-button">
-            Učitajte datoteke
-            <i className="fa-solid fa-cloud-arrow-up"></i>
-          </label>
+          <input id="file" type="file" onChange={handleFileChange} />
+          {file && (
+            <button onClick={handleUpload} className="submit">
+              Upload a file
+            </button>
+          )}
         </div>
         <div className="inputWrapper">
           <div className="inputs">
