@@ -47,7 +47,9 @@ function SearchBarFilter({ onFilterChange, onSearchBarEnter }) {
         {dropdown && (
           <div className="dropdownMenu">
             <div className="dropdownSection">
-              <label className="dropdownLabel">Datum</label>
+              <label className="dropdownLabel">
+                Datum <i className="fa-solid fa-calendar-days"></i>
+              </label>
               <button
                 className="dropdownButton"
                 onClick={() => {
@@ -68,7 +70,9 @@ function SearchBarFilter({ onFilterChange, onSearchBarEnter }) {
               </button>
             </div>
             <div className="dropdownSection">
-              <label className="dropdownLabel">Tip</label>
+              <label className="dropdownLabel">
+                Tip <i className="fa-solid fa-graduation-cap"></i>
+              </label>
               <button
                 className="dropdownButton"
                 onClick={() => {
@@ -96,7 +100,7 @@ function SearchBarFilter({ onFilterChange, onSearchBarEnter }) {
                   setCurrentName('Filter');
                 }}
               >
-                Resetiraj
+                Resetiraj <i className="fa-solid fa-trash"></i>
               </button>
             </div>
           </div>
