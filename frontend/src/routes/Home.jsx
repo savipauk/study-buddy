@@ -160,7 +160,9 @@ function HomePage() {
         <Header></Header>
         <div className="newStudyGroup">
           <button className="newStudyGroupButton" onClick={handleCreateGroup}>
-            {role === 'STUDENT' ? 'Kreiraj StudyGroup' : 'Kreiraj Instrukcije'}
+            {role === 'STUDENT'
+              ? 'Kreirajte StudyGroup'
+              : 'Kreirajte Instrukcije'}
           </button>
         </div>
         <div className="searcBar">
@@ -325,6 +327,7 @@ function ProfileSetup({ finishSetup }) {
     setErrorMessage('');
     return true;
   }
+
   function onSubmit(e) {
     e.preventDefault();
     if (isValid()) {
