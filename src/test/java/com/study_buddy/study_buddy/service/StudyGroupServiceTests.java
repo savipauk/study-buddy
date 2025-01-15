@@ -38,9 +38,7 @@ public class StudyGroupServiceTests {
     }
 
     @Test
-    public void StudyGroupService_GetPokemonById_ReturnsStudyGroup(){
-
-
+    public void StudyGroupService_GetStudyGroupById_ReturnStudyGroup(){
         when(studyGroupRepository.findByGroupId(1L)).thenReturn(studyGroup);
 
         StudyGroup foundStudyGroup = studyGroupService.getStudyGroupById(1L);
