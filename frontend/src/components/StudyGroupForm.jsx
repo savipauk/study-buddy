@@ -136,27 +136,32 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
   async function onSubmit() {
     if (!isValid()) {
       return;
-    } else {
-      if (!file) {
-        await createStudyGroup();
-        onCreateClick();
-        onClose();
-      } else {
-        await Promise.all([createStudyGroup(), handleUpload()]);
-        onCreateClick();
-        onClose();
+    }
+    try {
+      const data2 = await createStudyGroup();
+      if (!data2 || !data2.studyGroupId) {
+        console.error('Greška: Nije moguće dobiti groupId iz odgovora.');
+        return;
       }
+      if (file) {
+        await handleUpload(data2.studyGroupId);
+      }
+      onCreateClick();
+      onClose();
+    } catch (error) {
+      console.error('Greška prilikom podnošenja:', error);
     }
   }
 
-  const handleUpload = async () => {
+  const handleUpload = async (studyGroupId) => {
     if (file) {
       const formData = new FormData();
-      formData.append('user_id', 2);
-      formData.append('group_id', 2);
+      const email = localStorage.getItem('user_email');
+      formData.append('email', email);
+      formData.append('group_id', studyGroupId);
       formData.append('file', file);
       formData.append('description', 'This is a sample file');
-      3;
+
       try {
         const response = await fetch('http://localhost:8080/material/upload', {
           method: 'POST',
@@ -205,6 +210,9 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
+      const data2 = await response.json();
+      console.log('Odgovor sa servera:', data2);
+      return data2;
     } catch (error) {
       console.log(error);
       return null;

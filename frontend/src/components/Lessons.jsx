@@ -46,7 +46,6 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
   const handleFileChange = (e) => {
     if (e.target.files) {
       const selectedFile = e.target.files[0];
-      console.log('Selected file:', selectedFile);
       setFile(selectedFile);
     }
   };
@@ -165,27 +164,27 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       return;
     }
     try {
-      console.log('Submitting form with data:', instructionInfoForm);
-      console.log('File to upload:', file);
-
-      if (!file) {
-        await createNewLesson();
-      } else {
-        await Promise.all([createNewLesson(), handleUpload()]);
+      const data2 = await createNewLesson();
+      if (!data2 || !data2.lessonId) {
+        console.error('Greška: Nije moguće dobiti lessonpId iz odgovora.');
+        return;
       }
-
+      if (file) {
+        await handleUpload(data2.lessonId);
+      }
       onCreateClick();
       onClose();
     } catch (error) {
-      console.error('Error during submission:', error);
+      console.error('Greška prilikom podnošenja:', error);
     }
   }
 
-  const handleUpload = async () => {
+  const handleUpload = async (lessonId) => {
     if (file) {
       const formData = new FormData();
-      formData.append('user_id', 2);
-      formData.append('lesson_id', 2);
+      const email = localStorage.getItem('user_email');
+      formData.append('email', email);
+      formData.append('lesson_id', lessonId);
       formData.append('file', file);
       formData.append('description', 'This is a sample file');
 
@@ -202,12 +201,12 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
         }
 
         const data = await response.json();
-        console.log('File upload successful:', data);
+        console.log('Učitavanje datoteke uspješno:', data);
       } catch (error) {
-        console.error('Error during file upload:', error);
+        console.error('Greška prilikom učitavanja datoteke:', error);
       }
     } else {
-      console.log('No file selected for upload');
+      console.log('Niste odabrali file');
     }
   };
 
@@ -242,6 +241,9 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
+      const data2 = await response.json();
+      console.log('Odgovor sa servera:', data2);
+      return data2;
     } catch (error) {
       console.log(error);
       return null;
