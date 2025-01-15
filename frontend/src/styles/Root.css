@@ -69,6 +69,8 @@
 
 .headerButtons {
     background: transparent;
+    color: whitesmoke;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     font-size: 1.5em;
     border: 0;
     transition: transform 0.2s ease;
@@ -83,7 +85,8 @@
     font-size: 1.5em;
     border: 0;
     transition: transform 0.2s ease;
-    color: rgb(173, 55, 55);
+    color: whitesmoke;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .headerButtonSignOut:hover {

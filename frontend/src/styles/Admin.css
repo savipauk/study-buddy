@@ -1,113 +1,113 @@
 h1 {
-  text-align: center;
-  width: 100%;
+    text-align: center;
+    width: 100%;
 }
 
 .adminWrapper {
-  display: flex;
-  width: 100vw;
-  flex-wrap: wrap;
-  justify-content: center;
+    display: flex;
+    width: 100vw;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
 .reportedUserWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  border: 2px solid red;
-  border-radius: 8px;
-  margin-bottom: 1em;
-  padding: 0.5em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border: 2px solid darkred;
+    border-radius: 8px;
+    margin-bottom: 1em;
+    padding: 0.5em;
 }
 
 .reportCard {
-  display: flex;
-  width: 30%;
-  flex-direction: column;
-  font-size: 0.9em;
+    display: flex;
+    width: 30%;
+    flex-direction: column;
+    font-size: 0.9em;
 }
 
 .labelInfo {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .decisionButtons {
-  display: flex;
-  width: 30%;
-  flex-direction: column;
-  font-size: 0.9em;
-  gap: 0.5em;
+    display: flex;
+    width: 30%;
+    flex-direction: column;
+    font-size: 0.9em;
+    gap: 0.5em;
 }
 
 .decisionButtons button {
-  background-color: black;
-  color: white;
-  border: 0px;
-  transition: transform 0.2s ease-in;
+    background-color: black;
+    color: white;
+    border: 0px;
+    transition: transform 0.2s ease-in;
 }
 
 .decisionButtons button:hover {
-  transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 .allReportsWrapper {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .reports {
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  border: 2px solid black;
-  border-radius: 8px;
-  padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 1em;
 }
 
 .reportsWrapper {
-  display: flex;
-  justify-content: center;
-  align-content: start;
-  flex-wrap: wrap;
-  width: 50%;
-  padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-content: start;
+    flex-wrap: wrap;
+    width: 50%;
+    padding: 1em;
 }
 
 .reportsWrapper > label:first-of-type {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 0.5em;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
 }
 
 .toggleSwitch {
-  display: flex;
-  justify-content: center;
-  gap: 1em;
-  margin-bottom: 1em;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-bottom: 1em;
 }
 
 .toggleSwitch button {
-  padding: 0.5em 1em;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: white;
-  cursor: pointer;
-  font-weight: bold;
-  transition:
-    background-color 0.2s,
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s,
     color 0.2s;
 }
 
 .toggleSwitch button.active {
-  background-color: #000000;
-  color: white;
-  border: 0;
+    background-color: #000000;
+    color: white;
+    border: 0;
 }
 
 .toggleSwitch button:hover {
-  background-color: #00000077;
-  color: white;
+    background-color: #00000077;
+    color: white;
 }

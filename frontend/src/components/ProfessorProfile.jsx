@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import ReportForm from './ReportForm';
 import ReviewForm from './ReviewForm';
-import '../styles/ProfessorProfile.css';
+import '../styles/StudentProfessorProfile.css';
 import PropTypes from 'prop-types';
 
 function ProfessorProfile({ onClose, username }) {
