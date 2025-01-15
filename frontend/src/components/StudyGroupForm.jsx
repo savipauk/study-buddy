@@ -237,6 +237,16 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
             value={groupInfoForm.description}
             onChange={onChange}
           ></textarea>
+          <input
+            type="file"
+            accept="*"
+            id="fileUpload"
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="fileUpload" className="upload-button">
+            Učitajte datoteke
+            <i className="fa-solid fa-cloud-arrow-up"></i>
+          </label>
         </div>
         <div className="inputWrapper">
           <div className="inputs">
