@@ -122,7 +122,7 @@ public class LessonController {
 
     // Create a new study group
     @PostMapping("/create")
-    public ResponseEntity<Lesson> createLesson(@RequestBody LessonDto dto) {
+    public ResponseEntity<LessonDto> createLesson(@RequestBody LessonDto dto) {
         User creator = userService.getUserByEmail(dto.getEmail());
         Professor creatorProfessor = professorService.getProfessorByUserId(creator.getUserId());
         // Create lesson and store it into database
@@ -143,7 +143,7 @@ public class LessonController {
 
         lessonService.createLesson(lesson);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(lesson);
+        return ResponseEntity.status(HttpStatus.CREATED).body(lessonService.convertToDto(lesson));
     }
 
     // Add a student to a lesson

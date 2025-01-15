@@ -133,20 +133,22 @@ public class MaterialController {
 
    @PostMapping("/upload")
     public ResponseEntity<Material> uploadMaterial(
-            @RequestParam("user_id") Long userId,
+            @RequestParam("email") String email,
             @RequestParam(value = "group_id", required = false) Long groupId,
             @RequestParam(value = "lesson_id", required = false) Long lessonId,
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "description", required = false) String description) {
         try {
-            User creator = userService.getUserById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            User creator = userService.getUserByEmail(email);
+            if(creator == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
 
             StudyGroup group = groupId != null ? studyGroupService.getStudyGroupById(groupId) : null;
             Lesson lesson = lessonId != null ? lessonService.getLessonById(lessonId) : null;
 
             if(lesson != null){
-                 if(!(lesson.getProfessor().getUser().getUserId().equals(userId))){
+                 if(!(lesson.getProfessor().getUser().getUserId().equals(userService.getUserByEmail(email).getUserId()))){
                     throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
                         "You cannot upload files if you are not the creator of the lesson or the lesson does not exist."
