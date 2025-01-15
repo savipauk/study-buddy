@@ -47,26 +47,9 @@ public class UserServiceTests {
         user.setOauthProvider("");
         user.setOauthId("");
 
-        User user_dto = new User();
-        user_dto.setUserId(1L);
-        user_dto.setEmail("test@example.com");
-        user_dto.setPassword("password123");
-        user_dto.setUsername("janedoe");
-        user_dto.setFirstName("Jane");
-        user_dto.setLastName("Doe");
-        user_dto.setDescription("Math lover!");
-        user_dto.setRole(StudyRole.STUDENT);
-        user_dto.setCreatedAt(LocalDateTime.now());
-        user_dto.setUpdatedAt(LocalDateTime.now());
-        user_dto.setDateOfBirth(LocalDate.of(2003,1,1));
-        user_dto.setGender(Gender.F);
-        user_dto.setCity("New York");
-        user_dto.setOauthProvider("");
-        user_dto.setOauthId("");
-
         when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
-        User savedUser = userService.createUser(user_dto);
+        User savedUser = userService.createUser(user);
         assertNotNull(savedUser);
         assertEquals(user.getEmail(),savedUser.getEmail());
     }
