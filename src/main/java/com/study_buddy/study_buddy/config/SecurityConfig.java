@@ -26,15 +26,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login/**", "/example/greeting", "/oauth2/**", "/studyGroup/**", "/lesson/**",
-                            "/users/profile/update/**", "/users/profile/**", "/users/**", "/admin/**", "/reviews/**",
-                            "/h2-console/**", "/favicon.ico").permitAll()
+                    auth.requestMatchers("/login/**", "/users/**", "/example/greeting",
+                            "/oauth2/**", "/h2-console/**", "/favicon.ico").permitAll()
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll(); // Allow OPTIONS
                     auth.anyRequest().authenticated();
                 })
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Custom CORS configuration
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())))
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for testing
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for
+                                                       // testing??????????????????????????????????????????
                 .addFilterBefore(customHeaderFilter(), HeaderWriterFilter.class) // Add the custom header filter
                 .build();
     }
