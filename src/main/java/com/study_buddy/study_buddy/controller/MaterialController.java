@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/material")
@@ -56,23 +58,28 @@ public class MaterialController {
         Material material = materialService.getMaterialById(materialId);
         return ResponseEntity.ok(MaterialDto.convertToDto(material));
     }
-    /* 
+    
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<MaterialDto>> getAllMaterialsByUser(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
+        Optional<User> OptUser = userService.getUserById(userId);
+        User user = OptUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
         List<MaterialDto> materials = materialService.getAllMaterialsByUser(user)
                 .stream()
                 .map(MaterialDto::convertToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(materials);
     }
-    */
+    
 
     @GetMapping("/preview/{materialId}")
     public ResponseEntity<byte[]> previewFile(@PathVariable("materialId") Long materialId) {
         Material material = materialService.getMaterialById(materialId);
-        if(MaterialDto.convertToDto(material).getFileData() == null){throw new IllegalArgumentException("File data is missing.");}
-        
+        if (MaterialDto.convertToDto(material).getFileData() == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "File data is missing for the requested material."
+                );
+        }
         return ResponseEntity.ok()
                 .header("Content-Type", material.getMimeType())
                 .header("Content-Disposition", "inline; filename=\"" + material.getFileName() + "\"")
@@ -82,8 +89,12 @@ public class MaterialController {
     @GetMapping("/download/{materialId}")
         public ResponseEntity<byte[]> downloadFile(@PathVariable("materialId") Long materialId) {
         Material material = materialService.getMaterialById(materialId);
-        if(MaterialDto.convertToDto(material).getFileData() == null){throw new IllegalArgumentException("File data is missing.");}
-
+        if (MaterialDto.convertToDto(material).getFileData() == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "File data is missing for the requested material."
+                );
+        }
         return ResponseEntity.ok()
                 .header("Content-Type", material.getMimeType())
                 .header("Content-Disposition", "attachment; filename=\"" + material.getFileName() + "\"")
@@ -117,31 +128,48 @@ public class MaterialController {
 
 
    @PostMapping("/upload")
-    public ResponseEntity<Material> uploadMaterial(@RequestBody MaterialDto materialDto) {
-        if (materialDto == null) {throw new IllegalArgumentException("Request body is missing.");}
-        User creator = userService.getUserById(materialDto.getUserId())
-                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        StudyGroup group = materialDto.getGroupId() != null ? studyGroupService.getStudyGroupById(materialDto.getGroupId()) : null;
-        Lesson lesson = materialDto.getLessonId() != null ? lessonService.getLessonById(materialDto.getLessonId()) : null;
+    public ResponseEntity<Material> uploadMaterial(
+            @RequestParam("user_id") Long userId,
+            @RequestParam(value = "group_id", required = false) Long groupId,
+            @RequestParam(value = "lesson_id", required = false) Long lessonId,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "description", required = false) String description) {
+        try {
+            User creator = userService.getUserById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if(lesson.getProfessor().getUser().getUserId() != materialDto.getUserId() && materialDto.getLessonId() != null){
-            throw new IllegalArgumentException("You can not upload files if you are not a creator of the lesson");
+            StudyGroup group = groupId != null ? studyGroupService.getStudyGroupById(groupId) : null;
+            Lesson lesson = lessonId != null ? lessonService.getLessonById(lessonId) : null;
+
+            if(lesson != null){
+                 if(!(lesson.getProfessor().getUser().getUserId().equals(userId))){
+                    throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "You cannot upload files if you are not the creator of the lesson or the lesson does not exist."
+                    );
+                }
             }
+           
+            Material material = new Material();
+            material.setUser(creator);
+            material.setGroup(group);
+            material.setLesson(lesson);
+            material.setFileData(file.getBytes());
+            material.setFileName(file.getOriginalFilename());
+            material.setMimeType(file.getContentType());
+            material.setFileSize(file.getSize());
+            material.setDescription(description);
+            material.setUploadDate(LocalDateTime.now());
 
-        Material material = new Material();
-        material.setUser(creator);
-        material.setGroup(group);
-        material.setLesson(lesson);
-        material.setFileData(materialDto.getFileData());
-        material.setFileName(materialDto.getFileName());
-        material.setMimeType(materialDto.getMimeType());
-        material.setDescription(materialDto.getDescription());
-        material.setUploadDate(materialDto.getUploadDate());
+            Material savedMaterial = materialService.createMaterial(material);
 
-        Material savedMaterial = materialService.createMaterial(material);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedMaterial);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMaterial);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
     @DeleteMapping("/{materialId}")
     public ResponseEntity<Void> deleteMaterialById(@PathVariable("materialId") Long materialId, @RequestParam Long userId) {
         try {

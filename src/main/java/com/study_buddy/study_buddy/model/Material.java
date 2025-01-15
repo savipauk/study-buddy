@@ -33,6 +33,9 @@ public class Material {
     @Lob
     @Column(name = "file_data")
     private byte[] fileData;
+   
+    @Column(name = "file_size")
+    private Long fileSize;
 
     @Column(name = "description")
     private String description;
@@ -42,7 +45,7 @@ public class Material {
 
     public Material () {}
 
-    public Material(Long materialId, User user, StudyGroup group, Lesson lesson,String fileName, String mimeType, byte[] fileData, String description, LocalDateTime uploadDate) {
+    public Material(Long materialId, User user, StudyGroup group, Lesson lesson,String fileName, String mimeType, byte[] fileData, Long fileSize, String description, LocalDateTime uploadDate) {
         this.materialId = materialId;
         this.user = user;
         this.group = group;
@@ -50,6 +53,7 @@ public class Material {
         this.fileName = fileName;
         this.mimeType = mimeType;
         this.fileData = fileData;
+        this.fileSize = fileSize;
         this.description = description;
         this.uploadDate = uploadDate;
     }
@@ -110,6 +114,14 @@ public class Material {
         this.fileName = fileName;
     }
 
+    public Long getFileSize() {
+    return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -125,4 +137,5 @@ public class Material {
     public void setUploadDate(LocalDateTime uploadDate) {
         this.uploadDate = uploadDate;
     }
+    
 }

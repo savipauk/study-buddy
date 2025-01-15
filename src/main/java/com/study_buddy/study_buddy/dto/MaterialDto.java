@@ -12,12 +12,13 @@ public class MaterialDto {
     private String fileName;
     private String mimeType;
     private byte[] fileData;
+    private Long fileSize;
     private String description;
     private LocalDateTime uploadDate;
 
     public MaterialDto() {}
 
-    public MaterialDto(Long userId, Long groupId, Long lessonId, Long materialId, String fileName, String mimeType, byte[] fileData, String description, LocalDateTime uploadDate) {
+    public MaterialDto(Long userId, Long groupId, Long lessonId, Long materialId, String fileName, String mimeType, byte[] fileData, Long fileSize, String description, LocalDateTime uploadDate) {
         this.userId = userId;
         this.groupId = groupId;
         this.lessonId = lessonId;
@@ -25,6 +26,7 @@ public class MaterialDto {
         this.fileName = fileName;
         this.mimeType = mimeType;
         this.fileData = fileData;
+        this.fileSize = fileSize;
         this.description = description;
         this.uploadDate = uploadDate;
     }
@@ -85,6 +87,14 @@ public class MaterialDto {
         this.fileData = fileData;
     }
 
+    public Long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -110,6 +120,7 @@ public class MaterialDto {
         materialDto.setFileName(material.getFileName());
         materialDto.setMimeType(material.getMimeType());
         materialDto.setFileData(material.getFileData());
+        materialDto.setFileSize(material.getFileSize());
         materialDto.setDescription(material.getDescription());
         materialDto.setUploadDate(material.getUploadDate());
         return materialDto;

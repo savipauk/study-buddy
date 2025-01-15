@@ -4,8 +4,10 @@ import com.study_buddy.study_buddy.model.*;
 import com.study_buddy.study_buddy.repository.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.io.IOException;
 
 @Service
 public class MaterialService {
@@ -41,7 +43,7 @@ public class MaterialService {
         return materialRepository.findByLesson(lesson);
     }
 
-    public Material createMaterial(Material material) {
+    public Material createMaterial(Material material){
         if (material.getUser() == null || material.getFileName() == null || material.getFileData() == null) {
             throw new IllegalArgumentException("User, file name, and file data are required.");
         }
