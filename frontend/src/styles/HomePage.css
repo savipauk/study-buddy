@@ -63,3 +63,18 @@ body.no-scroll {
     justify-content: center;
     align-content: center;
 }
+
+.searcBar {
+  margin-top: 3em;
+  display: flex;
+  width: auto;
+  justify-content: space-between;
+  padding-left: 10%;
+  padding-right: 10%;
+  align-items: center;
+}
+
+.searcBar h1 {
+  margin: 0;
+  width: 50%;
+}

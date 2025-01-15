@@ -144,6 +144,10 @@ CREATE TABLE Materials (
     user_id INT NOT NULL, -- ID korisnika koji je postavio materijal
     group_id INT, -- Ako je materijal postavljen za grupu
     lesson_id INT, -- Ako je materijal postavljen za lekciju
+    file_data LONGBLOB,
+    file_size INT,
+    file_name VARCHAR(255),
+    mime_type VARCHAR(255),
     description TEXT,
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (material_id),
@@ -154,9 +158,9 @@ CREATE TABLE Materials (
 
 -- User entries
 INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city)
-VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'F', '2003-06-20', 'Zagreb'),
-    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'M', '2003-06-03', 'Zagreb'),
-    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','F', '1974-01-15', 'Zagreb'),
+VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb'),
+    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb'),
+    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb'),
     ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb'),
     ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb'),
     ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb'),
@@ -236,5 +240,10 @@ VALUES (1, 1, 5, 'Amazing professor, very clear explanations!', '2025-01-10 10:3
      (2, 2, 2, 'Had difficulties understanding the material.', '2025-01-13 09:15:00'),
      (3, 2, 5, 'Najboljši.', '2025-01-14 08:20:00');
 
-
+-- Materials entries
+INSERT INTO Materials (user_id, group_id, lesson_id, file_name, mime_type, description, upload_date)
+VALUES(1, 1, NULL, 'sample1.pdf', 'application/pdf', 'Sample PDF for Group 1, Lesson 1', NOW()),
+    (2, NULL, 2, 'sample2.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Word document for Lesson 2', NOW()),
+    (3, 2, NULL, 'sample3.png', 'image/png', 'Image uploaded for Group 2', NOW()),
+    (4, NULL, 1, 'sample4.txt', 'text/plain', 'General text file uploaded by user 4', NOW());
 
