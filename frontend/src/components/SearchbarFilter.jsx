@@ -73,7 +73,7 @@ function SearchBarFilter({ onFilterChange, onSearchBarEnter }) {
                 className="dropdownButton"
                 onClick={() => {
                   applyFilter('Instrukcije');
-                  setCurrentName('Samo:');
+                  setCurrentName('Tip:');
                 }}
               >
                 Instrukcije
@@ -82,7 +82,7 @@ function SearchBarFilter({ onFilterChange, onSearchBarEnter }) {
                 className="dropdownButton"
                 onClick={() => {
                   applyFilter('StudyGrupe');
-                  setCurrentName('Samo:');
+                  setCurrentName('Tip:');
                 }}
               >
                 StudyGrupe
