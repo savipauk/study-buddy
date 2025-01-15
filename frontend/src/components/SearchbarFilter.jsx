@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../styles/SearchBar.css';
 import PropTypes from 'prop-types';
 
-function SearchBarFilter({ onFilterChange }) {
+function SearchBarFilter({ onFilterChange, onSearchBarEnter }) {
   const [dropdown, setDropdown] = useState(false);
   const [searchBar, setSearchBar] = useState('');
   const [currentFilter, setCurrentFilter] = useState('');
@@ -15,7 +15,14 @@ function SearchBarFilter({ onFilterChange }) {
   };
 
   const handleSearch = (event) => {
-    setSearchBar(event.target.value);
+    const inputValue = event.target.value;
+    if (inputValue.trim() !== '' && inputValue !== searchBar) {
+      setSearchBar(inputValue);
+      onSearchBarEnter(inputValue);
+    } else if (inputValue === '') {
+      setSearchBar('');
+      onSearchBarEnter('');
+    }
   };
 
   return (
@@ -39,38 +46,59 @@ function SearchBarFilter({ onFilterChange }) {
         </button>
         {dropdown && (
           <div className="dropdownMenu">
-            <button
-              onClick={() => {
-                applyFilter('Najblizi');
-                setCurrentName('Datum:');
-              }}
-            >
-              Najblizi
-            </button>
-            <button
-              onClick={() => {
-                applyFilter('Najdalji');
-                setCurrentName('Datum:');
-              }}
-            >
-              Najdalji
-            </button>
-            <button
-              onClick={() => {
-                applyFilter('Instrukcije');
-                setCurrentName('Samo:');
-              }}
-            >
-              Instrukcije
-            </button>
-            <button
-              onClick={() => {
-                applyFilter('StudyGrupe');
-                setCurrentName('Samo:');
-              }}
-            >
-              StudyGrupe
-            </button>
+            <div className="dropdownSection">
+              <label className="dropdownLabel">Datum</label>
+              <button
+                className="dropdownButton"
+                onClick={() => {
+                  applyFilter('Najblizi');
+                  setCurrentName('Datum:');
+                }}
+              >
+                Najblizi
+              </button>
+              <button
+                className="dropdownButton"
+                onClick={() => {
+                  applyFilter('Najdalji');
+                  setCurrentName('Datum:');
+                }}
+              >
+                Najdalji
+              </button>
+            </div>
+            <div className="dropdownSection">
+              <label className="dropdownLabel">Tip</label>
+              <button
+                className="dropdownButton"
+                onClick={() => {
+                  applyFilter('Instrukcije');
+                  setCurrentName('Samo:');
+                }}
+              >
+                Instrukcije
+              </button>
+              <button
+                className="dropdownButton"
+                onClick={() => {
+                  applyFilter('StudyGrupe');
+                  setCurrentName('Samo:');
+                }}
+              >
+                StudyGrupe
+              </button>
+            </div>
+            <div className="dropdownSectionReset">
+              <button
+                className="dropdownButtonReset"
+                onClick={() => {
+                  applyFilter('');
+                  setCurrentName('Filter');
+                }}
+              >
+                Resetiraj
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -78,7 +106,8 @@ function SearchBarFilter({ onFilterChange }) {
   );
 }
 SearchBarFilter.propTypes = {
-  onFilterChange: PropTypes.func.isRequired
+  onFilterChange: PropTypes.func.isRequired,
+  onSearchBarEnter: PropTypes.func.isRequired
 };
 
 export default SearchBarFilter;
