@@ -2,10 +2,7 @@ package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.model.StudyGroup;
 import com.study_buddy.study_buddy.repository.StudyGroupRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,8 +24,10 @@ public class StudyGroupServiceTests {
     @InjectMocks
     private StudyGroupService studyGroupService;
 
-    @Test
-    public void StudyGroupService_GetPokemonById_ReturnsStudyGroup(){
+    private StudyGroup studyGroup;
+
+    @BeforeEach
+    public void init(){
         StudyGroup studyGroup = new StudyGroup();
         studyGroup.setGroupId(1L);
         studyGroup.setGroupName("testGroup");
@@ -37,6 +35,11 @@ public class StudyGroupServiceTests {
         studyGroup.setMaxMembers(10);
         studyGroup.setDate(LocalDate.now());
         studyGroup.setExpirationDate(LocalDate.now().minusDays(2));
+    }
+
+    @Test
+    public void StudyGroupService_GetPokemonById_ReturnsStudyGroup(){
+
 
         when(studyGroupRepository.findByGroupId(1L)).thenReturn(studyGroup);
 
