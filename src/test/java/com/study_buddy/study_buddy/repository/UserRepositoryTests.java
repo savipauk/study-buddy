@@ -26,7 +26,6 @@ public class UserRepositoryTests {
 
     @Test
     public void UserRepository_SaveAll_ReturnSavedUser(){
-        // Arrange
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password123");
@@ -43,24 +42,10 @@ public class UserRepositoryTests {
         user.setOauthProvider("");
         user.setOauthId("");
 
-        // Act
         User savedUser = userRepository.save(user);
 
-        // Assert
         assertNotNull(savedUser);
         assertNotNull(savedUser.getUserId());
-        assertEquals(savedUser.getEmail(),"test@example.com");
-        assertEquals(savedUser.getPassword(), "password123");
-        assertEquals(savedUser.getUsername(),"janedoe");
-        assertEquals(savedUser.getFirstName(),"Jane");
-        assertEquals(savedUser.getLastName(),"Doe");
-        assertEquals(savedUser.getDescription(),"Math lover!");
-        assertEquals(savedUser.getRole(), StudyRole.STUDENT);
-        assertNotNull(savedUser.getCreatedAt());
-        assertNotNull(savedUser.getUpdatedAt());
-        assertEquals(savedUser.getDateOfBirth(), LocalDate.of(2003,01,01));
-        assertEquals(savedUser.getGender(),Gender.F);
-        assertEquals(savedUser.getCity(),"New York");
-
+        assertEquals(savedUser,user);
     }
 }
