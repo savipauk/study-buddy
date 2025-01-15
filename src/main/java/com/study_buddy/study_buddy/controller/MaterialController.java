@@ -62,7 +62,11 @@ public class MaterialController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<MaterialDto>> getAllMaterialsByUser(@PathVariable Long userId) {
         Optional<User> OptUser = userService.getUserById(userId);
-        User user = OptUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = OptUser.orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "User not found."
+                )
+            );
         List<MaterialDto> materials = materialService.getAllMaterialsByUser(user)
                 .stream()
                 .map(MaterialDto::convertToDto)
