@@ -10,7 +10,7 @@ import { serverFetch } from '../hooks/serverUtils';
 
 function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapLocation = {
-    //Zagreb
+    // Zagreb
     lat: 45.815,
     lng: 15.9819
   };
@@ -25,6 +25,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const markerRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [instructionInfoForm, setInstructionInfoForm] = useState({
     subject: '',
     price: '',
@@ -41,6 +42,14 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       setMinNum(1);
     }
   }
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      console.log('Selected file:', selectedFile);
+      setFile(selectedFile);
+    }
+  };
 
   const findLocationName = () => {
     const geocoder = new google.maps.Geocoder();
@@ -154,12 +163,53 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
   async function onSubmit() {
     if (!isValid()) {
       return;
-    } else {
-      await createNewLesson();
+    }
+    try {
+      console.log('Submitting form with data:', instructionInfoForm);
+      console.log('File to upload:', file);
+
+      if (!file) {
+        await createNewLesson();
+      } else {
+        await Promise.all([createNewLesson(), handleUpload()]);
+      }
+
       onCreateClick();
       onClose();
+    } catch (error) {
+      console.error('Error during submission:', error);
     }
   }
+
+  const handleUpload = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append('user_id', 2);
+      formData.append('lesson_id', 2);
+      formData.append('file', file);
+      formData.append('description', 'This is a sample file');
+
+      console.log('Form data before upload:', formData);
+
+      try {
+        const response = await fetch('http://localhost:8080/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('File upload successful:', data);
+      } catch (error) {
+        console.error('Error during file upload:', error);
+      }
+    } else {
+      console.log('No file selected for upload');
+    }
+  };
 
   async function createNewLesson() {
     const email = localStorage.getItem('user_email');
@@ -341,16 +391,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
               </label>
             </div>
             <div className="uploadFile">
-              <input
-                type="file"
-                accept="*"
-                id="fileUpload"
-                style={{ display: 'none' }}
-              />
-              <label htmlFor="fileUpload" className="upload-button">
-                Učitajte datoteke
-                <i className="fa-solid fa-cloud-arrow-up"></i>
-              </label>
+              <input id="file" type="file" onChange={handleFileChange} />
             </div>
           </div>
         </div>

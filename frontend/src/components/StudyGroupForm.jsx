@@ -41,33 +41,6 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
       setFile(selectedFile);
     }
   };
-  const handleUpload = async () => {
-    if (file) {
-      const formData = new FormData();
-      formData.append('user_id', localStorage.getItem('user_id'));
-      formData.append('group_id', 2); // Ako postoji, dodaj ID grupe
-      formData.append('file', file); // Dodaj datoteku
-      formData.append('description', 'This is a sample file'); // Dodaj opis
-
-      try {
-        const response = await fetch('http://localhost:8080/material/upload', {
-          method: 'POST',
-          body: formData
-        });
-
-        if (!response.ok) {
-          throw new Error(`Upload failed: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Upload successful:', data);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
-    } else {
-      console.log('No file selected');
-    }
-  };
 
   const findLocationName = () => {
     const geocoder = new google.maps.Geocoder();
@@ -164,11 +137,45 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     if (!isValid()) {
       return;
     } else {
-      await createStudyGroup();
-      onCreateClick();
-      onClose();
+      if (!file) {
+        await createStudyGroup();
+        onCreateClick();
+        onClose();
+      } else {
+        await Promise.all([createStudyGroup(), handleUpload()]);
+        onCreateClick();
+        onClose();
+      }
     }
   }
+
+  const handleUpload = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append('user_id', 2);
+      formData.append('group_id', 2);
+      formData.append('file', file);
+      formData.append('description', 'This is a sample file');
+      3;
+      try {
+        const response = await fetch('http://localhost:8080/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Učitavanje datoteke uspješno:', data);
+      } catch (error) {
+        console.error('Greška prilikom učitavanja datoteke:', error);
+      }
+    } else {
+      console.log('Niste odabrali file');
+    }
+  };
 
   async function createStudyGroup() {
     const email = localStorage.getItem('user_email');
@@ -273,11 +280,6 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
             onChange={onChange}
           ></textarea>
           <input id="file" type="file" onChange={handleFileChange} />
-          {file && (
-            <button onClick={handleUpload} className="submit">
-              Upload a file
-            </button>
-          )}
         </div>
         <div className="inputWrapper">
           <div className="inputs">
