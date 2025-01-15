@@ -109,7 +109,7 @@ public class StudyGroupController {
 
     // Create a new study group
     @PostMapping("/create")
-    public ResponseEntity<StudyGroup> createStudyGroup(@RequestBody StudyGroupDto dto) {
+    public ResponseEntity<StudyGroupDto> createStudyGroup(@RequestBody StudyGroupDto dto) {
         // Creating new studyGroup
         User creator = userService.getUserByEmail(dto.getEmail());
         Student creatorStudent = studentService.getStudentByUserId(creator.getUserId());
@@ -131,7 +131,7 @@ public class StudyGroupController {
         // Inserting studyGroup creator into GroupMember table
         groupMemberService.addStudentToGroup(creatorStudent, studyGroup);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(studyGroup);
+        return ResponseEntity.status(HttpStatus.CREATED).body(studyGroupService.convertToDto(studyGroup));
     }
 
     // Add a student to a study group

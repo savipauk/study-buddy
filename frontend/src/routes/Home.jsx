@@ -9,12 +9,16 @@ import ActiveGroup from '../components/ActiveGroup';
 import ActiveLesson from '../components/AcitveLesson';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import SearchBarFilter from '../components/SearchbarFilter';
 
 function HomePage() {
   const [createClicked, setCreateClicked] = useState(false);
   const [groups, setGroups] = useState([]);
   const [lessons, setLessons] = useState([]);
   const role = localStorage.getItem('role');
+  const [filteredData, setFilteredData] = useState([]);
+  const [currentFilter, setCurrentFilter] = useState('Newest');
+  const [currentSearch, setCurrentSearch] = useState('');
 
   const [hasRefreshed, setHasRefreshed] = useState(false);
   const [isProfileSetupComplete, setIsProfileSetupComplete] = useState(() =>
@@ -32,8 +36,33 @@ function HomePage() {
 
   const handleProfileSetupComplete = () => {
     localStorage.setItem('isProfileSetupComplete', true);
-    setIsProfileSetupComplete(true); // Trigger re-render
+    setIsProfileSetupComplete(true);
   };
+
+  useEffect(() => {
+    handleFilterChange(currentFilter);
+  }, [groups, lessons, currentFilter]);
+
+  useEffect(() => {
+    const fetchSearchedGroups = async () => {
+      if (currentSearch.trim() === '') {
+        try {
+          await getActiveGroups('studyGroup');
+          await getActiveGroups('lesson');
+        } catch (error) {
+          console.log('Error fetching groups:', error);
+        }
+      } else {
+        try {
+          await getSearchbarGroups('studyGroup');
+          await getSearchbarGroups('lesson');
+        } catch (error) {
+          console.log('Error fetching groups:', error);
+        }
+      }
+    };
+    fetchSearchedGroups();
+  }, [currentSearch, hasRefreshed]);
 
   useEffect(() => {
     if (role === 'ADMIN') {
@@ -42,24 +71,32 @@ function HomePage() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getActiveGroups('studyGroup');
-        await getActiveGroups('lesson');
-      } catch (error) {
-        console.error('Error fetching groups:', error);
-      }
-    };
-    fetchData();
-  }, [hasRefreshed]);
-
-  useEffect(() => {
     if (createClicked || !isProfileSetupComplete) {
       document.body.classList.add('no-scroll');
     } else {
       document.body.classList.remove('no-scroll');
     }
   }, [createClicked, isProfileSetupComplete]);
+
+  const handleFilterChange = (filter) => {
+    let combinedData = [
+      ...groups.map((group) => ({ ...group, type: 'group' })),
+      ...lessons.map((lesson) => ({ ...lesson, type: 'lesson' }))
+    ];
+
+    if (filter === 'Najdalji') {
+      combinedData.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (filter === 'Najblizi') {
+      combinedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (filter === 'Instrukcije') {
+      combinedData = combinedData.filter((item) => item.type === 'lesson');
+    } else if (filter === 'StudyGrupe') {
+      combinedData = combinedData.filter((item) => item.type === 'group');
+    }
+
+    setFilteredData(combinedData);
+    setCurrentFilter(filter);
+  };
 
   async function getActiveGroups(type) {
     const endpoint = `/${type}/active`;
@@ -85,6 +122,32 @@ function HomePage() {
       console.log(error);
     }
   }
+
+  async function getSearchbarGroups(type) {
+    const endpoint = `/${type}/filter/${currentSearch}`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const data = await response.json();
+        if (type === 'lesson') {
+          setLessons(data);
+        } else if (type === 'studyGroup') {
+          setGroups(data);
+        }
+      } else {
+        console.log('response error');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <div
@@ -100,8 +163,13 @@ function HomePage() {
             {role === 'STUDENT' ? 'Kreiraj StudyGroup' : 'Kreiraj Instrukcije'}
           </button>
         </div>
-
-        <h1 className="someText">AKTIVNO</h1>
+        <div className="searcBar">
+          <h1 className="someText">AKTIVNO</h1>
+          <SearchBarFilter
+            onFilterChange={setCurrentFilter}
+            onSearchBarEnter={setCurrentSearch}
+          />
+        </div>
       </div>
       {!isProfileSetupComplete && (
         <ProfileSetup finishSetup={handleProfileSetupComplete} />
@@ -119,19 +187,16 @@ function HomePage() {
         />
       )}
       <div className="activeLessons">
-        {groups.length === 0 ? (
-          <p>Treutno nema aktivnih studyGrupa</p>
+        {filteredData.length === 0 ? (
+          <p>No results found</p>
         ) : (
-          groups.map((group, index) => (
-            <ActiveGroup key={index} group={group} />
-          ))
-        )}
-        {lessons.length === 0 ? (
-          <p>Trenutno nema aktivnih instrukcija</p>
-        ) : (
-          lessons.map((lesson, index) => (
-            <ActiveLesson key={index} lesson={lesson} />
-          ))
+          filteredData.map((item, index) =>
+            item.type === 'group' ? (
+              <ActiveGroup key={index} group={item} />
+            ) : (
+              <ActiveLesson key={index} lesson={item} />
+            )
+          )
         )}
       </div>
     </>
