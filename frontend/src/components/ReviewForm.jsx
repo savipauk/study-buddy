@@ -3,7 +3,7 @@ import { serverFetch } from '../hooks/serverUtils';
 import '../styles/ReviewForm.css';
 import PropTypes from 'prop-types';
 
-function ReviewForm({ onClose, studentUsername, professorUsername }) {
+function ReviewForm({ onClose, studentEmail, professorUsername }) {
   const [validationMessage, setValidationMessage] = useState('');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -32,10 +32,10 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
 
   async function submitReviewForm() {
     const data = {
-      studentUsername: studentUsername,
+      studentEmail: studentEmail,
       professorUsername: professorUsername,
-      rating: rating,
-      comment: comment
+      comment: comment,
+      rating: rating
     };
 
     const endpoint = '/reviews/create';
@@ -51,8 +51,11 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
+        console.log('Odgovor servera:', response);
+
         alert('Uspješno ste ostavili recenziju');
         onClose();
+        console.log(data);
       } else {
         alert(
           `Recenzija nije zaprimljena. 
