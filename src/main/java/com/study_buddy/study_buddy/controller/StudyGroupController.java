@@ -46,12 +46,12 @@ public class StudyGroupController {
         User user;
         if(what.equals("email")){ user = userService.getUserByEmail(usernameOrEmail);}
         else if (what.equals("username")) { user = userService.getUserByUsername(usernameOrEmail);}
-        else {return ResponseEntity.notFound().build();}
+        else {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
 
-        if (user==null) {return ResponseEntity.notFound().build();}
+        if (user==null) {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
 
         Student creator = studentService.getStudentByUserId(user.getUserId());
-        if (creator == null) { return ResponseEntity.notFound().build(); }
+        if (creator == null) { return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); }
 
         List<StudyGroup> studyGroups = studyGroupService.getStudyGroupsByCreator(creator);
         List<StudyGroupDto> studyGroupDtos = studyGroups.stream()
@@ -62,7 +62,6 @@ public class StudyGroupController {
     }
 
 
-
     // Get all active studyGroups
     @GetMapping("/active")
     public ResponseEntity<List<StudyGroupDto>> getAllActiveStudyGroups() {
@@ -71,6 +70,23 @@ public class StudyGroupController {
             return ResponseEntity.noContent().build();
         }
         List<StudyGroupDto> activeStudyGroupDtos = activeStudyGroups.stream()
+                .map(studyGroupService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(activeStudyGroupDtos);
+    }
+
+    // Get all active studyGroups
+    @GetMapping("/active/{username}")
+    public ResponseEntity<List<StudyGroupDto>> getAllActiveStudyGroupsForMember(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        if (user==null) {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+
+        Student student = studentService.getStudentByUserId(user.getUserId());
+        List<StudyGroup> activeStudyGroupsForMember = studyGroupService.getActiveStudyGroupsForMember(student);
+
+        if (activeStudyGroupsForMember.isEmpty()) { return ResponseEntity.noContent().build(); }
+
+        List<StudyGroupDto> activeStudyGroupDtos = activeStudyGroupsForMember.stream()
                 .map(studyGroupService::convertToDto)
                 .toList();
         return ResponseEntity.ok(activeStudyGroupDtos);
@@ -134,9 +150,6 @@ public class StudyGroupController {
         studyGroup.setExpirationDate(dto.getDate().minusDays(3));
 
         studyGroupService.createStudyGroup(studyGroup);
-
-        // Inserting studyGroup creator into GroupMember table
-        groupMemberService.addStudentToGroup(creatorStudent, studyGroup);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(studyGroupService.convertToDto(studyGroup));
     }

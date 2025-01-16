@@ -203,11 +203,13 @@ VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00
 
 -- GroupMembers entries
 INSERT INTO GroupMembers(group_id, member_id, join_date)
-VALUES (1,1, NOW()),
-       (2,2, NOW()),
-       (3,1, NOW()),
-       (4,2, NOW()),
-       (5,1, NOW());
+VALUES (1,2, NOW()),
+       (1,3, NOW()),
+       (2,1, NOW()),
+       (2,3, NOW()),
+       (3,2, NOW()),
+       (4,1, NOW()),
+       (5,3, NOW());
 
 -- Insert default user with ID = 0
 INSERT INTO Users (user_id, email, password, oauth_provider, oauth_id, first_name, last_name, username, profile_picture, description,
