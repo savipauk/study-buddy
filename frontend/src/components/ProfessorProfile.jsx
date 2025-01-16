@@ -15,7 +15,7 @@ function ProfessorProfile({ onClose, username }) {
   });
 
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-  const [averageRating, setAverageRating] = useState('0');
+  const [averageRating, setAverageRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [showReviews, setShowReviews] = useState(false);
   const [showReportWindow, setShowReportWindow] = useState(false);
