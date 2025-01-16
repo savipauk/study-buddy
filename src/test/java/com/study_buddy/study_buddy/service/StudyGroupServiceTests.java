@@ -28,7 +28,7 @@ public class StudyGroupServiceTests {
 
     @BeforeEach
     public void init(){
-        StudyGroup studyGroup = new StudyGroup();
+        studyGroup = new StudyGroup();
         studyGroup.setGroupId(1L);
         studyGroup.setGroupName("testGroup");
         studyGroup.setLocation("New Zeland");
