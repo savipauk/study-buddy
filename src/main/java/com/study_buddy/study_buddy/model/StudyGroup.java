@@ -131,6 +131,24 @@ public class StudyGroup {
     public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
 
     @Override
+    public String toString() {
+        return "StudyGroup{" +
+                "groupId=" + groupId +
+                ", groupName='" + groupName + '\'' +
+                ", location='" + location + '\'' +
+                ", xCoordinate='" + xCoordinate + '\'' +
+                ", yCoordinate='" + yCoordinate + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                ", maxMembers=" + maxMembers +
+                ", description='" + description + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", creator=" + creator +
+                ", creators=" + creators +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

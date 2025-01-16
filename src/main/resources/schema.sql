@@ -193,6 +193,18 @@ VALUES (1,'Math', '60 minutes', 20, 5, '45.8132', '15.9770', 'Zagreb', 'MASS', '
     (1,'Chemistry', '120 minutes', 25, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', '35.00', '2025-01-26', '15:00:00', '2025-01-24'),
     (2,'History', '50 minutes', 30, 8, '44.1178', '15.2272', 'Zadar', 'ONE_ON_ONE', '15.00', '2025-01-25', '10:00:00', '2025-01-23');
 
+-- LessonParticipant entries
+INSERT INTO LessonParticipants(lesson_id, participant_id, participation_date)
+VALUES (1,1, NOW()),
+        (1,2, NOW()),
+        (1,3, NOW()),
+        (2,1, NOW()),
+        (3,2, NOW()),
+        (4,1, NOW()),
+        (4,2, NOW()),
+        (5,2, NOW()),
+        (5,3, NOW());
+
 -- StudyGroups entries
 INSERT INTO StudyGroups (group_name, location, x_coordinate, y_coordinate, date, time, max_members, description, expiration_date, creator_id)
 VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00:00', 15, 'Focus on algebra and calculus', '2025-01-18', 1),
@@ -203,11 +215,13 @@ VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00
 
 -- GroupMembers entries
 INSERT INTO GroupMembers(group_id, member_id, join_date)
-VALUES (1,1, NOW()),
-       (2,2, NOW()),
-       (3,1, NOW()),
-       (4,2, NOW()),
-       (5,1, NOW());
+VALUES (1,2, NOW()),
+       (1,3, NOW()),
+       (2,1, NOW()),
+       (2,3, NOW()),
+       (3,2, NOW()),
+       (4,1, NOW()),
+       (5,3, NOW());
 
 -- Insert default user with ID = 0
 INSERT INTO Users (user_id, email, password, oauth_provider, oauth_id, first_name, last_name, username, profile_picture, description,
