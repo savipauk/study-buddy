@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import ReportForm from './ReportForm';
 import ReviewForm from './ReviewForm';
-import '../styles/ProfessorProfile.css';
+import '../styles/StudentProfessorProfile.css';
 import PropTypes from 'prop-types';
 
 function ProfessorProfile({ onClose, username }) {
@@ -50,8 +50,8 @@ function ProfessorProfile({ onClose, username }) {
         console.error('Failed to fetch user profile');
       }
 
-      const imageResponse = await fetch(
-        `http://localhost:8080/users/profile-picture/${username}`,
+      const imageResponse = await serverFetch(
+        `/users/profile-picture/${username}`,
         {
           method: 'GET',
           headers: {

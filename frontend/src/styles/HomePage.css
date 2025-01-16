@@ -1,61 +1,67 @@
 .header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding-top: 1em;
-  padding-bottom: 2em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1em;
+    padding-bottom: 2em;
+    margin-bottom: 1em;
 }
 
 .homePageWrapper {
-  width: 100vw;
+    width: 100vw;
 }
 
-/* Will delete this later on */
 .someText {
-  text-align: left;
+    text-align: left;
+    color: whitesmoke;
+    margin-left: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
+
 .blurred {
-  width: 100vw;
-  filter: blur(5px);
-  pointer-events: none;
-  overflow: hidden;
+    width: 100vw;
+    filter: blur(5px);
+    pointer-events: none;
+    overflow: hidden;
 }
+
 body.no-scroll {
-  overflow: hidden;
+    overflow: hidden;
 }
+
 .newStudyGroup {
-  display: flex;
-  justify-content: right;
-  margin-left: 3em;
-  margin-right: 3em;
+    display: flex;
+    justify-content: right;
+    margin-left: 3em;
+    margin-right: 3em;
 }
 
 .setupWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .newStudyGroupButton {
-  background-color: black;
-  color: white;
+    background-color: black;
+    color: white;
 }
 
 .activeLessons {
-  margin-top: 2em;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  width: 100%;
-  justify-content: center;
-  align-content: center;
+    margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
 }
 
 .searcBar {

@@ -52,7 +52,8 @@
   padding: 0.5em;
   font-size: 1em;
   width: 100%;
-  border: 0px;
+  border: none;
+  background-color: inherit;
 }
 
 .dropdownMenu {
@@ -68,20 +69,20 @@
   gap: 0.2em;
   flex-direction: column;
   border-radius: 8px;
-	display: flex;
+  display: flex;
 }
 
 .dropdownMenu button {
   width: 100%;
   padding: 0.5em;
-	padding-top: 0;
+  padding-top: 0;
   background-color: transparent;
   color: rgb(0, 0, 0);
   text-align: left;
   cursor: pointer;
   border: 0px;
   text-align: left;
-	margin-left: 10%;
+  margin-left: 10%;
 }
 
 .dropdownMenu button:hover {
@@ -90,71 +91,71 @@
 
 .dropdownSection {
   margin-top: 5px;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
 }
 
-.dropdownSectionReset{
-	margin-top: 8px;
-	display: flex;
-	justify-content: center;
-	width: auto;
+.dropdownSectionReset {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  width: auto;
 }
 
-.dropdownSectionReset button{
-	background-color: #333333a2;
-	padding: 2px;
-	text-align: center;
-	font-size: 1em;
-	border: 1px solid black;
-	margin: 10px;
-	margin-top: 0;
+.dropdownSectionReset button {
+  background-color: #333333a2;
+  padding: 2px;
+  text-align: center;
+  font-size: 1em;
+  border: 1px solid black;
+  margin: 10px;
+  margin-top: 0;
 }
 
-.dropdownSubButton{
-	width: 100%;
+.dropdownSubButton {
+  width: 100%;
   padding: 0.5em;
-	padding-top: 0;
+  padding-top: 0;
   background-color: transparent;
   color: rgb(0, 0, 0);
   text-align: left;
   cursor: pointer;
   border: 0px;
   text-align: left;
-	margin-left: 10%;
+  margin-left: 10%;
 }
 
-.dropdownSectionReset button:hover{
-	transform: scale(1.1);
+.dropdownSectionReset button:hover {
+  transform: scale(1.1);
 }
 
-.inputsWrapper{
-	width: auto;
-	text-align: center;
-	background-color: #333;
-	margin: 0;
-	padding: 0;
+.inputsWrapper {
+  width: auto;
+  text-align: center;
+  background-color: #333;
+  margin: 0;
+  padding: 0;
 }
 
-.dropdownSubSection{
-	margin-top: 5px;
-	display: flex;
-	height: auto;
-	flex-wrap: wrap;
-	align-items: start;
-	font-size: 0.8em;
+.dropdownSubSection {
+  margin-top: 5px;
+  display: flex;
+  height: auto;
+  flex-wrap: wrap;
+  align-items: start;
+  font-size: 0.8em;
 }
 
-.dropdownSubButton{
-	padding: 0;
-	margin: 0;
+.dropdownSubButton {
+  padding: 0;
+  margin: 0;
 }
 
 .dropdownLabel {
   font-weight: bold;
   color: #333;
-	margin-left: 5%;
+  margin-left: 5%;
 }
 
 .searchBarWrapper {

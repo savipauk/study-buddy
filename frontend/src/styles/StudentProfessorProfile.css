@@ -2,10 +2,10 @@
     display: flex;
     flex-direction: column;
     width: 25vw;
-    border: 1px solid black;
+    border: 2px solid ghostwhite;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    background-color: #ffffff;
+    background-color: #5d9cec;
     justify-content: center;
     align-items: center;
     padding: 2em;
@@ -60,6 +60,13 @@
     width: 80px;
 }
 
+.showProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 
 .buttons {
     display: flex;
@@ -72,7 +79,7 @@
     background-color: black;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 7px;
     cursor: pointer;
     margin: 10px;
 }
@@ -93,7 +100,6 @@
 }
 
 button {
-    font-family: Arial, sans-serif;
     font-size: 14px;
     cursor: pointer;
 }

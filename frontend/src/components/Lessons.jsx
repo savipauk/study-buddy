@@ -10,7 +10,7 @@ import { serverFetch } from '../hooks/serverUtils';
 
 function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapLocation = {
-    //Zagreb
+    // Zagreb
     lat: 45.815,
     lng: 15.9819
   };
@@ -25,6 +25,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const markerRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [instructionInfoForm, setInstructionInfoForm] = useState({
     subject: '',
     price: '',
@@ -41,6 +42,13 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       setMinNum(1);
     }
   }
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+    }
+  };
 
   const findLocationName = () => {
     const geocoder = new google.maps.Geocoder();
@@ -154,12 +162,53 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
   async function onSubmit() {
     if (!isValid()) {
       return;
-    } else {
-      await createNewLesson();
+    }
+    try {
+      const data2 = await createNewLesson();
+      if (!data2 || !data2.lessonId) {
+        console.error('Greška: Nije moguće dobiti lessonpId iz odgovora.');
+        return;
+      }
+      if (file) {
+        await handleUpload(data2.lessonId);
+      }
       onCreateClick();
       onClose();
+    } catch (error) {
+      console.error('Greška prilikom podnošenja:', error);
     }
   }
+
+  const handleUpload = async (lessonId) => {
+    if (file) {
+      const formData = new FormData();
+      const email = localStorage.getItem('user_email');
+      formData.append('email', email);
+      formData.append('lesson_id', lessonId);
+      formData.append('file', file);
+      formData.append('description', 'This is a sample file');
+
+      console.log('Form data before upload:', formData);
+
+      try {
+        const response = await serverFetch('/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Učitavanje datoteke uspješno:', data);
+      } catch (error) {
+        console.error('Greška prilikom učitavanja datoteke:', error);
+      }
+    } else {
+      console.log('Niste odabrali file');
+    }
+  };
 
   async function createNewLesson() {
     const email = localStorage.getItem('user_email');
@@ -192,6 +241,9 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
+      const data2 = await response.json();
+      console.log('Odgovor sa servera:', data2);
+      return data2;
     } catch (error) {
       console.log(error);
       return null;
@@ -314,30 +366,35 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
             <label className="inputLabel">Tip instrukcija</label>
           </div>
           <div className="typeWrapper">
-            <input
-              className="typeRadioButton"
-              type="radio"
-              name="type"
-              value={'ONE_ON_ONE'}
-              id="typeOne"
-              checked={instructionInfoForm.type === 'ONE_ON_ONE'}
-              onChange={onChange}
-            ></input>
-            <label htmlFor="typeOne" className="toggleOptionType">
-              Jedan na jedan
-            </label>
-            <input
-              className="typeRadioButton"
-              type="radio"
-              name="type"
-              value={'MASS'}
-              id="typeMassive"
-              checked={instructionInfoForm.type === 'MASS'}
-              onChange={onChange}
-            ></input>
-            <label htmlFor="typeMassive" className="toggleOptionType">
-              Masivne
-            </label>
+            <div className="lessonType">
+              <input
+                className="typeRadioButton"
+                type="radio"
+                name="type"
+                value={'ONE_ON_ONE'}
+                id="typeOne"
+                checked={instructionInfoForm.type === 'ONE_ON_ONE'}
+                onChange={onChange}
+              ></input>
+              <label htmlFor="typeOne" className="toggleOptionType">
+                Jedan na jedan
+              </label>
+              <input
+                className="typeRadioButton"
+                type="radio"
+                name="type"
+                value={'MASS'}
+                id="typeMassive"
+                checked={instructionInfoForm.type === 'MASS'}
+                onChange={onChange}
+              ></input>
+              <label htmlFor="typeMassive" className="toggleOptionType">
+                Masivne
+              </label>
+            </div>
+            <div className="uploadFile">
+              <input id="file" type="file" onChange={handleFileChange} />
+            </div>
           </div>
         </div>
         <div className="inputWrapper">
