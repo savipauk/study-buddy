@@ -10,7 +10,6 @@ import com.study_buddy.study_buddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
@@ -35,7 +33,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class StudyGroupControllerTests {
 
     @Autowired
-    private MockMvc mocMvc;
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @MockBean
     private StudyGroupService studyGroupService;
@@ -49,10 +50,6 @@ public class StudyGroupControllerTests {
     @MockBean
     private GroupMemberService groupMemberService;
 
-
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private StudyGroup studyGroup;
     private StudyGroupDto studyGroupDto;
@@ -103,12 +100,12 @@ public class StudyGroupControllerTests {
     }
 
     @Test
-    public void StudyGroupController_CreateStudyGroup_ReturnStudyGroupDto() throws Exception{
+    public void StudyGroupController_CreateStudyGroup_ReturnStudyGroupDto() throws Exception {
         given(userService.getUserByEmail(user.getEmail())).willReturn(user);
         given(studentService.getStudentByUserId(1L)).willReturn(student);
         given(studyGroupService.createStudyGroup(studyGroup)).willReturn(studyGroup);
 
-        ResultActions response = mocMvc.perform(post("/studyGroup/create")
+        ResultActions response = mockMvc.perform(post("/studyGroup/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studyGroupDto)));
 
