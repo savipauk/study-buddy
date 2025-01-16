@@ -53,6 +53,7 @@ function ReviewForm({ onClose, studentUsername, professorUsername }) {
       if (response.ok) {
         alert('Uspješno ste ostavili recenziju');
         onClose();
+        console.log(data);
       } else {
         alert(
           `Recenzija nije zaprimljena. 
