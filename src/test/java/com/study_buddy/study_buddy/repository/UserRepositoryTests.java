@@ -4,6 +4,7 @@ import com.study_buddy.study_buddy.model.Gender;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
@@ -24,9 +25,11 @@ public class UserRepositoryTests {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    public void UserRepository_SaveAll_ReturnSavedUser(){
-        User user = new User();
+    private User user;
+
+    @BeforeEach
+    public void init(){
+        user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password123");
         user.setUsername("janedoe");
@@ -41,6 +44,10 @@ public class UserRepositoryTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+    }
+
+    @Test
+    public void UserRepository_SaveAll_ReturnSavedUser(){
 
         User savedUser = userRepository.save(user);
 
