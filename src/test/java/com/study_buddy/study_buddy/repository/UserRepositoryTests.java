@@ -47,7 +47,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void UserRepository_SaveAll_ReturnSavedUser(){
+    public void UserRepository_SaveAll_ReturnCorrectUser(){
 
         User savedUser = userRepository.save(user);
 
