@@ -39,13 +39,19 @@ public class LessonController {
     }
 
     // Get all lessons created by one professor
-    @GetMapping("/createdBy/{username}")
-    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
+    @GetMapping("/createdBy/{what}/{usernameOrEmail}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("usernameOrEmail") String usernameOrEmail,
+                                                                    @PathVariable("what") String what) {
+        User user;
+        if(what.equals("email")){ user = userService.getUserByEmail(usernameOrEmail);}
+        else if (what.equals("username")) { user = userService.getUserByUsername(usernameOrEmail);}
+        else {return ResponseEntity.notFound().build();}
+
+        if (user==null) {return ResponseEntity.notFound().build();}
+
         Professor professor = professorService.getProfessorByUserId(user.getUserId());
-        if (professor == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (professor == null) { return ResponseEntity.notFound().build(); }
+
         List<Lesson> lessons = lessonService.getAllLessonsByProfessor(professor);
         List<LessonDto> lessonDtos = lessons.stream()
                 .map(lessonService::convertToDto)
