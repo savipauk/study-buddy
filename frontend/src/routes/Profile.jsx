@@ -33,7 +33,7 @@ function UserForm() {
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
 
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-  
+
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
   );
@@ -72,18 +72,16 @@ function UserForm() {
           Email: userData.email,
           Bio: userData.description
         });
+        const endpoint = `/users/profile-picture/${userData.username}`;
+        const options = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
 
         try {
-          const response = await fetch(
-            `http://localhost:8080/users/profile-picture/${userData.username}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-
+          const response = await serverFetch(endpoint, options);
           if (response.ok) {
             const blob = await response.blob();
             if (blob.size > 0) {
@@ -112,17 +110,17 @@ function UserForm() {
     if (file) {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await fetch(
-        `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
-        {
-          method: 'POST',
-          body: formData
-        }
-      );
+
+      const endpoint = `/users/profile-picture/${userInfoForm.Username}`;
+      const options = {
+        method: 'POST',
+        body: formData
+      };
+      const response = await serverFetch(endpoint, options);
 
       if (response.ok) {
         console.log('Profilna slika uspješno dodana.');
-        const updatedResponse = await fetch(
+        const updatedResponse = await serverFetch(
           `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
           {
             method: 'GET',
