@@ -45,8 +45,8 @@ function StudentProfile({ onClose, username }) {
         console.error('Failed to fetch user profile');
       }
 
-      const imageResponse = await fetch(
-        `http://localhost:8080/users/profile-picture/${username}`,
+      const imageResponse = await serverFetch(
+        `/users/profile-picture/${username}`,
         {
           method: 'GET',
           headers: {
