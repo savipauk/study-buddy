@@ -79,14 +79,15 @@ public class ReviewController {
     // Create review
     @PostMapping("/create")
     public ResponseEntity<String> createReview(@RequestBody ReviewDto dto){
-        User user_student = userService.getUserByUsername(dto.getStudentUsername());
-        if (user_student==null) {
-            return ResponseEntity.noContent().build();
-        }
-        User user_professor = userService.getUserByUsername(dto.getProfessorUsername());
-        if (user_professor==null) {
-            return ResponseEntity.noContent().build();
-        }
+        User user_student;
+        if(dto.getStudentEmail()!=null){ user_student = userService.getUserByEmail(dto.getStudentEmail());
+        } else { user_student = userService.getUserByUsername(dto.getStudentUsername()); }
+        if (user_student==null) { return ResponseEntity.notFound().build(); }
+
+        User user_professor;
+        if(dto.getProfessorEmail()!=null){ user_professor = userService.getUserByEmail(dto.getProfessorEmail());
+        } else{ user_professor = userService.getUserByUsername(dto.getProfessorUsername()); }
+        if (user_professor==null) { return ResponseEntity.notFound().build(); }
 
         System.out.println(user_professor.toString());
         Student student = studentService.getStudentByUserId(user_student.getUserId());

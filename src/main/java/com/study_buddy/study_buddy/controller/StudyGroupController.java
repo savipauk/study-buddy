@@ -40,13 +40,18 @@ public class StudyGroupController {
     }
 
     // Get all study groups created by one user
-    @GetMapping("/createdBy/{username}")
-    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
+    @GetMapping("/createdBy/{what}/{usernameOrEmail}")
+    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("usernameOrEmail") String usernameOrEmail,
+                                                                       @PathVariable("what") String what) {
+        User user;
+        if(what.equals("email")){ user = userService.getUserByEmail(usernameOrEmail);}
+        else if (what.equals("username")) { user = userService.getUserByUsername(usernameOrEmail);}
+        else {return ResponseEntity.notFound().build();}
+
+        if (user==null) {return ResponseEntity.notFound().build();}
+
         Student creator = studentService.getStudentByUserId(user.getUserId());
-        if (creator == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (creator == null) { return ResponseEntity.notFound().build(); }
 
         List<StudyGroup> studyGroups = studyGroupService.getStudyGroupsByCreator(creator);
         List<StudyGroupDto> studyGroupDtos = studyGroups.stream()
@@ -55,6 +60,8 @@ public class StudyGroupController {
 
         return ResponseEntity.ok(studyGroupDtos);
     }
+
+
 
     // Get all active studyGroups
     @GetMapping("/active")
