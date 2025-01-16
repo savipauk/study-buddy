@@ -72,10 +72,27 @@ public class LessonController {
         return ResponseEntity.ok(lessonDtos);
     }
 
+    // Get all active studyGroups
+    @GetMapping("/active/{username}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsForLessonParticipant(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        if (user==null) {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+
+        Student student = studentService.getStudentByUserId(user.getUserId());
+        List<Lesson> activeLessonsForLessonParticipant = lessonService.getAllActiveLessonsForLessonParticipant(student);
+
+        if (activeLessonsForLessonParticipant.isEmpty()) { return ResponseEntity.noContent().build(); }
+
+        List<LessonDto> activeLessonsForLessonParticipantDto = activeLessonsForLessonParticipant.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(activeLessonsForLessonParticipantDto);
+    }
+
     // Get all active mass or one_on_one lessons
-    @GetMapping("/active/{lessonType}")
+    @GetMapping("/active/lessonType/{lessonType}")
     public ResponseEntity<List<LessonDto>> getAllActiveMassLessons(@PathVariable("lessonType") LessonType lessonType) {
-        List<Lesson> activeLessons = lessonService.getAllActiveMassLessons(lessonType);
+        List<Lesson> activeLessons = lessonService.getAllActiveLessonsByLessonType(lessonType);
         if (activeLessons.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

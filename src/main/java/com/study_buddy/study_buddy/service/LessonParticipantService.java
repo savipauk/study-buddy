@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class LessonParticipantService {
@@ -35,4 +36,6 @@ public class LessonParticipantService {
         // Persist the relationship
         lessonParticipantRepository.save(lessonParticipant);
     }
+
+    public List<LessonParticipant> getLessonsByParticipantId(Student participantId){ return lessonParticipantRepository.findByParticipantId(participantId);}
 }
