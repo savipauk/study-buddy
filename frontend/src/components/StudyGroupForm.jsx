@@ -163,7 +163,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
       formData.append('description', 'This is a sample file');
 
       try {
-        const response = await fetch('http://localhost:8080/material/upload', {
+        const response = await serverFetch('/material/upload', {
           method: 'POST',
           body: formData
         });

@@ -191,7 +191,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       console.log('Form data before upload:', formData);
 
       try {
-        const response = await fetch('http://localhost:8080/material/upload', {
+        const response = await serverFetch('material/upload', {
           method: 'POST',
           body: formData
         });
