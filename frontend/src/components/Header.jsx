@@ -6,10 +6,11 @@ function Header() {
   const navigate = useNavigate();
 
   const role = localStorage.getItem('role');
+  const email = localStorage.getItem('user_email');
 
   const { signOut } = useAuth();
   const handleClickProfile = () => {
-    navigate('/users/profile');
+    navigate(`/users/profile/${email}`);
   };
   const handleClickHome = () => {
     navigate('/users/home');
