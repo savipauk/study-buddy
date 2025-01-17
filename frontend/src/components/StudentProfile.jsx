@@ -3,6 +3,7 @@ import { serverFetch } from '../hooks/serverUtils';
 import ReportForm from './ReportForm';
 import '../styles/StudentProfessorProfile.css';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 function StudentProfile({ onClose, username }) {
   const [userInfoForm, setUserInfoForm] = useState({
@@ -13,8 +14,9 @@ function StudentProfile({ onClose, username }) {
   });
 
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-
   const [showReportWindow, setShowReportWindow] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleCloseWindow = () => {
     setShowReportWindow(false);
@@ -88,7 +90,14 @@ function StudentProfile({ onClose, username }) {
               <p>Prezime: {userInfoForm.LastName}</p>
               <p>Opis: {userInfoForm.Bio}</p>
               <div className="showProfile">
-                <button className="showProfileButton">Prikaži Profil</button>
+                <button
+                  className="showProfileButton"
+                  onClick={() => {
+                    navigate(`/users/profile/${username}`);
+                  }}
+                >
+                  Prikaži Profil
+                </button>
               </div>
             </div>
           </div>
