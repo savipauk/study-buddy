@@ -55,3 +55,27 @@ export async function getUserData(userEmail) {
     return null;
   }
 }
+
+export async function getUserByUsername(username) {
+  const endpoint = `/users/profileByUsername/${username}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const response = await serverFetch(endpoint, options);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.log('Failed to fetch data', response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
