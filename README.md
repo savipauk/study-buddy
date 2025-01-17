@@ -11,18 +11,17 @@ Aplikacija je osmišljena s ciljem brzog povezivanja i koordinacije vršnjaka ko
 
 # Funkcijski zahtjevi
 
-- Platforma ima početnu web-stranicu koja korisnicima omogućuje jednostavan pristup opcijama za registraciju i prijavu.
-- Neregistrirani korisnici vide samo početnu stranicu i stranicu za prijavu i registraciju.  
-- Korisnicima je omogućena prijava preko njihovog Google računa, ali i upisivanje maila nekog drugog pružatelja mail usluge.   
-- Prilikom kreiranja novog računa, korisnici odabiru rade li registraciju kao učenici, studenti ili profesori.  
-- Prijavljeni korisnici imaju javne profile koji sadrže osnovne podatke o korisniku, a ti se profili mogu uređivati.   
-- Profesori na platformi imaju mogućnost objavljivanja poziva na „masovne instrukcije“ te definiraju detalje vezane uz određeni termin.  
-- Učenici i studenti mogu objavljivati termine grupa za učenje te također određuju detalje vezane uz događaj. Oni pretražuju ponuđene oglase te se prijavljuju za pohađanje instrukcija ili za sudjelovanje u grupama za učenje. Također imaju opciju objave recenzija na profilima profesora.  
-- Administrator sustava nadzire aktivnost svih korisnika i pregledava pristigle prijave i zahtjeve.   
-- Korisnik može privremeno deaktivirati svoj račun pa se tijekom neaktivnosti s tim računom ne može komunicirati. Administrator također može deaktivirati i blokirati neki račun ako je sam uočio neprimjereno ponašanje ili je primio prijavu poslanu od nekog drugog korisnika.  
-- Svaki korisnik ima mogućnost komunikacije s ostalim korisnicima razmjenom poruka (čavrljanje).  
-- Svi se novi podaci i izmjene postojećih podataka o korisnicima, instrukcijama, grupama, recenzijama i prijavama spremaju u bazu podataka.  
+StudyBuddy platforma ima početnu stranicu koja korisnicima omogućuje jednostavan pristup opcijama za registraciju i prijavu. Korisnicima je omogućena prijava preko njihovog Google računa, ali i upisivanje maila nekog drugog pružatelja mail usluge.
 
+Prilikom kreiranja novog računa, korisnici biraju ulogu studenta ili profesora te stvaraju svoj profil. Profili su javni te sadrže osnovne podatke o korisniku, a vlasnik profila može ga urediti, deaktivirati na određeno vrijeme ili obrisati.
+
+Profesorima se nudi mogućnost objavljivanja poziva na masovne instrukcije, a učenicima i studentima mogućnost objave termina grupa za učenje. Učenicima se na  početnoj stranici prikazuju aktivne grupe za učenje i pozivi na instrukcije, a sve to mogu pretražiti te se za željene termine prijaviti. Također imaju opciju objave recenzija na profilima profesora.
+
+Uloga je administratora sustava nadzirati aktivnost svih korisnika i pregled pristiglih prijava i zahtjeva. Po nailasku na neprimjereno ponašanje ili prijavu poslanu od nekog korisnika, administrator je ovlašten deaktivirati i blokirati određeni račun.
+
+Korisnici mogu međusobno komunicirati razmjenom poruka u chatu.
+
+Svi se novi podaci i izmjene postojećih podataka o korisnicima, instrukcijama, grupama, recenzijama i prijavama spremaju u bazu podataka.
 
 # Tehnologije
 
@@ -30,7 +29,7 @@ Aplikacija je osmišljena s ciljem brzog povezivanja i koordinacije vršnjaka ko
 
 ### Preduvjeti
 #### 1. Java Development Kit (JDK)
-Potrebno je JDK imati instaliran na svom računalu. Možete ga preuzeti sa stranice: [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) ili koristite OpenJDK s [ove poveznice](https://jdk.java.net/). 
+Na računalo je potrebno instalirati JDK. Možete ga preuzeti sa stranice: [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) ili koristite OpenJDK s [ove poveznice](https://jdk.java.net/). 
 
 #### 2. Instalacija Mavena
 Ako već nemate Maven instaliran globalno, možete ga instalirati preuzimanjem najnovije verzije s [Apache Maven web stranice](https://maven.apache.org/download.cgi). Nakon preuzimanja, raspakirajte arhivu i slijedite [upute za instalaciju](https://maven.apache.org/install.html) kako biste dodali Maven u `PATH` sustava.
@@ -47,10 +46,10 @@ Nakon izgradnje projekta, možete pokrenuti Spring Boot aplikaciju koristeći Ma
 ./mvnw spring-boot:run
 ```
 
-Za frontend specifične upute pogledajte na [README](frontend/README.md).
+Specifične upute za frontend pogledajte na [README](frontend/README.md).
 
 ## Docker
-Aplikacija se može jednostavno postaviti i pokrenuti korištenjem Docker Compose-a. Prije svega, provjerite imate li instalirane sljedeće alate: - [Docker](https://www.docker.com/get-started) i [Docker Compose](https://docs.docker.com/compose/install/).
+Aplikacija se može jednostavno postaviti i pokrenuti korištenjem Docker Compose-a. Prije svega, provjerite imate li instalirane sljedeće alate: [Docker](https://www.docker.com/get-started) i [Docker Compose](https://docs.docker.com/compose/install/).
 U terminalu je potrebno izvršiti naredbu:
 ```
 docker-compose up –build
