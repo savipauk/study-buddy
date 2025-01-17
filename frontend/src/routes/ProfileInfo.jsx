@@ -79,9 +79,9 @@ function ProfileInfo() {
     console.log(role);
     let endpoint;
     if (role === 'STUDENT') {
-      endpoint = `/studyGroup/createdBy/${userInfoForm.username}`;
+      endpoint = `/studyGroup/createdBy/username/${userInfoForm.username}`;
     } else if (role === 'PROFESSOR') {
-      endpoint = `/lesson/createdBy/${userInfoForm.username}`;
+      endpoint = `/lesson/createdBy/username/${userInfoForm.username}`;
     }
     const options = {
       method: 'GET',
@@ -118,8 +118,13 @@ function ProfileInfo() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        const data = await response.json();
-        setJoinedGroups(data);
+        const text = await response.text();
+        if (text) {
+          const data = JSON.parse(text);
+          setJoinedGroups(data);
+        } else {
+          console.log('Empty response body');
+        }
       } else {
         console.log('response error');
       }

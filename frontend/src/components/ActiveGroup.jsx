@@ -9,31 +9,30 @@ function ActiveGroup({ group }) {
   return (
     <>
       {!showInfo && (
-        <div className='activeGroupsWrapper'>
-          <div className='rightWrapper'>
-            <div className='groupType'>
+        <div className="activeGroupsWrapper">
+          <div className="rightWrapper">
+            <div className="groupType">
               <label>{'StudyGroup'}</label>
             </div>
-            <div className='wrapper'>
-              <div className='basicInfoWrapper'>
-                <div className='infoSubject'>
+            <div className="wrapper">
+              <div className="basicInfoWrapper">
+                <div className="infoSubject">
                   <label>{group.groupName}</label>
                 </div>
-                <div className='info'>
+                <div className="info">
                   <label>{group.date}</label>
                 </div>
-                <div className='info'>
+                <div className="info">
                   <label>{group.username}</label>
                 </div>
               </div>
             </div>
           </div>
-          <div className='leftWrapper'>
-            <div className='joinGroup'>
+          <div className="leftWrapper">
+            <div className="joinGroup">
               <button
                 onClick={() => {
                   setShowInfo(true);
-                  console.log('kliknut');
                 }}
               >
                 Pogledaj Info

@@ -170,7 +170,7 @@ LessonInfo.propTypes = {
     type: PropTypes.string,
     maxMembers: PropTypes.number,
     minMembers: PropTypes.number,
-    price: PropTypes.number,
+    price: PropTypes.string,
     subject: PropTypes.string
   }).isRequired,
   onClose: PropTypes.func.isRequired

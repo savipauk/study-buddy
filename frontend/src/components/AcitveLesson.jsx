@@ -33,7 +33,6 @@ function ActiveLesson({ lesson }) {
               <button
                 onClick={() => {
                   setShowInfo(true);
-                  console.log('kliknut');
                 }}
               >
                 Pogledaj Info

@@ -5,6 +5,7 @@ import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import StudentProfile from './StudentProfile';
+import { serverFetch } from '../hooks/serverUtils';
 
 function StudyGroupInfo({ group, onClose }) {
   const [showProfile, setShowProfile] = useState(false);
@@ -32,6 +33,30 @@ function StudyGroupInfo({ group, onClose }) {
   const handleCloseProfile = () => {
     setShowProfile(false);
   };
+
+  const handleJoinGroup = async () => {
+    const email = localStorage.getItem('user_email');
+    await joinGroup(group.studyGroupId, email);
+  };
+
+  async function joinGroup(id, username) {
+    const endpoint = `/studyGroup/${id}/add-student/${username}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (!response.ok) {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="groupInfoWrapper">
@@ -85,7 +110,7 @@ function StudyGroupInfo({ group, onClose }) {
           </div>
         </div>
         <div className="joinGroupButton">
-          <button>Pridružite se!</button>
+          <button onClick={handleJoinGroup}>Pridružite se!</button>
         </div>
       </div>
       <div className="mapsLocation">
