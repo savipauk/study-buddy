@@ -223,7 +223,8 @@ LessonInfo.propTypes = {
     maxMembers: PropTypes.number,
     minMembers: PropTypes.number,
     price: PropTypes.string,
-    subject: PropTypes.string
+    subject: PropTypes.string,
+    lessonId: PropTypes.string
   }).isRequired,
   onClose: PropTypes.func.isRequired,
   joinedGroups: PropTypes.array.isRequired

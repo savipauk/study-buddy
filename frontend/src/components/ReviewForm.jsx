@@ -111,7 +111,7 @@ function ReviewForm({ onClose, studentEmail, professorUsername }) {
 
 ReviewForm.propTypes = {
   onClose: PropTypes.func.isRequired,
-  studentUsername: PropTypes.string.isRequired,
+  studentEmail: PropTypes.string.isRequired,
   professorUsername: PropTypes.string.isRequired
 };
 
