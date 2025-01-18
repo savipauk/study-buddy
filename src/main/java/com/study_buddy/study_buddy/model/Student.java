@@ -24,9 +24,14 @@ public class Student{
     private User user;
 
     // CONNECTING TABLES STUDENT-STUDYGROUP
-    // Student is creator of studyGroup
+    // Student is perticipant of studyGroup
     @ManyToMany(mappedBy = "participants")
     private List<StudyGroup> studyGroups;
+
+    // CONNECTING TABLES STUDENT-LESSON
+    // Student is participang of lesson
+    @ManyToMany(mappedBy = "studentParticipants")
+    private List<Lesson> lessons;
 
 
     // Constructors
