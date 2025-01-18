@@ -7,13 +7,15 @@ import { useState } from 'react';
 import StudentProfile from './StudentProfile';
 import { serverFetch } from '../hooks/serverUtils';
 
-function StudyGroupInfo({ group, onClose }) {
+function StudyGroupInfo({ group, onClose, joinedGroups }) {
   const [showProfile, setShowProfile] = useState(false);
   const mapLocation = {
     lat: parseFloat(group.xCoordinate),
     lng: parseFloat(group.yCoordinate)
   };
   const [locationName, setLocationName] = useState();
+
+  const joined = joinedGroups.includes(group.studyGroupId);
 
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
@@ -39,8 +41,32 @@ function StudyGroupInfo({ group, onClose }) {
     await joinGroup(group.studyGroupId, email);
   };
 
+  const handleLeaveGroup = async () => {
+    const email = localStorage.getItem('user_email');
+    await leaveGroup(group.studyGroupId, email);
+  };
+
   async function joinGroup(id, username) {
     const endpoint = `/studyGroup/${id}/add-student/${username}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (!response.ok) {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function leaveGroup(id, username) {
+    const endpoint = `/studyGroup/${id}/remove-student/${username}`;
     const options = {
       method: 'POST',
       headers: {
@@ -110,7 +136,8 @@ function StudyGroupInfo({ group, onClose }) {
           </div>
         </div>
         <div className="joinGroupButton">
-          <button onClick={handleJoinGroup}>Pridružite se!</button>
+          {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}
+          {joined && <button onClick={handleLeaveGroup}>Napusti grupu!</button>}
         </div>
       </div>
       <div className="mapsLocation">
@@ -158,9 +185,11 @@ StudyGroupInfo.propTypes = {
     location: PropTypes.string,
     type: PropTypes.string,
     maxMembers: PropTypes.number,
-    groupName: PropTypes.string
+    groupName: PropTypes.string,
+    studyGroupId: PropTypes.number
   }).isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  joinedGroups: PropTypes.array.isRequired
 };
 
 export default StudyGroupInfo;

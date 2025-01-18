@@ -2,7 +2,7 @@ import '../styles/HomePage.css';
 import '../styles/Login.css';
 import Header from '../components/Header';
 import { useState, useEffect } from 'react';
-import { serverFetch } from '../hooks/serverUtils';
+import { serverFetch, getUserData } from '../hooks/serverUtils';
 import CreateStudyGroupForm from '../components/StudyGroupForm';
 import Lessons from '../components/Lessons';
 import ActiveGroup from '../components/ActiveGroup';
@@ -16,9 +16,12 @@ function HomePage() {
   const [groups, setGroups] = useState([]);
   const [lessons, setLessons] = useState([]);
   const role = localStorage.getItem('role');
+  const userEmail = localStorage.getItem('user_email');
   const [filteredData, setFilteredData] = useState([]);
   const [currentFilter, setCurrentFilter] = useState('Newest');
   const [currentSearch, setCurrentSearch] = useState('');
+  const [joinedGroups, setJoinedGroups] = useState([]);
+  const [joinedLessons, setJoinedLessons] = useState([]);
 
   const [hasRefreshed, setHasRefreshed] = useState(false);
   const [isProfileSetupComplete, setIsProfileSetupComplete] = useState(() =>
@@ -97,6 +100,43 @@ function HomePage() {
     setFilteredData(combinedData);
     setCurrentFilter(filter);
   };
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      await getJoinedGroups('studyGroup');
+      await getJoinedGroups('lesson');
+    };
+    fetchUsername();
+  }, []);
+
+  async function getJoinedGroups(type) {
+    const data = await getUserData(localStorage.getItem('user_email'));
+    const username = data.username;
+    const endpoint = `/${type}/active/${username}`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        const text = await response.text();
+        if (text) {
+          const data = JSON.parse(text);
+          if (type === 'studyGroup') setJoinedGroups(data);
+          else if (type === 'lesson') setJoinedLessons(data);
+        } else {
+          console.log('Empty response body');
+        }
+      } else {
+        console.log('response error');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function getActiveGroups(type) {
     const endpoint = `/${type}/active`;
@@ -192,13 +232,26 @@ function HomePage() {
         {filteredData.length === 0 ? (
           <p>No results found</p>
         ) : (
-          filteredData.map((item, index) =>
-            item.type === 'group' ? (
-              <ActiveGroup key={index} group={item} />
-            ) : (
-              <ActiveLesson key={index} lesson={item} />
-            )
-          )
+          filteredData.map((item, index) => {
+            if (item.type === 'group' && item.email !== userEmail) {
+              return (
+                <ActiveGroup
+                  key={index}
+                  group={item}
+                  joinedGroups={joinedGroups.map((group) => group.studyGroupId)}
+                />
+              );
+            } else if (item.type === 'lesson' && item.email !== userEmail) {
+              return (
+                <ActiveLesson
+                  key={index}
+                  lesson={item}
+                  joinedGroups={joinedLessons.map((lesson) => lesson.lessonId)}
+                />
+              );
+            }
+            return null;
+          })
         )}
       </div>
     </>

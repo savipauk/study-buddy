@@ -3,7 +3,7 @@ import '../styles/ActiveGroups.css';
 import LessonInfo from './LessonInfo';
 import PropTypes from 'prop-types';
 
-function ActiveLesson({ lesson }) {
+function ActiveLesson({ lesson, joinedGroups }) {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
@@ -42,7 +42,11 @@ function ActiveLesson({ lesson }) {
         </div>
       )}
       {showInfo && (
-        <LessonInfo lesson={lesson} onClose={() => setShowInfo(false)} />
+        <LessonInfo
+          lesson={lesson}
+          onClose={() => setShowInfo(false)}
+          joinedGroups={joinedGroups}
+        />
       )}
     </>
   );
@@ -53,6 +57,7 @@ ActiveLesson.propTypes = {
     subject: PropTypes.string,
     date: PropTypes.string,
     username: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  joinedGroups: PropTypes.array.isRequired
 };
 export default ActiveLesson;

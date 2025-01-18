@@ -6,8 +6,9 @@ import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import ProfessorProfile from './ProfessorProfile';
+import { serverFetch } from '../hooks/serverUtils';
 
-function LessonInfo({ lesson, onClose }) {
+function LessonInfo({ lesson, onClose, joinedGroups }) {
   const mapLocation = {
     lat: parseFloat(lesson.xCoordinate),
     lng: parseFloat(lesson.yCoordinate)
@@ -25,6 +26,8 @@ function LessonInfo({ lesson, onClose }) {
     });
   };
 
+  const joined = joinedGroups.includes(lesson.lessonId);
+
   const handleProfileClick = () => {
     setShowProfile(true);
   };
@@ -32,6 +35,54 @@ function LessonInfo({ lesson, onClose }) {
   const handleCloseProfile = () => {
     setShowProfile(false);
   };
+
+  const handleJoinGroup = async () => {
+    const email = localStorage.getItem('user_email');
+    await joinGroup(lesson.lessonId, email);
+  };
+
+  const handleLeaveGroup = async () => {
+    const email = localStorage.getItem('user_email');
+    await leaveGroup(lesson.lessonId, email);
+  };
+
+  async function joinGroup(id, username) {
+    const endpoint = `/lesson/${id}/add-student/${username}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (!response.ok) {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function leaveGroup(id, username) {
+    const endpoint = `/lesson/${id}/remove-student/${username}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (!response.ok) {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="groupInfoWrapper">
@@ -121,7 +172,8 @@ function LessonInfo({ lesson, onClose }) {
           </div>
         )}
         <div className="joinGroupButton">
-          <button>Pridružite se!</button>
+          {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}
+          {joined && <button onClick={handleLeaveGroup}>Napusti grupu!</button>}
         </div>
       </div>
       <div className="mapsLocation">
@@ -173,7 +225,8 @@ LessonInfo.propTypes = {
     price: PropTypes.string,
     subject: PropTypes.string
   }).isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  joinedGroups: PropTypes.array.isRequired
 };
 
 export default LessonInfo;

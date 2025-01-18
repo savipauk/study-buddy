@@ -3,7 +3,7 @@ import '../styles/ActiveGroups.css';
 import StudyGroupInfo from './StudyGroupInfo';
 import PropTypes from 'prop-types';
 
-function ActiveGroup({ group }) {
+function ActiveGroup({ group, joinedGroups }) {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
@@ -42,7 +42,11 @@ function ActiveGroup({ group }) {
         </div>
       )}
       {showInfo && (
-        <StudyGroupInfo group={group} onClose={() => setShowInfo(false)} />
+        <StudyGroupInfo
+          group={group}
+          onClose={() => setShowInfo(false)}
+          joinedGroups={joinedGroups}
+        />
       )}
     </>
   );
@@ -53,6 +57,7 @@ ActiveGroup.propTypes = {
     username: PropTypes.string,
     date: PropTypes.string,
     groupName: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  joinedGroups: PropTypes.array.isRequired
 };
 export default ActiveGroup;
