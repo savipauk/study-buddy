@@ -59,7 +59,7 @@ public class Lesson {
     private Professor professor;
 
     // CONNECTING TABLES STUDENT-LESSONPARTICIPANT
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "LessonParticipants",
             joinColumns = @JoinColumn(name = "lesson_id"),

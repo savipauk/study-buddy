@@ -24,6 +24,8 @@ public class LessonService {
     @Autowired
     private LessonParticipantRepository lessonParticipantRepository;
 
+    public Lesson findByLessonId(Long lessonId){ return lessonRepository.findByLessonId(lessonId);}
+
     public Lesson createLesson(Lesson lesson){ return lessonRepository.save(lesson);}
 
     public List<Lesson> getAllLessons(){ return lessonRepository.findAll();}

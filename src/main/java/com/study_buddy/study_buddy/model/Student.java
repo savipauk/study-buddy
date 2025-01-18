@@ -31,7 +31,7 @@ public class Student{
 
     // CONNECTING TABLES STUDENT-LESSON
     // Student is participang of lesson
-    @ManyToMany(mappedBy = "studentParticipants")
+    @ManyToMany(mappedBy = "studentParticipants", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Lesson> lessons;
 
 
