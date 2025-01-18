@@ -68,7 +68,7 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
   async function leaveGroup(id, username) {
     const endpoint = `/lesson/${id}/remove-student/${username}`;
     const options = {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       }
