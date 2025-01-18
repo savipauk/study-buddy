@@ -155,9 +155,9 @@ public class StudyGroupController {
     }
 
     // Add a student to a study group
-    @PostMapping("/{groupId}/add-student/{username}")
-    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
+    @PostMapping("/{groupId}/add-student/{email}")
+    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
+        User user = userService.getUserByEmail(email);
         Student student = studentService.getStudentByUserId(user.getUserId());
         StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
 
@@ -182,18 +182,23 @@ public class StudyGroupController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
     // Remove a student from a study group
-    @DeleteMapping("/{groupId}/remove-student/{studentId}")
-    public ResponseEntity<Void> removeStudentFromGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
+    @DeleteMapping("/{groupId}/remove-student/{email}")
+    public ResponseEntity<Void> removeStudentFromGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
         try {
-            studyGroupService.removeStudentFromGroup(groupId, studentId);
+            StudyGroup studyGroup = studyGroupService.findByGroupId(groupId);
+
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            groupMemberService.deleteByGroupIdAndStudentId(groupId, student.getStudentId());
+
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-    }*/
+    }
 
 
 

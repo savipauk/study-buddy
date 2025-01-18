@@ -25,6 +25,8 @@ public class StudyGroupService {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
 
+    public StudyGroup findByGroupId(Long groupId){ return studyGroupRepository.findById(groupId).get();}
+
     public StudyGroup createStudyGroup(StudyGroup studyGroup){ return studyGroupRepository.save(studyGroup);}
 
     public List<StudyGroup> getAllStudyGroups(){ return studyGroupRepository.findAll();}

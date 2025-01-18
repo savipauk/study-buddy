@@ -49,7 +49,7 @@ public class StudyGroup {
     private Student creator;
 
     // CONNECTING TABLES STUDENT-STUDYGROUP -> GROUPMEMBERS
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "GroupMembers",
             joinColumns = @JoinColumn(name = "group_id"),

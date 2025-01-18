@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -25,7 +26,7 @@ public class Student{
 
     // CONNECTING TABLES STUDENT-STUDYGROUP
     // Student is perticipant of studyGroup
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<StudyGroup> studyGroups;
 
     // CONNECTING TABLES STUDENT-LESSON
@@ -51,10 +52,31 @@ public class Student{
 
     public void setStudentId(Long student_id) { this.studentId = student_id; }
 
+    public List<StudyGroup> getStudyGroups() { return studyGroups;}
+
+    public void setStudyGroups(List<StudyGroup> studyGroups) { this.studyGroups = studyGroups; }
+
+    public List<Lesson> getLessons() { return lessons; }
+
+    public void setLessons(List<Lesson> lessons) { this.lessons = lessons; }
+
     @Override
     public String toString() {
         return "Student{" +
                 "studentId=" + studentId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(studentId, student.studentId) && Objects.equals(user, student.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentId, user);
     }
 }
