@@ -38,8 +38,9 @@ public class StudyGroupService {
 
         return allStudyGroups.stream()
                 .filter(studyGroup ->
-                        studyGroup.getDate().isAfter(today) ||
-                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
+                        (studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
                 )
                 .collect(Collectors.toList());
     }
@@ -67,8 +68,9 @@ public class StudyGroupService {
         LocalTime now = LocalTime.now();
 
         return allStudyGroups.stream()
-                .filter(studyGroup -> studyGroup.getDate().isAfter(today) ||
-                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now))
+                .filter(studyGroup -> (studyGroup.getDate().isAfter(today) ||
+                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now)))
+                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
                 ).collect(Collectors.toList());
     }
 
@@ -101,6 +103,7 @@ public class StudyGroupService {
         dto.setDescription(studyGroup.getDescription());
         dto.setExpirationDate(studyGroup.getExpirationDate());
         dto.setUsername(studyGroup.getCreator().getUser().getUsername());
+        dto.setCurrentNumberOfMembers(studyGroup.getParticipants().size());
         return dto;
     }
 

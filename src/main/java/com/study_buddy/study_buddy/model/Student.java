@@ -25,7 +25,7 @@ public class Student{
 
     // CONNECTING TABLES STUDENT-STUDYGROUP
     // Student is creator of studyGroup
-    @ManyToMany(mappedBy = "creators")
+    @ManyToMany(mappedBy = "participants")
     private List<StudyGroup> studyGroups;
 
 
@@ -46,4 +46,10 @@ public class Student{
 
     public void setStudentId(Long student_id) { this.studentId = student_id; }
 
+    @Override
+    public String toString() {
+        return "Student{" +
+                "studentId=" + studentId +
+                '}';
+    }
 }

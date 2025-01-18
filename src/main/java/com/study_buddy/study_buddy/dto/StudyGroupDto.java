@@ -16,6 +16,7 @@ public class StudyGroupDto {
     private String description;
     private LocalDate expirationDate;
     private String username;
+    private int currentNumberOfMembers;
 
     // Constructors
     public StudyGroupDto() {}
@@ -84,6 +85,10 @@ public class StudyGroupDto {
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public int getCurrentNumberOfMembers() { return currentNumberOfMembers; }
+
+    public void setCurrentNumberOfMembers(int currentNumberOfMembers) { this.currentNumberOfMembers = currentNumberOfMembers; }
 
     @Override
     public String toString() {
