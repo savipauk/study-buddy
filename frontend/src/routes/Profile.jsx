@@ -121,7 +121,7 @@ function UserForm() {
       if (response.ok) {
         console.log('Profilna slika uspješno dodana.');
         const updatedResponse = await serverFetch(
-          `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
+          `/profile-picture/${userInfoForm.Username}`,
           {
             method: 'GET',
             headers: {

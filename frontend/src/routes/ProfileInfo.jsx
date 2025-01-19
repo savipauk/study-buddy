@@ -53,8 +53,8 @@ function ProfileInfo() {
       });
       setRole(userData.studyRole);
 
-      const response = await fetch(
-        `http://localhost:8080/users/profile-picture/${userData.username}`,
+      const response = await serverFetch(
+        `/users/profile-picture/${userData.username}`,
         {
           method: 'GET',
           headers: {
