@@ -4,6 +4,7 @@ import ReportForm from './ReportForm';
 import ReviewForm from './ReviewForm';
 import '../styles/StudentProfessorProfile.css';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 function ProfessorProfile({ onClose, username }) {
   const role = localStorage.getItem('role');
@@ -20,6 +21,7 @@ function ProfessorProfile({ onClose, username }) {
   const [showReviews, setShowReviews] = useState(false);
   const [showReportWindow, setShowReportWindow] = useState(false);
   const [showReviewWindow, setShowReviewWindow] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseWindow = () => {
     setShowReportWindow(false);
@@ -150,7 +152,12 @@ function ProfessorProfile({ onClose, username }) {
               <p>Opis: {userInfoForm.Bio}</p>
               <p>Prosječna ocjena: {renderStars(averageRating)}</p>
               <div className="showProfile">
-                <button className="showProfileButton">Prikaži Profil</button>
+                <button
+                  className="showProfileButton"
+                  onClick={() => navigate(`/users/profile/${username}`)}
+                >
+                  Prikaži Profil
+                </button>
               </div>
             </div>
           </div>

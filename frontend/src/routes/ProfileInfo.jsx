@@ -13,7 +13,9 @@ import { useParams } from 'react-router-dom';
 
 function ProfileInfo() {
   const [userGroups, setUserGroups] = useState([]);
+  const [userJoinedGroups, setUserJoinedGroups] = useState([]);
   const [joinedGroups, setJoinedGroups] = useState([]);
+  const [joinedLessons, setJoinedLessons] = useState([]);
   const [showActive, setShowActive] = useState(true);
   const [ownProfile, setOwnProfile] = useState(false);
   const isProfileSetupComplete = JSON.parse(
@@ -76,12 +78,11 @@ function ProfileInfo() {
   };
 
   async function getUserGroups(role) {
-    console.log(role);
     let endpoint;
     if (role === 'STUDENT') {
-      endpoint = `/studyGroup/createdBy/${userInfoForm.username}`;
+      endpoint = `/studyGroup/createdBy/username/${userInfoForm.username}`;
     } else if (role === 'PROFESSOR') {
-      endpoint = `/lesson/createdBy/${userInfoForm.username}`;
+      endpoint = `/lesson/createdBy/username/${userInfoForm.username}`;
     }
     const options = {
       method: 'GET',
@@ -102,13 +103,8 @@ function ProfileInfo() {
     }
   }
 
-  async function getUserJoinedGroups(role) {
-    let endpoint;
-    if (role === 'STUDENT') {
-      endpoint = `/studyGroup/active/${userInfoForm.username}`;
-    } else if (role === 'PROFESSOR') {
-      endpoint = `/lesson/active/${userInfoForm.username}`;
-    }
+  async function getUserJoinedGroups(type) {
+    const endpoint = `/${type}/active/${userInfoForm.username}`;
     const options = {
       method: 'GET',
       headers: {
@@ -118,8 +114,14 @@ function ProfileInfo() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        const data = await response.json();
-        setJoinedGroups(data);
+        const text = await response.text();
+        if (text) {
+          const data = JSON.parse(text);
+          if (type === 'studyGroup') setJoinedGroups(data);
+          else if (type === 'lesson') setJoinedLessons(data);
+        } else {
+          console.log('Empty response body');
+        }
       } else {
         console.log('response error');
       }
@@ -148,11 +150,16 @@ function ProfileInfo() {
     const fetchGroups = async () => {
       if (role) {
         await getUserGroups(role);
-        await getUserJoinedGroups(role);
+        await getUserJoinedGroups('studyGroup');
+        await getUserJoinedGroups('lesson');
       }
     };
     fetchGroups();
   }, [role]);
+
+  useEffect(() => {
+    setUserJoinedGroups(...joinedGroups, ...joinedLessons);
+  }, [joinedGroups, joinedLessons]);
 
   return (
     <div>
@@ -194,9 +201,21 @@ function ProfileInfo() {
             ) : (
               userGroups.map((item, index) =>
                 role === 'STUDENT' ? (
-                  <ActiveGroup key={index} group={item} />
+                  <ActiveGroup
+                    key={index}
+                    group={item}
+                    joinedGroups={joinedGroups.map(
+                      (group) => group.studyGroupId
+                    )}
+                  />
                 ) : role === 'PROFESSOR' ? (
-                  <ActiveLesson key={index} lesson={item} />
+                  <ActiveLesson
+                    key={index}
+                    lesson={item}
+                    joinedGroups={joinedLessons.map(
+                      (group) => group.studyGroupId
+                    )}
+                  />
                 ) : null
               )
             )}
@@ -204,16 +223,29 @@ function ProfileInfo() {
         )}
         {!showActive && (
           <div className="userGroups">
-            {joinedGroups.length === 0 && !showActive ? (
+            {userJoinedGroups.length === 0 ? (
               <p>Korisnik pridruzen niti jednoj grupi</p>
             ) : (
-              joinedGroups.map((item, index) =>
-                role === 'STUDENT' ? (
-                  <ActiveGroup key={index} group={item} />
-                ) : role === 'PROFESSOR' ? (
-                  <ActiveLesson key={index} lesson={item} />
-                ) : null
-              )
+              <>
+                {joinedGroups.map((item, index) => (
+                  <ActiveGroup
+                    key={index}
+                    group={item}
+                    joinedGroups={joinedGroups.map(
+                      (group) => group.studyGroupId
+                    )}
+                  />
+                ))}
+                {joinedLessons.map((item, index) => (
+                  <ActiveLesson
+                    key={index}
+                    lesson={item}
+                    joinedGroups={joinedLessons.map(
+                      (lesson) => lesson.lessonId
+                    )}
+                  />
+                ))}
+              </>
             )}
           </div>
         )}
