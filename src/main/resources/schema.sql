@@ -190,7 +190,7 @@ INSERT INTO Lessons (professor_id, subject, duration, max_participants, min_part
 VALUES (1,'Math', '60 minutes', 20, 5, '45.8132', '15.9770', 'Zagreb', 'MASS', '25.00', '2025-01-29', '09:00:00', '2025-01-27'),
     (2,'Physics', '90 minutes', 15, 3, '43.5081', ' 16.4402', 'Split', 'ONE_ON_ONE', '50.00', '2025-01-28', '14:30:00', '2025-01-26'),
     (1,'English', '45 minutes', 10, 2, '42.6410', '18.1106', 'Dubrovnik', 'MASS', '20.00', '2025-01-27', '11:00:00', '2025-01-25'),
-    (1,'Chemistry', '120 minutes', 25, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', '35.00', '2025-01-26', '15:00:00', '2025-01-24'),
+    (1,'Chemistry', '120 minutes', 2, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', '35.00', '2025-01-26', '15:00:00', '2025-01-24'),
     (2,'History', '50 minutes', 30, 8, '44.1178', '15.2272', 'Zadar', 'ONE_ON_ONE', '15.00', '2025-01-25', '10:00:00', '2025-01-23');
 
 -- LessonParticipant entries
@@ -207,7 +207,7 @@ VALUES (1,1, NOW()),
 
 -- StudyGroups entries
 INSERT INTO StudyGroups (group_name, location, x_coordinate, y_coordinate, date, time, max_members, description, expiration_date, creator_id)
-VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00:00', 15, 'Focus on algebra and calculus', '2025-01-18', 1),
+VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00:00', 2, 'Focus on algebra and calculus', '2025-01-18', 1),
      ('Physics Enthusiasts', 'Split', '43.5081', '16.4402', '2025-02-05', '14:30:00', 10, 'Discuss quantum mechanics and experiments', '2025-02-01', 2),
      ('Chemistry Basics', 'Rijeka', '45.3271', '14.4422', '2025-01-25', '16:00:00', 12, 'Introduction to organic and inorganic chemistry', '2025-01-22', 1),
      ('History Buffs', 'Osijek', '45.5600', '18.6758', '2025-03-01', '09:30:00', 8, 'Exploring World War II topics', '2025-02-28', 2),

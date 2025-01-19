@@ -24,6 +24,8 @@ public class LessonService {
     @Autowired
     private LessonParticipantRepository lessonParticipantRepository;
 
+    public Lesson findByLessonId(Long lessonId){ return lessonRepository.findByLessonId(lessonId);}
+
     public Lesson createLesson(Lesson lesson){ return lessonRepository.save(lesson);}
 
     public List<Lesson> getAllLessons(){ return lessonRepository.findAll();}
@@ -36,8 +38,9 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson -> (lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                        && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
                 ).collect(Collectors.toList());
     }
 
@@ -63,8 +66,9 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson -> (lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                        && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
                 ).collect(Collectors.toList());
     }
 
@@ -74,8 +78,9 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson -> (lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                        && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
                 ).collect(Collectors.toList());
 
     }
@@ -111,6 +116,7 @@ public class LessonService {
         lessonDto.setDate(lesson.getDate());
         lessonDto.setTime(lesson.getTime());
         lessonDto.setRegistrationDeadLine(lesson.getDate().minusDays(2));
+        lessonDto.setCurrentNumberOfMembers(lesson.getStudentParticipants().size());
 
         return lessonDto;
     }

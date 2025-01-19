@@ -25,6 +25,8 @@ public class StudyGroupService {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
 
+    public StudyGroup findByGroupId(Long groupId){ return studyGroupRepository.findById(groupId).get();}
+
     public StudyGroup createStudyGroup(StudyGroup studyGroup){ return studyGroupRepository.save(studyGroup);}
 
     public List<StudyGroup> getAllStudyGroups(){ return studyGroupRepository.findAll();}
@@ -38,8 +40,9 @@ public class StudyGroupService {
 
         return allStudyGroups.stream()
                 .filter(studyGroup ->
-                        studyGroup.getDate().isAfter(today) ||
-                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
+                        (studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
                 )
                 .collect(Collectors.toList());
     }
@@ -67,8 +70,9 @@ public class StudyGroupService {
         LocalTime now = LocalTime.now();
 
         return allStudyGroups.stream()
-                .filter(studyGroup -> studyGroup.getDate().isAfter(today) ||
-                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now))
+                .filter(studyGroup -> (studyGroup.getDate().isAfter(today) ||
+                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now)))
+                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
                 ).collect(Collectors.toList());
     }
 
@@ -101,6 +105,7 @@ public class StudyGroupService {
         dto.setDescription(studyGroup.getDescription());
         dto.setExpirationDate(studyGroup.getExpirationDate());
         dto.setUsername(studyGroup.getCreator().getUser().getUsername());
+        dto.setCurrentNumberOfMembers(studyGroup.getParticipants().size());
         return dto;
     }
 

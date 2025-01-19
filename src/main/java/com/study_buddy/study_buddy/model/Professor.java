@@ -18,10 +18,6 @@ public class Professor {
     @JoinColumn(name = "user_id", nullable = false, unique = true) // References the user_id column in the Users table
     private User user;
 
-    // CONNECTING TABLES PROFESSOR-LESSON
-    // Professor is owner of Lesson
-    @ManyToMany(mappedBy = "studentParticipants")
-    private List<Lesson> lessons;
 
     // Constructors
     public Professor () {}
@@ -40,7 +36,4 @@ public class Professor {
 
     public void setUser(User user) { this.user = user; }
 
-    public List<Lesson> getLessons() { return lessons; }
-
-    public void setLessons(List<Lesson> lessons) { this.lessons = lessons; }
 }

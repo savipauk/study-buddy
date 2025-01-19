@@ -170,15 +170,28 @@ public class LessonController {
     }
 
     // Add a student to a lesson
-    @PostMapping("/{lessonId}/add-student/{username}")
-    public ResponseEntity<String> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
+    @PostMapping("/{lessonId}/add-student/{email}")
+    public ResponseEntity<String> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("email") String email) {
+        User user = userService.getUserByEmail(email);
         Student student = studentService.getStudentByUserId(user.getUserId());
         Lesson lesson = lessonService.getLessonById(lessonId);
 
         lessonParticipantService.addStudentToLesson(student, lesson);
 
         return ResponseEntity.ok("Student added to the group successfully.");
+    }
+
+    @DeleteMapping("/{lessonId}/remove-student/{email}")
+    public ResponseEntity<Void> removeStudentFromLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("email") String email) {
+        try {
+            Lesson lesson = lessonService.findByLessonId(lessonId);
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            lessonParticipantService.deleteByLessonIdAndStudentId(lessonId, student.getStudentId());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
 }

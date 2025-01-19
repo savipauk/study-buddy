@@ -5,6 +5,11 @@ import com.study_buddy.study_buddy.model.GroupMemberID;
 import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.StudyGroup;
 import com.study_buddy.study_buddy.repository.GroupMemberRepository;
+import com.study_buddy.study_buddy.repository.StudentRepository;
+import com.study_buddy.study_buddy.repository.StudyGroupRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +19,18 @@ import java.util.List;
 @Service
 public class GroupMemberService {
 
-    private final GroupMemberRepository groupMemberRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public GroupMemberService(GroupMemberRepository groupMemberRepository) {
+
+    private final GroupMemberRepository groupMemberRepository;
+    private final StudyGroupRepository studyGroupRepository;
+    private final StudentRepository studentRepository;
+
+    public GroupMemberService(GroupMemberRepository groupMemberRepository, StudyGroupRepository studyGroupRepository, StudentRepository studentRepository) {
         this.groupMemberRepository = groupMemberRepository;
+        this.studyGroupRepository = studyGroupRepository;
+        this.studentRepository = studentRepository;
     }
 
     //Add a student to a study group.
@@ -37,4 +50,31 @@ public class GroupMemberService {
     }
 
     public List<GroupMember> getStudyGroupsByMemberId(Student memberId){ return groupMemberRepository.findByMemberId(memberId);}
+
+    @Transactional
+    public void deleteByGroupIdAndStudentId(Long groupId, Long studentId) {
+        // Remove directly via repository if applicable
+        groupMemberRepository.deleteByStudentIdAndGroupId(studentId, groupId);
+
+        // Flush and clear the persistence context to avoid conflicts
+        /*entityManager.flush();
+        entityManager.clear();*/
+
+        // Optionally fetch and update entities
+        StudyGroup studyGroup = studyGroupRepository.findById(groupId)
+                .orElseThrow(() -> new EntityNotFoundException("Study group not found"));
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+
+
+        // Update relationships
+
+        studyGroup.getParticipants().remove(student);
+        student.getStudyGroups().remove(studyGroup);
+
+        // Persist changes
+        studyGroupRepository.save(studyGroup);
+        studentRepository.save(student);
+    }
+
 }
