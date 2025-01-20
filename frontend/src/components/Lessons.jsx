@@ -166,7 +166,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
     try {
       const data2 = await createNewLesson();
       if (!data2 || !data2.lessonId) {
-        console.error('Greška: Nije moguće dobiti lessonpId iz odgovora.');
+        console.error('Greška: Nije moguće dobiti lessonId iz odgovora.');
         return;
       }
       if (file) {
