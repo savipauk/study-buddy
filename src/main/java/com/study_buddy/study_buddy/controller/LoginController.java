@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.study_buddy.study_buddy.model.Professor;
+import com.study_buddy.study_buddy.model.Status;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +56,13 @@ public class LoginController {
 
         try {
             User user = oAuthService.processGoogleTokenResponse(credential);
+
             if (userService.userExistsByEmail(user.getEmail())) {
                 registration = "LOGIN_OAUTH_OK";
 
             } else {
                 registration = "REGISTRATION_OAUTH_OK";
+                user.setStatus(Status.ACTIVE);
                 userService.createUser(user);
             }
 
@@ -119,6 +122,7 @@ public class LoginController {
         user.setGender(data.getGender());
         user.setDateOfBirth(data.getDateOfBirth());
         user.setCity(data.getCity());
+        user.setStatus(Status.ACTIVE);
         userService.createUser(user);
 
         // Create Authentication object
