@@ -70,4 +70,32 @@ public class LessonParticipantService {
         lessonRepository.save(lesson);
         studentRepository.save(student);
     }
+
+    @Transactional
+    public void deleteByStudentId(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+
+        List<LessonParticipant> lessonParticipantsLessons = lessonParticipantRepository.findByParticipantId(student);
+
+        for (LessonParticipant lp : lessonParticipantsLessons){
+            Lesson lesson = lp.getLesson();
+
+            // Update relationships
+            lesson.getStudentParticipants().remove(student);
+            student.getLessons().remove(lesson);
+
+            // Persist changes
+            lessonRepository.save(lesson);
+            studentRepository.save(student);
+
+        }
+
+        // Flush and clear the persistence context to avoid conflicts
+        /*entityManager.flush();
+        entityManager.clear();*/
+
+        // Remove directly via repository if applicable
+        lessonParticipantRepository.deleteByStudentId(studentId);
+    }
 }

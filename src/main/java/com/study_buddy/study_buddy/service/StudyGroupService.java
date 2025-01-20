@@ -43,9 +43,12 @@ public class StudyGroupService {
                         (studyGroup.getDate().isAfter(today) ||
                                 (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
                                 && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
+                                && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
                 )
                 .collect(Collectors.toList());
     }
+
+    // Get all active groups in which is Student member joined in
     public List<StudyGroup> getActiveStudyGroupsForMember(Student member) {
         List<GroupMember> groupMembers = groupMemberRepository.findByMemberId(member);
         List<StudyGroup> allStudyGroupsByMember = groupMembers.stream()
@@ -56,8 +59,9 @@ public class StudyGroupService {
 
         return allStudyGroupsByMember.stream()
                 .filter(studyGroup ->
-                        studyGroup.getDate().isAfter(today) ||
-                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
+                        (studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                                        && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
                 )
                 .collect(Collectors.toList());
     }
@@ -70,9 +74,10 @@ public class StudyGroupService {
         LocalTime now = LocalTime.now();
 
         return allStudyGroups.stream()
-                .filter(studyGroup -> (studyGroup.getDate().isAfter(today) ||
-                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now)))
+                .filter(studyGroup ->
+                        (studyGroup.getDate().isAfter(today) || (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now)))
                                 && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
+                                && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
     }
 

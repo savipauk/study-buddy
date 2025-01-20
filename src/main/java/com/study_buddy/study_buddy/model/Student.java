@@ -26,12 +26,14 @@ public class Student{
 
     // CONNECTING TABLES STUDENT-STUDYGROUP
     // Student is perticipant of studyGroup
-    @ManyToMany(mappedBy = "participants", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    //@ManyToMany(mappedBy = "participants", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "participants")
     private List<StudyGroup> studyGroups;
 
     // CONNECTING TABLES STUDENT-LESSON
     // Student is participang of lesson
-    @ManyToMany(mappedBy = "studentParticipants", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    //@ManyToMany(mappedBy = "studentParticipants", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "studentParticipants")
     private List<Lesson> lessons;
 
 

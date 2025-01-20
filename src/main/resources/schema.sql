@@ -27,6 +27,7 @@ CREATE TABLE Users (
     gender ENUM('M', 'F', 'NOTDEFINED'),
     city VARCHAR(100),
     role ENUM('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED') NOT NULL,
+    profile_status ENUM('ACTIVE', 'DEACTIVATED'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
@@ -63,10 +64,11 @@ CREATE TABLE StudyGroups (
     description TEXT,
     expiration_date DATE NOT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (creator_id) REFERENCES Students(student_id)
+    --Use this if we don't want to completely delete all studyGroup created by student with creator_id
+    --FOREIGN KEY (creator_id) REFERENCES Students(student_id)
 
     --Use this if want to completely delete all studyGroup created by student with creator_id
-    -- FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (
@@ -100,10 +102,11 @@ CREATE TABLE Lessons (
     time TIME NOT NULL,
     registration_deadline DATE,
     PRIMARY KEY (lesson_id),
-    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
+    --Use this if we don't want to completely delete all lessons created by professor with professor_id
+    --FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
 
     --Use this if we want to completely delete all lessons created by professor with professor_id
-    -- FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
+    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
 );
 
 CREATE TABLE LessonParticipants (
@@ -157,14 +160,14 @@ CREATE TABLE Materials (
 );
 
 -- User entries
-INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city)
-VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb'),
-    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb'),
-    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb'),
-    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb'),
-    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb'),
-    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb'),
-    ('student3@example.com', '$2a$10$K.2FEUx5RNYnfs6VeO79aedlChH.uFru9lh0DdyFcXrJ9gR7hmJiO', 'student3','','','Štefica', 'Štefić','Žena, majka, kraljica', 'accessToken3', 'refreshToken3', 'STUDENT', 'F', '1970-04-01', 'Bedekovčina');
+INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city, profile_status)
+VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb', 'ACTIVE'),
+    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb', 'ACTIVE'),
+    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb', 'ACTIVE'),
+    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb', 'ACTIVE'),
+    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb', 'ACTIVE'),
+    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb', 'ACTIVE'),
+    ('student3@example.com', '$2a$10$K.2FEUx5RNYnfs6VeO79aedlChH.uFru9lh0DdyFcXrJ9gR7hmJiO', 'student3','','','Štefica', 'Štefić','Žena, majka, kraljica', 'accessToken3', 'refreshToken3', 'STUDENT', 'F', '1970-04-01', 'Bedekovčina', 'ACTIVE');
 -- student1 password: 'password123'
 -- student2 password: 'password345'
 -- student3 password: '12345678i'

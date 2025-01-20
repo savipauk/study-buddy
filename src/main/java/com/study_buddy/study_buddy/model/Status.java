@@ -4,7 +4,10 @@ public enum Status {
     OPEN("OPEN"),
     CLOSED("CLOSED"),
     IN_PROGRESS("IN_PROGRESS"),
-    REJECTED("REJECTED");
+    REJECTED("REJECTED"),
+    ACTIVE("ACTIVE"),
+    DEACTIVATED("DEACTIVATED");
+
 
     private final String value;
 

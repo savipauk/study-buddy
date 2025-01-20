@@ -1,5 +1,7 @@
 package com.study_buddy.study_buddy.service;
 
+import com.study_buddy.study_buddy.model.LessonParticipant;
+import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import com.study_buddy.study_buddy.dto.Profile;
@@ -35,6 +37,12 @@ public class UserService {
 
     @Autowired
     private LessonService lessonService;
+
+    @Autowired
+    private GroupMemberService groupMemberService;
+
+    @Autowired
+    private LessonParticipantService lessonParticipantService;
 
     // Password Encoder
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -107,14 +115,23 @@ public class UserService {
 
         // Handle special cases for STUDENT or PROFESSOR roles
         // To completely delete all studyGroups and Lessons created by deleted student and professor comment this if
-        if (user.getRole().getValue().equals("STUDENT") ){
+        /*if (user.getRole().getValue().equals("STUDENT") ){
             // Delete all related StudyGroups
             studyGroupService.deleteAllStudyGroupsByCreator(user);
         } else if(user.getRole().getValue().equals("PROFESSOR")){
             // Delete all related Lessons
             lessonService.deleteAllLessonsByProfessor(user);
-        }
+        }*/
         userRepository.deleteById(user.getUserId());
+    }
+
+    // Deactivate user
+    public void deactivateUser(User user){
+        if (user.getRole().getValue().equals("STUDENT") ){
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            groupMemberService.deleteByStudentId(student.getStudentId());
+            lessonParticipantService.deleteByStudentId(student.getStudentId());
+        }
     }
 
     // Save profile picture
@@ -132,10 +149,6 @@ public class UserService {
 
         return user.getProfilePicture();
     }
-
-
-
-
 
     public Profile buildProfileResponse(User user) {
         Profile profile = new Profile();

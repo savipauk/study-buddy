@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.study_buddy.study_buddy.model.Professor;
+import com.study_buddy.study_buddy.model.Status;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +56,13 @@ public class LoginController {
 
         try {
             User user = oAuthService.processGoogleTokenResponse(credential);
+
             if (userService.userExistsByEmail(user.getEmail())) {
                 registration = "LOGIN_OAUTH_OK";
 
             } else {
                 registration = "REGISTRATION_OAUTH_OK";
+                user.setStatus(Status.ACTIVE);
                 userService.createUser(user);
             }
 
@@ -71,7 +74,8 @@ public class LoginController {
                     "token", user.getAccess_Token(),
                     "username", user.getUsername(),
                     "message", "Registration successful",
-                    "registration", registration
+                    "registration", registration,
+                    "status", user.getStatus().getValue()
             );
 
 
@@ -119,6 +123,7 @@ public class LoginController {
         user.setGender(data.getGender());
         user.setDateOfBirth(data.getDateOfBirth());
         user.setCity(data.getCity());
+        user.setStatus(Status.ACTIVE);
         userService.createUser(user);
 
         // Create Authentication object
@@ -173,7 +178,9 @@ public class LoginController {
                     "email",user.getEmail(),
                     "passwordCheck", "OK",
                     "message", "Successful login",
-                    "studyRole", user.getRole().getValue());
+                    "studyRole", user.getRole().getValue(),
+                    "status", user.getStatus().getValue());
+
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())

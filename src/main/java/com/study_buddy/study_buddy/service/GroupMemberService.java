@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -75,6 +76,33 @@ public class GroupMemberService {
         // Persist changes
         studyGroupRepository.save(studyGroup);
         studentRepository.save(student);
+    }
+
+    @Transactional
+    public void deleteByStudentId(Long studentId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        
+        List<GroupMember> groupMembersStudyGroups = groupMemberRepository.findByMemberId(student);
+
+        for (GroupMember gm:groupMembersStudyGroups){
+            StudyGroup studyGroup = gm.getGroup();
+
+            // Update relationships
+            studyGroup.getParticipants().remove(student);
+            student.getStudyGroups().remove(studyGroup);
+
+            // Persist changes
+            studyGroupRepository.save(studyGroup);
+            studentRepository.save(student);
+        }
+        
+        // Remove directly via repository if applicable
+        groupMemberRepository.deleteByStudentId(studentId);
+
+        // Flush and clear the persistence context to avoid conflicts
+        /*entityManager.flush();
+        entityManager.clear();*/
     }
 
 }
