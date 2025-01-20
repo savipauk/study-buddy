@@ -74,7 +74,8 @@ public class LoginController {
                     "token", user.getAccess_Token(),
                     "username", user.getUsername(),
                     "message", "Registration successful",
-                    "registration", registration
+                    "registration", registration,
+                    "status", user.getStatus().getValue()
             );
 
 
@@ -177,7 +178,9 @@ public class LoginController {
                     "email",user.getEmail(),
                     "passwordCheck", "OK",
                     "message", "Successful login",
-                    "studyRole", user.getRole().getValue());
+                    "studyRole", user.getRole().getValue(),
+                    "status", user.getStatus().getValue());
+
         }
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + user.getAccess_Token())
