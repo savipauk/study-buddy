@@ -119,12 +119,17 @@ public class UserController {
         User user = userService.getUserByEmail(email);
         if (user==null){ ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");}
 
-        userService.deactivateUser(user);
+        try{
+            userService.deactivateUser(user);
 
-        user.setStatus(Status.DEACTIVATED);
-        userService.createUser(user);
+            user.setStatus(Status.DEACTIVATED);
+            userService.createUser(user);
 
-        return ResponseEntity.ok().body("user_deactivated");
+            return ResponseEntity.ok().body("user_deactivated");
+
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     // POST - deactivate profile
