@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import StudentProfile from './StudentProfile';
 import { serverFetch } from '../hooks/serverUtils';
+import { useEffect } from 'react';
 
 function StudyGroupInfo({ group, onClose, joinedGroups }) {
   const [showProfile, setShowProfile] = useState(false);
@@ -14,6 +15,7 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
     lng: parseFloat(group.yCoordinate)
   };
   const [locationName, setLocationName] = useState();
+  const [materials, setMaterials] = useState([]);
 
   const joined = joinedGroups.includes(group.studyGroupId);
 
@@ -27,6 +29,26 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
       }
     });
   };
+
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const response = await serverFetch(
+          `/material/group/${group.studyGroupId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setMaterials(data);
+        } else {
+          console.error('Failed to fetch materials');
+        }
+      } catch (error) {
+        console.error('Error fetching materials:', error);
+      }
+    };
+
+    fetchMaterials();
+  }, [group.studyGroupId]);
 
   const handleProfileClick = () => {
     setShowProfile(true);
@@ -134,6 +156,26 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
           <div className="aboutLableWrapper">
             <label>{group.description}</label>
           </div>
+        </div>
+        <div className="infoGroup">
+          <label>Priložene datoteke</label>
+          {materials.length > 0 ? (
+            <ul>
+              {materials.map((material) => (
+                <li key={material.id}>
+                  <a
+                    href={`/material/download/${material.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {material.fileName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Nema priloženih datoteka.</p>
+          )}
         </div>
         <div className="joinGroupButton">
           {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}

@@ -4,7 +4,7 @@ import { GoogleMap } from '@react-google-maps/api';
 import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProfessorProfile from './ProfessorProfile';
 import { serverFetch } from '../hooks/serverUtils';
 
@@ -14,6 +14,7 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
     lng: parseFloat(lesson.yCoordinate)
   };
   const [locationName, setLocationName] = useState('');
+  const [materials, setMaterials] = useState([]);
   const [showProfile, setShowProfile] = useState(false);
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
@@ -25,6 +26,26 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
       }
     });
   };
+
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const response = await serverFetch(
+          `/material/lesson/${lesson.lessonId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setMaterials(data);
+        } else {
+          console.error('Failed to fetch materials');
+        }
+      } catch (error) {
+        console.error('Error fetching materials:', error);
+      }
+    };
+
+    fetchMaterials();
+  }, [lesson.lessonId]);
 
   const joined = joinedGroups.includes(lesson.lessonId);
 
@@ -171,6 +192,26 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
             </div>
           </div>
         )}
+        <div className="infoGroup">
+          <label>Priložene datoteke</label>
+          {materials.length > 0 ? (
+            <ul>
+              {materials.map((material) => (
+                <li key={material.id}>
+                  <a
+                    href={`/material/download/${material.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {material.fileName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Nema priloženih datoteka.</p>
+          )}
+        </div>
         <div className="joinGroupButton">
           {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}
           {joined && <button onClick={handleLeaveGroup}>Napusti grupu!</button>}
