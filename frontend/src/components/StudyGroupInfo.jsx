@@ -164,9 +164,8 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
               {materials.map((material) => (
                 <li key={material.id}>
                   <a
-                    href={`/material/download/${material.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`data:${material.mimeType};base64,${material.fileData}`}
+                    download={material.fileName}
                   >
                     {material.fileName}
                   </a>
