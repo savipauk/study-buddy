@@ -116,7 +116,8 @@ public class LessonService {
         lessonDto.setDate(lesson.getDate());
         lessonDto.setTime(lesson.getTime());
         lessonDto.setRegistrationDeadLine(lesson.getDate().minusDays(2));
-        lessonDto.setCurrentNumberOfMembers(lesson.getStudentParticipants().size());
+        if (lesson.getStudentParticipants()==null){ lessonDto.setCurrentNumberOfMembers(0); }
+        else { lessonDto.setCurrentNumberOfMembers(lesson.getStudentParticipants().size()); }
 
         return lessonDto;
     }

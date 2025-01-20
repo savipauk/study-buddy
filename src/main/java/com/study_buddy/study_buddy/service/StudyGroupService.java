@@ -105,7 +105,8 @@ public class StudyGroupService {
         dto.setDescription(studyGroup.getDescription());
         dto.setExpirationDate(studyGroup.getExpirationDate());
         dto.setUsername(studyGroup.getCreator().getUser().getUsername());
-        dto.setCurrentNumberOfMembers(studyGroup.getParticipants().size());
+        if (studyGroup.getParticipants()==null) {dto.setCurrentNumberOfMembers(0);}
+        else {dto.setCurrentNumberOfMembers(studyGroup.getParticipants().size());}
         return dto;
     }
 
