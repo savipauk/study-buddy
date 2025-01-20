@@ -31,8 +31,8 @@ function UserForm() {
   const [userHash, setUserHash] = useState('');
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
-
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const [showDeactivationWindow, setShowDeactivationWindow] = useState(false);
 
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
@@ -57,6 +57,12 @@ function UserForm() {
   const handlePasswordSave = (hash) => {
     setUserHash(hash);
     setShowPasswordWindow(false);
+  };
+  const handleDeactivationProfile = () => {
+    setShowDeactivationWindow(true);
+  };
+  const handleCloseDeactivationWindow = () => {
+    setShowDeactivationWindow(false);
   };
 
   useEffect(() => {
@@ -121,7 +127,7 @@ function UserForm() {
       if (response.ok) {
         console.log('Profilna slika uspješno dodana.');
         const updatedResponse = await serverFetch(
-          `http://localhost:8080/users/profile-picture/${userInfoForm.Username}`,
+          `/profile-picture/${userInfoForm.Username}`,
           {
             method: 'GET',
             headers: {
@@ -136,6 +142,31 @@ function UserForm() {
       } else {
         console.error('Profilna slika nije uspješno dodana', response.status);
       }
+    }
+  };
+
+  const handleSubmitDeactivation = async (reason, password) => {
+    const userEmail = localStorage.getItem('user_email');
+    const data = { reason, password, email: userEmail };
+
+    const endpoint = `/users/deactivate`; //TODO: promjeni ovo s backom
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        navigate('/users/home');
+      } else {
+        console.error('Greška prilikom deaktivacije.');
+      }
+    } catch (error) {
+      console.error('Greška:', error);
+    } finally {
+      setShowDeactivationWindow(false);
     }
   };
 
@@ -225,7 +256,13 @@ function UserForm() {
         </div>
         <div className="editWrapper">
           <button className="editButton" onClick={handleEditClick}>
-            Uredi profil!
+            Uredite profil!
+          </button>
+          <button
+            className="deactivateButton"
+            onClick={handleDeactivationProfile}
+          >
+            Deaktivirajte profil!
           </button>
         </div>
         {showEditWindow && (
@@ -241,6 +278,12 @@ function UserForm() {
             onSave={handlePasswordSave}
             onClose={handleCloseWindow}
             hash={userHash}
+          />
+        )}
+        {showDeactivationWindow && (
+          <DeactivationWindow
+            onSubmit={handleSubmitDeactivation}
+            onClose={handleCloseDeactivationWindow}
           />
         )}
       </div>
@@ -510,6 +553,60 @@ PasswordChange.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   hash: PropTypes.string.isRequired
+};
+
+function DeactivationWindow({ onSubmit, onClose }) {
+  const [reason, setReason] = useState('');
+  const [password, setPassword] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
+
+  const handleReasonChange = (e) => setReason(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  const handleSubmit = () => {
+    if (!reason) {
+      setValidationMessage('Molimo unesite razlog deaktivacije.');
+      return;
+    }
+    if (!password) {
+      setValidationMessage('Molimo unesite lozinku.');
+      return;
+    }
+    onSubmit(reason, password);
+  };
+
+  return (
+    <div className="modal">
+      <div className="modalContent">
+        <h1>Deaktivirajte Profil</h1>
+        <p>Unesite razlog deaktivacije:</p>
+        <textarea
+          className="inputEdit"
+          value={reason}
+          onChange={handleReasonChange}
+        ></textarea>
+        <p>Potvrdite lozinkom:</p>
+        <input
+          className="inputEdit"
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        <p className="errorMessage">{validationMessage}</p>
+        <button className="EditWindowButton" onClick={handleSubmit}>
+          Potvrdi
+        </button>
+        <button className="EditWindowButton" onClick={onClose}>
+          Odbaci
+        </button>
+      </div>
+    </div>
+  );
+}
+
+DeactivationWindow.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default Profile;

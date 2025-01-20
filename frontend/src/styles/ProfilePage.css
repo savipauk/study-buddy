@@ -239,6 +239,11 @@
   padding: 2px;
 }
 
+.deactivateButton {
+  color: white;
+  font-size: 1em;
+}
+
 .editProfileButton {
   background-color: inherit;
   color: whitesmoke;
@@ -307,4 +312,14 @@
 .groupChoice button:hover {
   transform: scale(1.05);
   background-color: #3b80db;
+}
+
+.modalContent h1 {
+  font-size: 2em;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.modalContent {
+  border: 2px solid whitesmoke;
 }
