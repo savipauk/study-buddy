@@ -112,6 +112,17 @@ public class UserController {
                 .body(profilePicture);
     }
 
+    // POST - deactivate profile
+    @PostMapping(value = "/profile/deactivate/{email}")
+    public ResponseEntity<String> deactivateProfile(@PathVariable("email") String email){
+        User user = userService.getUserByEmail(email);
+        if (user==null){ ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");}
+
+        userService.deactivateUser(user);
+
+        return ResponseEntity.ok().body("user_deactivated");
+    }
+
 
     // POST /profile - Update the user's profile
     @PostMapping(value = "/profile/update/{email}", produces = "application/json")

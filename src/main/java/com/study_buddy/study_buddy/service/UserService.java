@@ -1,5 +1,7 @@
 package com.study_buddy.study_buddy.service;
 
+import com.study_buddy.study_buddy.model.LessonParticipant;
+import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import com.study_buddy.study_buddy.dto.Profile;
@@ -38,6 +40,9 @@ public class UserService {
 
     @Autowired
     private GroupMemberService groupMemberService;
+
+    @Autowired
+    private LessonParticipantService lessonParticipantService;
 
     // Password Encoder
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -120,6 +125,15 @@ public class UserService {
         userRepository.deleteById(user.getUserId());
     }
 
+    // Deactivate user
+    public void deactivateUser(User user){
+        if (user.getRole().getValue().equals("STUDENT") ){
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            groupMemberService.deleteByStudentId(student.getStudentId());
+            lessonParticipantService.deleteByStudentId(student.getStudentId());
+        }
+    }
+
     // Save profile picture
     public void saveProfilePicture(Long userId, MultipartFile file) throws IOException {
         User user = userRepository.findById(userId)
@@ -135,10 +149,6 @@ public class UserService {
 
         return user.getProfilePicture();
     }
-
-
-
-
 
     public Profile buildProfileResponse(User user) {
         Profile profile = new Profile();
