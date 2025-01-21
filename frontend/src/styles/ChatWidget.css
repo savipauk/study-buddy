@@ -2,3 +2,19 @@
   opacity: 0;
   transition: opacity 2s ease;
 }
+
+#freechatpopup h1, .freechat-popup-content, #freechat input {
+  color: black;
+}
+
+#freechatpopup input {
+  background-color: white;
+}
+
+#freechatpopup input::placeholder {
+  color: #777777;
+}
+
+#freechat-bottom-cta {
+  color: white;
+}
