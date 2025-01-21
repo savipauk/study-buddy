@@ -150,7 +150,6 @@ function UserForm() {
       console.error('User email not found in local storage.');
       return;
     }
-    const data = { email: userEmail };
 
     const confirmDeactivation = window.confirm(
       'Jeste li sigurni da želite deaktivirati profil? Ako izvršite ovu radnju biti ćete izbačeni iz svih StudyGroup-a i Instrukcija u koje ste prijavljeni.'
@@ -161,8 +160,7 @@ function UserForm() {
     const endpoint = `/users/profile/deactivate/${userEmail}`;
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'application/json' }
     };
 
     try {
