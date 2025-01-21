@@ -38,7 +38,7 @@ function ActivateProfile() {
   };
 
   return (
-    <div className="wholePage">
+    <div className="wholeActivePage">
       <div className="activateWrapper">
         <h1>Aktivacija profila</h1>
         <p>
