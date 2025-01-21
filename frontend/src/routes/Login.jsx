@@ -99,7 +99,11 @@ function LoginForm() {
         const registration = data.registration;
         const email = data.email;
         const role = data.studyRole;
-        if (registration === 'REGISTRATION_OAUTH_OK') {
+        if (data.status === 'DEACTIVATED') {
+          localStorage.setItem('user_email', data.email);
+          navigate('/activateProfile');
+          return;
+        } else if (registration === 'REGISTRATION_OAUTH_OK') {
           signInWithGoogle(credential, email, role, 'false');
           navigate('/users/home');
         } else if (registration === 'LOGIN_OAUTH_OK') {
