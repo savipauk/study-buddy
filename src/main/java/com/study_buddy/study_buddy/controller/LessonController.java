@@ -171,15 +171,23 @@ public class LessonController {
 
     // Add a student to a lesson
     @PostMapping("/{lessonId}/add-student/{email}")
-    public ResponseEntity<String> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("email") String email) {
+    public ResponseEntity<Map<String, String>> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("email") String email) {
         try{
             User user = userService.getUserByEmail(email);
             Student student = studentService.getStudentByUserId(user.getUserId());
             Lesson lesson = lessonService.getLessonById(lessonId);
 
-            lessonParticipantService.addStudentToLesson(student, lesson);
+            if(lesson.getStudentParticipants()==null){
+                lessonParticipantService.addStudentToLesson(student, lesson);
+                return ResponseEntity.ok(Map.of("message", "OK"));
+            } else if (lesson.getStudentParticipants().size()<lesson.getMaxMembers()) {
+                lessonParticipantService.addStudentToLesson(student, lesson);
+                return ResponseEntity.ok(Map.of("message", "OK"));
+            } else {
+                lessonParticipantService.addStudentToLesson(student, lesson);
+                return ResponseEntity.ok(Map.of("message", "GROUP_FULL"));
+            }
 
-            return ResponseEntity.ok("Student added to the group successfully.");
 
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
