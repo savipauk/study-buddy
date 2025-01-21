@@ -57,7 +57,7 @@ public class LoginController {
         try {
             User user = oAuthService.processGoogleTokenResponse(credential);
 
-            if (userService.userExistsByEmail(user.getEmail())) {
+            if (userService.userExistsByEmail(user.getEmail()) && !user.getRole().getValue().equals("UNASSIGNED")) {
                 registration = "LOGIN_OAUTH_OK";
 
             } else {
