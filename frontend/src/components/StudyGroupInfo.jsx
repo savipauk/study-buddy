@@ -69,7 +69,7 @@ function StudyGroupInfo({ group, onClose, joinedGroups, onLeave }) {
     try {
       const response = await joinGroup(group.studyGroupId, email);
       if (response.ok) {
-        const data = response.json();
+        const data = await response.json();
         if (data.message === 'OK') {
           joinedGroups.push(group.studyGroupId);
           setJoinedGroups(joinedGroups);
@@ -140,16 +140,16 @@ function StudyGroupInfo({ group, onClose, joinedGroups, onLeave }) {
   }
 
   return (
-    <div className='groupInfoWrapper'>
-      <div className='exit'>
+    <div className="groupInfoWrapper">
+      <div className="exit">
         <button onClick={onClose}>
-          <i className='fa-regular fa-circle-xmark'></i>
+          <i className="fa-regular fa-circle-xmark"></i>
         </button>
       </div>
-      <div className='allGroupInfoWrapper'>
-        <div className='infoGroup'>
-          <div className='groupTitle'>
-            <div className='currentMembers'>
+      <div className="allGroupInfoWrapper">
+        <div className="infoGroup">
+          <div className="groupTitle">
+            <div className="currentMembers">
               <label>{'StudyGroup'}</label>
               <label>
                 Broj prijavljenih : {currentNumberOfMembers}/{group.maxMembers}
@@ -158,44 +158,44 @@ function StudyGroupInfo({ group, onClose, joinedGroups, onLeave }) {
             <h2>{group.groupName}</h2>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Organizator</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{group.username}</label>
           </div>
-          <div className='lablesWrapper'>
-            <button className='profileInfo' onClick={handleProfileClick}>
-              <i className='fa-regular fa-user'></i>
+          <div className="lablesWrapper">
+            <button className="profileInfo" onClick={handleProfileClick}>
+              <i className="fa-regular fa-user"></i>
             </button>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Datum</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{group.date}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Vrijeme</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{group.time}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Opis</label>
           </div>
-          <div className='aboutLableWrapper'>
+          <div className="aboutLableWrapper">
             <label>{group.description}</label>
           </div>
         </div>
-        <div className='infoGroup'>
+        <div className="infoGroup">
           <label>Priložene datoteke</label>
           {materials.length > 0 ? (
             <ul>
@@ -214,17 +214,17 @@ function StudyGroupInfo({ group, onClose, joinedGroups, onLeave }) {
             <p>Nema priloženih datoteka.</p>
           )}
         </div>
-        <div className='joinGroupButton'>
+        <div className="joinGroupButton">
           {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}
           {joined && <button onClick={handleLeaveGroup}>Napusti grupu!</button>}
         </div>
       </div>
-      <div className='mapsLocation'>
-        <div className='locationName'>
+      <div className="mapsLocation">
+        <div className="locationName">
           <label>Lokacija:</label>
           <label>{locationName}</label>
         </div>
-        <div className='maps'>
+        <div className="maps">
           <GoogleMap
             center={mapLocation}
             zoom={15}

@@ -67,7 +67,7 @@ function LessonInfo({ lesson, onClose, joinedGroups, onLeave }) {
     try {
       const response = await joinGroup(lesson.lessonId, email);
       if (response.ok) {
-        const data = response.json();
+        const data = await response.json();
         if (data.message === 'OK') {
           joinedGroups.push(lesson.lessonId);
           setJoinedGroups(joinedGroups);

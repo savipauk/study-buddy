@@ -9,6 +9,7 @@ import {
 } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 function Profile() {
   return (
@@ -32,7 +33,7 @@ function UserForm() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-
+  const { signOut } = useAuth();
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
   );
@@ -167,6 +168,7 @@ function UserForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         console.log('Profil je uspješno deaktiviran.');
+        signOut();
         navigate('/');
       } else {
         console.error('Greška prilikom deaktivacije.');
@@ -201,8 +203,7 @@ function UserForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         console.log('Profil uspješno izbrisan.');
-        localStorage.removeItem('user_email');
-        localStorage.setItem('isSignedIn', false);
+        signOut();
         navigate('/');
       } else {
         console.error('Failed to delete the profile.', response.status);
