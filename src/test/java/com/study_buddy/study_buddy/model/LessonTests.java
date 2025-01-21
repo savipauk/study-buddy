@@ -40,7 +40,7 @@ public class LessonTests {
         user.setFirstName("Jane");
         user.setLastName("Doe");
         user.setDescription("Math lover!");
-        user.setRole(StudyRole.STUDENT);
+        user.setRole(StudyRole.PROFESSOR);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         user.setDateOfBirth(LocalDate.of(2003,1,1));
