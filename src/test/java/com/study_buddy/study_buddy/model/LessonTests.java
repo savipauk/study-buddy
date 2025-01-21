@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class LessonTests {
 
-    Lesson lesson;
-    Professor professor;
-    User user;
+    private Lesson lesson;
+    private Professor professor;
+    private User user;
 
     @BeforeAll
     static void setUpBeforeClass(){

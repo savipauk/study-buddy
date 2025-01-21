@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class StudyGroupTests {
-    StudyGroup studyGroup;
-    Student student;
-    User user;
+    private StudyGroup studyGroup;
+    private Student student;
+    private User user;
 
     @BeforeAll
     static void setUpBeforeClass(){

@@ -15,10 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class ReportTests {
-    Professor professor;
-    User user;
-    User newUser;
-    Report report;
+    private User user;
+    private User newUser;
+    private Report report;
 
     @BeforeAll
     static void setUpBeforeClass(){
