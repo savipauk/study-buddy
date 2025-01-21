@@ -64,7 +64,7 @@ public class StudyGroupTests {
     }
 
     @Test
-    void testStudyGroup() throws Exception {
+    void testStudyGroupProperties() throws Exception {
         assertNotNull(studyGroup);
         assertEquals(10, studyGroup.getMaxMembers());
         assertEquals(LocalDate.of(2025, 2, 15),studyGroup.getDate());
