@@ -127,7 +127,7 @@ function UserForm() {
       if (response.ok) {
         console.log('Profilna slika uspješno dodana.');
         const updatedResponse = await serverFetch(
-          `/profile-picture/${userInfoForm.Username}`,
+          `/users/profile-picture/${userInfoForm.Username}`,
           {
             method: 'GET',
             headers: {
@@ -138,6 +138,7 @@ function UserForm() {
         if (updatedResponse.ok) {
           const blob = await updatedResponse.blob();
           setProfilePictureUrl(URL.createObjectURL(blob));
+          //window.location.reload();
         }
       } else {
         console.error('Profilna slika nije uspješno dodana', response.status);
@@ -159,7 +160,7 @@ function UserForm() {
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        navigate('/users/home');
+        navigate('/');
       } else {
         console.error('Greška prilikom deaktivacije.');
       }
@@ -167,6 +168,41 @@ function UserForm() {
       console.error('Greška:', error);
     } finally {
       setShowDeactivationWindow(false);
+    }
+  };
+
+  const handleDeletingProfile = async () => {
+    const userEmail = localStorage.getItem('user_email');
+    if (!userEmail) {
+      console.error('User email not found in local storage.');
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      'Jeste li sigurni da želite obrisati profil? Ova radnja ne može se poništiti.'
+    );
+
+    if (!confirmDelete) return;
+
+    const endpoint = `/users/delete/${userEmail}`;
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        console.log('Profil uspješno izbrisan.');
+        localStorage.clear();
+        navigate('/');
+      } else {
+        console.error('Failed to delete the profile.', response.status);
+      }
+    } catch (error) {
+      console.error('Error occurred while deleting the profile:', error);
     }
   };
 
@@ -263,6 +299,9 @@ function UserForm() {
             onClick={handleDeactivationProfile}
           >
             Deaktivirajte profil!
+          </button>
+          <button className="deletingButton" onClick={handleDeletingProfile}>
+            Obrišite profil!
           </button>
         </div>
         {showEditWindow && (
@@ -579,6 +618,10 @@ function DeactivationWindow({ onSubmit, onClose }) {
     <div className="modal">
       <div className="modalContent">
         <h1>Deaktivirajte Profil</h1>
+        <p>
+          NAPOMENA: Prilikom deaktivacije profila biti ćete izbačeni iz svih
+          Studygroup-a i Lessons-a u koje ste prijavljeni.
+        </p>
         <p>Unesite razlog deaktivacije:</p>
         <textarea
           className="inputEdit"

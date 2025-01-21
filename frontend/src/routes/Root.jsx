@@ -9,8 +9,10 @@ function Root() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isSignedIn) {
-      navigate('users/home');
+    if (!isSignedIn) {
+      navigate('/');
+    } else {
+      navigate('/users/home');
     }
   }, [isSignedIn, navigate]);
 
