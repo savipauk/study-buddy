@@ -39,13 +39,14 @@ public class StudyGroupService {
         LocalTime now = LocalTime.now();
 
         return allStudyGroups.stream()
-                .filter(studyGroup ->
-                        (studyGroup.getDate().isAfter(today) ||
-                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
-                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
-                                && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
-                )
-                .collect(Collectors.toList());
+                .filter(studyGroup ->{
+                    int numberOfCurrentMembers = studyGroup.getParticipants() == null ? 0 : studyGroup.getParticipants().size();
+
+                    return (studyGroup.getDate().isAfter(today) ||
+                            (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                            && (numberOfCurrentMembers < studyGroup.getMaxMembers())
+                            && ("ACTIVE".equals(studyGroup.getCreator().getUser().getStatus().getValue()));
+                }).collect(Collectors.toList());
     }
 
     // Get all active groups in which is Student member joined in
@@ -74,11 +75,14 @@ public class StudyGroupService {
         LocalTime now = LocalTime.now();
 
         return allStudyGroups.stream()
-                .filter(studyGroup ->
-                        (studyGroup.getDate().isAfter(today) || (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now)))
-                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
-                                && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
-                ).collect(Collectors.toList());
+                .filter(studyGroup -> {
+                    int numberOfCurrentMembers = studyGroup.getParticipants() == null ? 0 : studyGroup.getParticipants().size();
+
+                    return (studyGroup.getDate().isAfter(today) ||
+                            (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                            && (numberOfCurrentMembers < studyGroup.getMaxMembers())
+                            && ("ACTIVE".equals(studyGroup.getCreator().getUser().getStatus().getValue()));
+                }).collect(Collectors.toList());
     }
 
     public StudyGroup getStudyGroupById(Long groupId){ return studyGroupRepository.findByGroupId(groupId);}
