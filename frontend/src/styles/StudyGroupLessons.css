@@ -2,10 +2,10 @@
   display: flex;
   flex-wrap: wrap;
   width: 40vw;
-  border: 1px solid black;
+  border: 2px solid ghostwhite;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background: linear-gradient(to right, #3a7bd5, #3a6073);
   justify-content: space-between;
   padding: 1.5em;
   gap: 1.5em;
@@ -28,7 +28,8 @@
   font-size: 1.5em;
   font-weight: 600;
   margin-bottom: 0.5em;
-  color: #222;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   text-align: center;
   width: 100%;
 }
@@ -52,13 +53,14 @@
   padding: 0.5em;
   border-radius: 4px;
   font-size: 0.95em;
-  border: 1px solid black;
+  border: 1px solid whitesmoke;
+  background-color: inherit;
 }
 
 .mapsWrapper {
   width: 100%;
   height: 20em;
-  border: 1px solid black;
+  border: 1px solid whitesmoke;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -67,8 +69,10 @@
   width: 100%;
   padding: 0.75em;
   border: 1px solid #ccc;
+  background-color: whitesmoke;
   border-radius: 6px;
   font-size: 1em;
+  font-palette: dark;
   outline: none;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s ease-in-out;
@@ -87,19 +91,21 @@
 }
 
 .descriptionInput {
-  width: 45%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: start;
   align-content: start;
+  column-gap: inherit;
 }
 
 .groupDescrition {
   box-sizing: border-box;
-  width: 100%;
+  width: 45%;
   border-radius: 5px;
   font-size: 1em;
-  border: 1px solid black;
+  border: 1px solid whitesmoke;
+  background-color: inherit;
   height: 60%;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -109,7 +115,7 @@
 .decriptionText {
   width: 100%;
   padding-bottom: 0.3em;
-  text-align: center;
+  text-align: -moz-left;
   height: auto;
 }
 
@@ -138,6 +144,7 @@
   text-align: center;
   padding: 0;
   border: 0px;
+  background-color: inherit;
 }
 
 .numButton:hover {
@@ -170,7 +177,7 @@
 }
 
 .typeWrapper {
-  width: 50%;
+  width: 100%;
   display: flex;
   border-radius: 12px;
   align-items: center;
@@ -179,6 +186,10 @@
 
 .typeRadioButton {
   display: none;
+}
+
+.lessonType {
+  width: 60%;
 }
 
 .toggleOptionType {
@@ -205,6 +216,7 @@
   width: 100%;
   justify-content: center;
 }
+
 .validationMessage label {
   color: red;
 }

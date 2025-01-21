@@ -1,22 +1,16 @@
 /* global google */
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  GoogleMap,
-  LoadScriptNext,
-  StandaloneSearchBox
-} from '@react-google-maps/api';
+import { GoogleMap, StandaloneSearchBox } from '@react-google-maps/api';
 import '../styles/StudyGroupLessons.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import PropTypes from 'prop-types';
 import { serverFetch } from '../hooks/serverUtils';
 
-const librariesHardcode = ['places', 'marker'];
-
 function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapLocation = {
-    //Zagreb
+    // Zagreb
     lat: 45.815,
     lng: 15.9819
   };
@@ -31,6 +25,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const markerRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [instructionInfoForm, setInstructionInfoForm] = useState({
     subject: '',
     price: '',
@@ -47,6 +42,27 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
       setMinNum(1);
     }
   }
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+    }
+  };
+
+  const findLocationName = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const locationsName = results[0].address_components.find((component) =>
+          component.types.includes('locality')
+        );
+        if (locationsName) {
+          setLocationName(locationsName.long_name);
+        }
+      }
+    });
+  };
 
   useEffect(() => {
     if (mapRef.current && !markerRef.current) {
@@ -143,29 +159,56 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
     return true;
   };
 
-  const findLocationName = () => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: location }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        const locationsName = results[0].address_components.find((component) =>
-          component.types.includes('locality')
-        );
-        if (locationsName) {
-          setLocationName(locationsName.long_name);
-        }
-      }
-    });
-  };
-
   async function onSubmit() {
     if (!isValid()) {
       return;
-    } else {
-      await createNewLesson();
+    }
+    try {
+      const data2 = await createNewLesson();
+      if (!data2 || !data2.lessonId) {
+        console.error('Greška: Nije moguće dobiti lessonId iz odgovora.');
+        return;
+      }
+      if (file) {
+        await handleUpload(data2.lessonId);
+      }
       onCreateClick();
       onClose();
+    } catch (error) {
+      console.error('Greška prilikom podnošenja:', error);
     }
   }
+
+  const handleUpload = async (lessonId) => {
+    if (file) {
+      const formData = new FormData();
+      const email = localStorage.getItem('user_email');
+      formData.append('email', email);
+      formData.append('lesson_id', lessonId);
+      formData.append('file', file);
+      formData.append('description', 'This is a sample file');
+
+      console.log('Form data before upload:', formData);
+
+      try {
+        const response = await serverFetch('/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Učitavanje datoteke uspješno:', data);
+      } catch (error) {
+        console.error('Greška prilikom učitavanja datoteke:', error);
+      }
+    } else {
+      console.log('Niste odabrali file');
+    }
+  };
 
   async function createNewLesson() {
     const email = localStorage.getItem('user_email');
@@ -198,6 +241,9 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
+      const data2 = await response.json();
+      console.log('Odgovor sa servera:', data2);
+      return data2;
     } catch (error) {
       console.log(error);
       return null;
@@ -320,30 +366,35 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
             <label className="inputLabel">Tip instrukcija</label>
           </div>
           <div className="typeWrapper">
-            <input
-              className="typeRadioButton"
-              type="radio"
-              name="type"
-              value={'ONE_ON_ONE'}
-              id="typeOne"
-              checked={instructionInfoForm.type === 'ONE_ON_ONE'}
-              onChange={onChange}
-            ></input>
-            <label htmlFor="typeOne" className="toggleOptionType">
-              Jedan na jedan
-            </label>
-            <input
-              className="typeRadioButton"
-              type="radio"
-              name="type"
-              value={'MASS'}
-              id="typeMassive"
-              checked={instructionInfoForm.type === 'MASS'}
-              onChange={onChange}
-            ></input>
-            <label htmlFor="typeMassive" className="toggleOptionType">
-              Masivne
-            </label>
+            <div className="lessonType">
+              <input
+                className="typeRadioButton"
+                type="radio"
+                name="type"
+                value={'ONE_ON_ONE'}
+                id="typeOne"
+                checked={instructionInfoForm.type === 'ONE_ON_ONE'}
+                onChange={onChange}
+              ></input>
+              <label htmlFor="typeOne" className="toggleOptionType">
+                Jedan na jedan
+              </label>
+              <input
+                className="typeRadioButton"
+                type="radio"
+                name="type"
+                value={'MASS'}
+                id="typeMassive"
+                checked={instructionInfoForm.type === 'MASS'}
+                onChange={onChange}
+              ></input>
+              <label htmlFor="typeMassive" className="toggleOptionType">
+                Masivne
+              </label>
+            </div>
+            <div className="uploadFile">
+              <input id="file" type="file" onChange={handleFileChange} />
+            </div>
           </div>
         </div>
         <div className="inputWrapper">
@@ -351,33 +402,28 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
             <label className="inputLabel">Lokacija</label>
           </div>
           <div className="mapsWrapper">
-            <LoadScriptNext
-              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
-              libraries={librariesHardcode}
+            <StandaloneSearchBox
+              onLoad={(ref) => (searchBoxRef.current = ref)}
+              onPlacesChanged={handlePlaceSelect}
             >
-              <StandaloneSearchBox
-                onLoad={(ref) => (searchBoxRef.current = ref)}
-                onPlacesChanged={handlePlaceSelect}
-              >
-                <input
-                  className="searchBar"
-                  placeholder="Upišite lokaciju"
-                  type="text"
-                />
-              </StandaloneSearchBox>
-              <GoogleMap
-                onLoad={(map) => (mapRef.current = map)}
-                center={location}
-                zoom={15}
-                options={{
-                  mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
-                  streetViewControl: false,
-                  mapTypeControl: false,
-                  draggableCursor: true
-                }}
-                mapContainerStyle={{ width: '100%', height: '100%' }}
-              ></GoogleMap>
-            </LoadScriptNext>
+              <input
+                className="searchBar"
+                placeholder="Upišite lokaciju"
+                type="text"
+              />
+            </StandaloneSearchBox>
+            <GoogleMap
+              onLoad={(map) => (mapRef.current = map)}
+              center={location}
+              zoom={15}
+              options={{
+                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
+                streetViewControl: false,
+                mapTypeControl: false,
+                draggableCursor: true
+              }}
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+            ></GoogleMap>
           </div>
         </div>
         <div className="validationMessage">
@@ -391,6 +437,7 @@ function CreateInstructionForm({ onClose, onCreateClick }) {
     </div>
   );
 }
+
 CreateInstructionForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCreateClick: PropTypes.func.isRequired

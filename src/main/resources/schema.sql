@@ -19,7 +19,7 @@ CREATE TABLE Users (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     username VARCHAR(100) NOT NULL,
-    profile_picture VARCHAR(255),
+    profile_picture BLOB,
     description TEXT,
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
@@ -27,6 +27,7 @@ CREATE TABLE Users (
     gender ENUM('M', 'F', 'NOTDEFINED'),
     city VARCHAR(100),
     role ENUM('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED') NOT NULL,
+    profile_status ENUM('ACTIVE', 'DEACTIVATED'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
@@ -63,10 +64,11 @@ CREATE TABLE StudyGroups (
     description TEXT,
     expiration_date DATE NOT NULL,
     PRIMARY KEY (group_id),
-    FOREIGN KEY (creator_id) REFERENCES Students(student_id)
+    --Use this if we don't want to completely delete all studyGroup created by student with creator_id
+    --FOREIGN KEY (creator_id) REFERENCES Students(student_id)
 
     --Use this if want to completely delete all studyGroup created by student with creator_id
-    -- FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (
@@ -100,10 +102,11 @@ CREATE TABLE Lessons (
     time TIME NOT NULL,
     registration_deadline DATE,
     PRIMARY KEY (lesson_id),
-    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
+    --Use this if we don't want to completely delete all lessons created by professor with professor_id
+    --FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
 
     --Use this if we want to completely delete all lessons created by professor with professor_id
-    -- FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
+    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
 );
 
 CREATE TABLE LessonParticipants (
@@ -144,6 +147,10 @@ CREATE TABLE Materials (
     user_id INT NOT NULL, -- ID korisnika koji je postavio materijal
     group_id INT, -- Ako je materijal postavljen za grupu
     lesson_id INT, -- Ako je materijal postavljen za lekciju
+    file_data LONGBLOB,
+    file_size INT,
+    file_name VARCHAR(255),
+    mime_type VARCHAR(255),
     description TEXT,
     upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (material_id),
@@ -153,14 +160,14 @@ CREATE TABLE Materials (
 );
 
 -- User entries
-INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city)
-VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'F', '2003-06-20', 'Zagreb'),
-    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'M', '2003-06-03', 'Zagreb'),
-    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','F', '1974-01-15', 'Zagreb'),
-    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb'),
-    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb'),
-    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb'),
-    ('student3@example.com', '$2a$10$K.2FEUx5RNYnfs6VeO79aedlChH.uFru9lh0DdyFcXrJ9gR7hmJiO', 'student3','','','Štefica', 'Štefić','Žena, majka, kraljica', 'accessToken3', 'refreshToken3', 'STUDENT', 'F', '1970-04-01', 'Bedekovčina');
+INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city, profile_status)
+VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb', 'ACTIVE'),
+    ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb', 'ACTIVE'),
+    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb', 'ACTIVE'),
+    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb', 'ACTIVE'),
+    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb', 'ACTIVE'),
+    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb', 'ACTIVE'),
+    ('student3@example.com', '$2a$10$K.2FEUx5RNYnfs6VeO79aedlChH.uFru9lh0DdyFcXrJ9gR7hmJiO', 'student3','','','Štefica', 'Štefić','Žena, majka, kraljica', 'accessToken3', 'refreshToken3', 'STUDENT', 'F', '1970-04-01', 'Bedekovčina', 'ACTIVE');
 -- student1 password: 'password123'
 -- student2 password: 'password345'
 -- student3 password: '12345678i'
@@ -186,12 +193,24 @@ INSERT INTO Lessons (professor_id, subject, duration, max_participants, min_part
 VALUES (1,'Math', '60 minutes', 20, 5, '45.8132', '15.9770', 'Zagreb', 'MASS', '25.00', '2025-01-29', '09:00:00', '2025-01-27'),
     (2,'Physics', '90 minutes', 15, 3, '43.5081', ' 16.4402', 'Split', 'ONE_ON_ONE', '50.00', '2025-01-28', '14:30:00', '2025-01-26'),
     (1,'English', '45 minutes', 10, 2, '42.6410', '18.1106', 'Dubrovnik', 'MASS', '20.00', '2025-01-27', '11:00:00', '2025-01-25'),
-    (1,'Chemistry', '120 minutes', 25, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', '35.00', '2025-01-26', '15:00:00', '2025-01-24'),
+    (1,'Chemistry', '120 minutes', 2, 10, '45.3271', '14.4422', 'Rijeka', 'MASS', '35.00', '2025-01-26', '15:00:00', '2025-01-24'),
     (2,'History', '50 minutes', 30, 8, '44.1178', '15.2272', 'Zadar', 'ONE_ON_ONE', '15.00', '2025-01-25', '10:00:00', '2025-01-23');
+
+-- LessonParticipant entries
+INSERT INTO LessonParticipants(lesson_id, participant_id, participation_date)
+VALUES (1,1, NOW()),
+        (1,2, NOW()),
+        (1,3, NOW()),
+        (2,1, NOW()),
+        (3,2, NOW()),
+        (4,1, NOW()),
+        (4,2, NOW()),
+        (5,2, NOW()),
+        (5,3, NOW());
 
 -- StudyGroups entries
 INSERT INTO StudyGroups (group_name, location, x_coordinate, y_coordinate, date, time, max_members, description, expiration_date, creator_id)
-VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00:00', 15, 'Focus on algebra and calculus', '2025-01-18', 1),
+VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00:00', 2, 'Focus on algebra and calculus', '2025-01-18', 1),
      ('Physics Enthusiasts', 'Split', '43.5081', '16.4402', '2025-02-05', '14:30:00', 10, 'Discuss quantum mechanics and experiments', '2025-02-01', 2),
      ('Chemistry Basics', 'Rijeka', '45.3271', '14.4422', '2025-01-25', '16:00:00', 12, 'Introduction to organic and inorganic chemistry', '2025-01-22', 1),
      ('History Buffs', 'Osijek', '45.5600', '18.6758', '2025-03-01', '09:30:00', 8, 'Exploring World War II topics', '2025-02-28', 2),
@@ -199,11 +218,13 @@ VALUES ('Math Study Group', 'Zagreb', '45.8150', '15.9819', '2025-01-20', '10:00
 
 -- GroupMembers entries
 INSERT INTO GroupMembers(group_id, member_id, join_date)
-VALUES (1,1, NOW()),
-       (2,2, NOW()),
-       (3,1, NOW()),
-       (4,2, NOW()),
-       (5,1, NOW());
+VALUES (1,2, NOW()),
+       (1,3, NOW()),
+       (2,1, NOW()),
+       (2,3, NOW()),
+       (3,2, NOW()),
+       (4,1, NOW()),
+       (5,3, NOW());
 
 -- Insert default user with ID = 0
 INSERT INTO Users (user_id, email, password, oauth_provider, oauth_id, first_name, last_name, username, profile_picture, description,
@@ -236,5 +257,10 @@ VALUES (1, 1, 5, 'Amazing professor, very clear explanations!', '2025-01-10 10:3
      (2, 2, 2, 'Had difficulties understanding the material.', '2025-01-13 09:15:00'),
      (3, 2, 5, 'Najboljši.', '2025-01-14 08:20:00');
 
-
+-- Materials entries
+INSERT INTO Materials (user_id, group_id, lesson_id, file_name, mime_type, description, upload_date)
+VALUES(1, 1, NULL, 'sample1.pdf', 'application/pdf', 'Sample PDF for Group 1, Lesson 1', NOW()),
+    (2, NULL, 2, 'sample2.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Word document for Lesson 2', NOW()),
+    (3, 2, NULL, 'sample3.png', 'image/png', 'Image uploaded for Group 2', NOW()),
+    (4, NULL, 1, 'sample4.txt', 'text/plain', 'General text file uploaded by user 4', NOW());
 

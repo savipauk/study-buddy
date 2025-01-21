@@ -1,23 +1,28 @@
 /*global google */
 
-import { GoogleMap, LoadScriptNext } from '@react-google-maps/api';
+import { GoogleMap } from '@react-google-maps/api';
 import '../styles/ActiveGroups.css';
 import CustomAdvancedMarker from './CustomAdvancedMarker';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import useAuth from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import ProfessorProfile from './ProfessorProfile';
+import { serverFetch } from '../hooks/serverUtils';
 
-const librariesHardcode = ['places', 'marker'];
-
-function LessonInfo({ lesson, onClose }) {
-  const navigate = useNavigate();
+function LessonInfo({ lesson, onClose, joinedGroups, onLeave }) {
   const mapLocation = {
     lat: parseFloat(lesson.xCoordinate),
     lng: parseFloat(lesson.yCoordinate)
   };
   const [locationName, setLocationName] = useState('');
-  const { setMyProfile, setUsername } = useAuth();
+  const [materials, setMaterials] = useState([]);
+  const [showProfile, setShowProfile] = useState(false);
+  const [joinedGroupsState, setJoinedGroups] = useState(joinedGroups);
+  const [joined, setJoined] = useState(
+    joinedGroupsState.includes(lesson.lessonId)
+  );
+  const [currentNumberOfMembers, setCurrentNumberOfMembers] = useState(
+    lesson.currentNumberOfMembers
+  );
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: mapLocation }, (results, status) => {
@@ -29,135 +34,255 @@ function LessonInfo({ lesson, onClose }) {
     });
   };
 
-  const handleGoToProfileClick = () => {
-    setMyProfile(false);
-    setUsername(lesson.username);
-    navigate('/users/profile');
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const response = await serverFetch(
+          `/material/lesson/${lesson.lessonId}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setMaterials(data);
+        } else {
+          console.error('Failed to fetch materials');
+        }
+      } catch (error) {
+        console.error('Error fetching materials:', error);
+      }
+    };
+
+    fetchMaterials();
+  }, [lesson.lessonId, joinedGroupsState]);
+
+  const handleProfileClick = () => {
+    setShowProfile(true);
   };
 
+  const handleCloseProfile = () => {
+    setShowProfile(false);
+  };
+
+  const handleJoinGroup = async () => {
+    const email = localStorage.getItem('user_email');
+    try {
+      const response = await joinGroup(lesson.lessonId, email);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.message === 'OK') {
+          joinedGroups.push(lesson.lessonId);
+          setJoinedGroups(joinedGroups);
+          setJoined(true);
+          setCurrentNumberOfMembers(currentNumberOfMembers + 1);
+        } else if (data.message === 'GROUP_FULL') alert('Grupa popunjena');
+      } else {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleLeaveGroup = async () => {
+    const email = localStorage.getItem('user_email');
+    try {
+      const response = await leaveGroup(lesson.lessonId, email);
+      if (response.ok) {
+        const updatedGroups = joinedGroups.filter(
+          (id) => id !== lesson.lessonId
+        );
+        joinedGroups.splice(0, joinedGroups, ...updatedGroups);
+        setJoinedGroups(joinedGroups);
+        setJoined(false);
+        setCurrentNumberOfMembers(currentNumberOfMembers - 1);
+        onLeave(lesson.lessonId, 'lesson');
+      } else {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  async function joinGroup(id, username) {
+    const endpoint = `/lesson/${id}/add-student/${username}`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function leaveGroup(id, username) {
+    const endpoint = `/lesson/${id}/remove-student/${username}`;
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className='groupInfoWrapper'>
-      <div className='exit'>
+    <div className="groupInfoWrapper">
+      <div className="exit">
         <button onClick={onClose}>
-          <i className='fa-regular fa-circle-xmark'></i>
+          <i className="fa-regular fa-circle-xmark"></i>
         </button>
       </div>
-      <div className='allGroupInfoWrapper'>
-        <div className='infoGroup'>
-          <div className='groupTitle'>
-            <label>{'Instrukcije'}</label>
+      <div className="allGroupInfoWrapper">
+        <div className="infoGroup">
+          <div className="groupTitle">
+            <div className="currentMembers">
+              <label>{'Instrukcije'}</label>
+              <label>
+                Broj prijavljenih : {currentNumberOfMembers}/{lesson.maxMembers}
+              </label>
+            </div>
             <h2>{lesson.subject}</h2>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Organizator</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.username}</label>
           </div>
-          <div className='lablesWrapper'>
-            <button
-              className='goToProfileButton'
-              onClick={handleGoToProfileClick}
-            >
-              <i className='fa-regular fa-user'></i>
+          <div className="lablesWrapper">
+            <button className="profileInfo" onClick={handleProfileClick}>
+              <i className="fa-regular fa-user"></i>
             </button>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Datum</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.date}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Vrijeme</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.time}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Cijena</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.price}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Tip</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.type}</label>
           </div>
         </div>
-        <div className='infoGroup'>
-          <div className='lablesWrapper'>
+        <div className="infoGroup">
+          <div className="lablesWrapper">
             <label>Trajanje</label>
           </div>
-          <div className='lablesWrapperLesson'>
+          <div className="lablesWrapperLesson">
             <label>{lesson.duration}</label>
           </div>
         </div>
         {lesson.type === 'Masivne' && (
-          <div className='infoGroup'>
-            <div className='lablesWrapper'>
-              <label>Maksimalan broj clanova</label>
+          <div className="infoGroup">
+            <div className="lablesWrapper">
+              <label>Maksimalan broj članova</label>
             </div>
-            <div className='lablesWrapperLesson'>
+            <div className="lablesWrapperLesson">
               <label>{lesson.maxMembers}</label>
             </div>
           </div>
         )}
         {lesson.type === 'Masivne' && (
-          <div className='infoGroup'>
-            <div className='lablesWrapper'>
-              <label>Minimalan broj clanova</label>
+          <div className="infoGroup">
+            <div className="lablesWrapper">
+              <label>Minimalan broj članova</label>
             </div>
-            <div className='lablesWrapperLesson'>
+            <div className="lablesWrapperLesson">
               <label>{lesson.minMembers}</label>
             </div>
           </div>
         )}
-        <div className='joinGroupButton'>
-          <button>Pridruzi se!</button>
+        <div className="infoGroup">
+          <label>Priložene datoteke</label>
+          {materials.length > 0 ? (
+            <ul>
+              {materials.map((material) => (
+                <li key={material.materialId}>
+                  <a
+                    href={`data:${material.mimeType};base64,${material.fileData}`}
+                    download={material.fileName}
+                  >
+                    {material.fileName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Nema priloženih datoteka.</p>
+          )}
+        </div>
+        <div className="joinGroupButton">
+          {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}
+          {joined && <button onClick={handleLeaveGroup}>Napusti grupu!</button>}
         </div>
       </div>
-      <div className='mapsLocation'>
-        <div className='locationName'>
+      <div className="mapsLocation">
+        <div className="locationName">
           <label>Lokacija:</label>
           <label>{locationName}</label>
         </div>
-        <div className='maps'>
-          <LoadScriptNext
-            googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
-            libraries={librariesHardcode}
+        <div className="maps">
+          <GoogleMap
+            center={mapLocation}
+            zoom={15}
+            onLoad={getLocation}
+            options={{
+              mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
+              streetViewControl: false,
+              mapTypeControl: false
+            }}
+            mapContainerStyle={{ width: '100%', height: '100%' }}
           >
-            <GoogleMap
-              center={mapLocation}
-              zoom={15}
-              onLoad={getLocation}
-              options={{
-                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
-                streetViewControl: false,
-                mapTypeControl: false
-              }}
-              mapContainerStyle={{ width: '100%', height: '100%' }}
-            >
-              <CustomAdvancedMarker
-                lat={lesson.xCoordinate}
-                lng={lesson.yCoordinate}
-              />
-            </GoogleMap>
-          </LoadScriptNext>
+            <CustomAdvancedMarker
+              lat={lesson.xCoordinate}
+              lng={lesson.yCoordinate}
+            />
+          </GoogleMap>
         </div>
       </div>
+      {showProfile && (
+        <ProfessorProfile
+          onClose={handleCloseProfile}
+          username={lesson.username}
+        />
+      )}
     </div>
   );
 }
@@ -174,10 +299,14 @@ LessonInfo.propTypes = {
     type: PropTypes.string,
     maxMembers: PropTypes.number,
     minMembers: PropTypes.number,
-    price: PropTypes.number,
-    subject: PropTypes.string
+    price: PropTypes.string,
+    subject: PropTypes.string,
+    lessonId: PropTypes.number,
+    currentNumberOfMembers: PropTypes.number
   }).isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  joinedGroups: PropTypes.array.isRequired,
+  onLeave: PropTypes.func.isRequired
 };
 
 export default LessonInfo;

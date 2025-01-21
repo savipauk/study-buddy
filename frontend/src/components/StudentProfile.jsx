@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { serverFetch } from '../hooks/serverUtils';
 import ReportForm from './ReportForm';
-import '../styles/StudentProfile.css';
+import '../styles/StudentProfessorProfile.css';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 function StudentProfile({ onClose, username }) {
   const [userInfoForm, setUserInfoForm] = useState({
@@ -12,7 +13,10 @@ function StudentProfile({ onClose, username }) {
     Email: ''
   });
 
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
   const [showReportWindow, setShowReportWindow] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleCloseWindow = () => {
     setShowReportWindow(false);
@@ -42,8 +46,30 @@ function StudentProfile({ onClose, username }) {
       } else {
         console.error('Failed to fetch user profile');
       }
+
+      const imageResponse = await serverFetch(
+        `/users/profile-picture/${username}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      if (imageResponse.ok) {
+        const blob = await imageResponse.blob();
+        if (blob.size > 0) {
+          setProfilePictureUrl(URL.createObjectURL(blob));
+        } else {
+          setProfilePictureUrl(
+            'https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'
+          );
+        }
+      } else {
+        console.error('Greška pri dohvaćanju profilne slike');
+      }
     } catch (error) {
-      console.error('Error fetching user profile:', error);
+      console.error('Greška:', error);
     }
   };
 
@@ -56,13 +82,22 @@ function StudentProfile({ onClose, username }) {
       <div className="profileContainer">
         <div className="profile-container">
           <div className="profile-header">
-            <div className="profile-picture"></div>
+            <div className="profile-picture">
+              <img src={profilePictureUrl} />
+            </div>
             <div className="profile-info">
               <p>Ime: {userInfoForm.FirstName}</p>
               <p>Prezime: {userInfoForm.LastName}</p>
               <p>Opis: {userInfoForm.Bio}</p>
               <div className="showProfile">
-                <button className="showProfileButton">Prikaži Profil</button>
+                <button
+                  className="showProfileButton"
+                  onClick={() => {
+                    navigate(`/users/profile/${username}`);
+                  }}
+                >
+                  Prikaži Profil
+                </button>
               </div>
             </div>
           </div>
@@ -88,10 +123,8 @@ function StudentProfile({ onClose, username }) {
 }
 
 StudentProfile.propTypes = {
-  FirstName: PropTypes.string,
-  LastName: PropTypes.string,
-  Bio: PropTypes.string,
-  Email: PropTypes.string
+  onClose: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired
 };
 
 export default StudentProfile;

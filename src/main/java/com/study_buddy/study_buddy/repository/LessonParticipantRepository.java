@@ -1,13 +1,26 @@
 package com.study_buddy.study_buddy.repository;
 
-import com.study_buddy.study_buddy.model.GroupMember;
-import com.study_buddy.study_buddy.model.GroupMemberID;
-import com.study_buddy.study_buddy.model.LessonParticipant;
-import com.study_buddy.study_buddy.model.LessonParticipantID;
+import com.study_buddy.study_buddy.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 public interface LessonParticipantRepository extends JpaRepository<LessonParticipant, LessonParticipantID> {
-    // Custom queries if needed
+    List<LessonParticipant> findByParticipantId(Student participant_id);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM LessonParticipant lp WHERE lp.participantId.studentId = :studentId AND lp.lessonId.lessonId = :lessonId")
+    void deleteByStudentIdAndLessonId(@Param("studentId") Long studentId, @Param("lessonId") Long lessonId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM LessonParticipant lp WHERE lp.participantId.studentId = :studentId")
+    void deleteByStudentId(@Param("studentId") Long studentId);
 }

@@ -49,13 +49,13 @@ public class StudyGroup {
     private Student creator;
 
     // CONNECTING TABLES STUDENT-STUDYGROUP -> GROUPMEMBERS
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "GroupMembers",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id")
     )
-    private List<Student> creators;
+    private List<Student> participants;
 
     public StudyGroup() {
     }
@@ -129,6 +129,28 @@ public class StudyGroup {
     public LocalDate getExpirationDate() { return expirationDate; }
 
     public void setExpirationDate(LocalDate expirationDate) { this.expirationDate = expirationDate; }
+
+    public List<Student> getParticipants() { return participants; }
+
+    public void setParticipants(List<Student> participants) { this.participants = participants; }
+
+    @Override
+    public String toString() {
+        return "StudyGroup{" +
+                "groupId=" + groupId +
+                ", groupName='" + groupName + '\'' +
+                ", location='" + location + '\'' +
+                ", xCoordinate='" + xCoordinate + '\'' +
+                ", yCoordinate='" + yCoordinate + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                ", maxMembers=" + maxMembers +
+                ", description='" + description + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", creator=" + creator +
+                ", participants=" + participants +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -61,8 +61,9 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "profile_picture", length = 255)
-    private String profilePicture;
+    @Lob // Marks this column as a Large Object (BLOB)
+    @Column(name = "profile_picture", nullable = true)
+    private byte[] profilePicture;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
@@ -73,6 +74,10 @@ public class User {
 
     @Column(name = "city", length = 100)
     private String city;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "profile_status")
+    private Status status;
 
     // CONNECTING TABLES USERS-STUDENTS
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
@@ -209,9 +214,9 @@ public class User {
 
     public void setUsername(String username) { this.username = username;}
 
-    public String getProfilePicture() {return profilePicture; }
+    public byte[] getProfilePicture() { return profilePicture; }
 
-    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
+    public void setProfilePicture(byte[] profilePicture) { this.profilePicture = profilePicture; }
 
     public LocalDate getDateOfBirth() { return dateOfBirth; }
 
@@ -224,6 +229,10 @@ public class User {
     public String getCity() { return city; }
 
     public void setCity(String city) { this.city = city; }
+
+    public Status getStatus() { return status; }
+
+    public void setStatus(Status status) { this.status = status; }
 
     @Override
     public String toString() {

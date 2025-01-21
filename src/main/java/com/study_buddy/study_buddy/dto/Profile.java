@@ -24,19 +24,36 @@ public class Profile {
     public Map<String,String> profileResponse (String message){
         Map<String, String> response;
         if(password==null){ password = "DummyPass"; };
-        response = Map.ofEntries(
-                Map.entry("firstName", this.getFirstName()),
-                Map.entry("lastName", this.getLastName()),
-                Map.entry("email", this.getEmail()),
-                Map.entry("studyRole", this.getRole().toString()),
-                Map.entry("username", this.getUsername()),
-                Map.entry("description", this.getDescription()),
-                Map.entry("password", this.getPassword()),
-                Map.entry("gender", this.getGender().toString()),
-                Map.entry("city", this.getCity()),
-                Map.entry("dateOfBirth", this.getDateOfBirth().toString()),
-                Map.entry("message", message)
-        );
+        if(gender!=null){
+            response = Map.ofEntries(
+                    Map.entry("firstName", this.getFirstName()),
+                    Map.entry("lastName", this.getLastName()),
+                    Map.entry("email", this.getEmail()),
+                    Map.entry("studyRole", this.getRole().toString()),
+                    Map.entry("username", this.getUsername()),
+                    Map.entry("description", this.getDescription()),
+                    Map.entry("password", this.getPassword()),
+                    Map.entry("gender", this.getGender().toString()),
+                    Map.entry("city", this.getCity()),
+                    Map.entry("dateOfBirth", this.getDateOfBirth().toString()),
+                    Map.entry("message", message)
+            );
+        } else {
+            response = Map.ofEntries(
+                    Map.entry("firstName", this.getFirstName()),
+                    Map.entry("lastName", this.getLastName()),
+                    Map.entry("email", this.getEmail()),
+                    Map.entry("studyRole", this.getRole().toString()),
+                    Map.entry("username", this.getUsername()),
+                    Map.entry("description", this.getDescription()),
+                    Map.entry("password", this.getPassword()),
+                    Map.entry("message", message),
+                    Map.entry("gender", ""),
+                    Map.entry("city", ""),
+                    Map.entry("dateOfBirth","")
+            );
+        }
+
         return response;
     };
 

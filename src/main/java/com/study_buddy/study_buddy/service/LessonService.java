@@ -2,6 +2,7 @@ package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.dto.LessonDto;
 import com.study_buddy.study_buddy.model.*;
+import com.study_buddy.study_buddy.repository.LessonParticipantRepository;
 import com.study_buddy.study_buddy.repository.LessonRepository;
 import com.study_buddy.study_buddy.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class LessonService {
     @Autowired
     private ProfessorRepository professorRepository;
 
+    @Autowired
+    private LessonParticipantRepository lessonParticipantRepository;
+
+    public Lesson findByLessonId(Long lessonId){ return lessonRepository.findByLessonId(lessonId);}
+
     public Lesson createLesson(Lesson lesson){ return lessonRepository.save(lesson);}
 
     public List<Lesson> getAllLessons(){ return lessonRepository.findAll();}
@@ -32,20 +38,40 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson -> (lesson.getDate().isAfter(today) || (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                        && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
+                        && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
+                ).collect(Collectors.toList());
+    }
+
+    // Get all active lessons in which Student lessonParticipant is joined in
+    public List<Lesson> getAllActiveLessonsForLessonParticipant(Student lessonParticipant){
+        List<LessonParticipant> lessonsForParticipant = lessonParticipantRepository.findByParticipantId(lessonParticipant);
+        List<Lesson> allLessons = lessonsForParticipant.stream()
+                .map(LessonParticipant::getLesson)
+                .collect(Collectors.toList()); // Fetch al
+
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allLessons.stream()
+                .filter(lesson ->
+                        (lesson.getDate().isAfter(today) || (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                                && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
 
     }
 
-    public List<Lesson> getAllActiveMassLessons(LessonType lessonType){
+    public List<Lesson> getAllActiveLessonsByLessonType(LessonType lessonType){
         List<Lesson> allLessons = lessonRepository.findByLessonType(lessonType);
         LocalDate today = LocalDate.now();
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson -> (lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                        && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
+                        && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
     }
 
@@ -55,8 +81,10 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson -> (lesson.getDate().isAfter(today) ||
+                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                        && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
+                        && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
 
     }
@@ -92,6 +120,8 @@ public class LessonService {
         lessonDto.setDate(lesson.getDate());
         lessonDto.setTime(lesson.getTime());
         lessonDto.setRegistrationDeadLine(lesson.getDate().minusDays(2));
+        if (lesson.getStudentParticipants()==null){ lessonDto.setCurrentNumberOfMembers(0); }
+        else { lessonDto.setCurrentNumberOfMembers(lesson.getStudentParticipants().size()); }
 
         return lessonDto;
     }

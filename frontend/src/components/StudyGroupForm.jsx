@@ -1,18 +1,12 @@
 /* global google */
 
 import { useState, useRef, useEffect } from 'react';
-import {
-  GoogleMap,
-  LoadScriptNext,
-  StandaloneSearchBox
-} from '@react-google-maps/api';
+import { GoogleMap, StandaloneSearchBox } from '@react-google-maps/api';
 import '../styles/StudyGroupLessons.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { serverFetch } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
-
-const librariesHardcode = ['places', 'marker'];
 
 function CreateStudyGroupForm({ onClose, onCreateClick }) {
   const mapLocation = {
@@ -30,6 +24,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
   const mapRef = useRef(null);
   const searchBoxRef = useRef(null);
   const markerRef = useRef(null);
+  const [file, setFile] = useState(null);
   const [groupInfoForm, setGroupInfoForm] = useState({
     name: '',
     description: ''
@@ -39,6 +34,27 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     const { name, value } = event.target;
     setGroupInfoForm((oldForm) => ({ ...oldForm, [name]: value }));
   }
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+    }
+  };
+
+  const findLocationName = () => {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const locationsName = results[0].address_components.find((component) =>
+          component.types.includes('locality')
+        );
+        if (locationsName) {
+          setLocationName(locationsName.long_name);
+        }
+      }
+    });
+  };
 
   useEffect(() => {
     if (mapRef.current && !markerRef.current) {
@@ -62,21 +78,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
       markerRef.current.position = location;
     }
     findLocationName();
-  }, [location]);
-
-  const findLocationName = () => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: location }, (results, status) => {
-      if (status === 'OK' && results[0]) {
-        const locationsName = results[0].address_components.find((component) =>
-          component.types.includes('locality')
-        );
-        if (locationsName) {
-          setLocationName(locationsName.long_name);
-        }
-      }
-    });
-  };
+  }, [location, findLocationName]);
 
   const handlePlaceSelect = () => {
     const place = searchBoxRef.current.getPlaces()[0];
@@ -134,12 +136,51 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
   async function onSubmit() {
     if (!isValid()) {
       return;
-    } else {
-      await createStudyGroup();
+    }
+    try {
+      const data2 = await createStudyGroup();
+      if (!data2 || !data2.studyGroupId) {
+        console.error('Greška: Nije moguće dobiti groupId iz odgovora.');
+        return;
+      }
+      if (file) {
+        await handleUpload(data2.studyGroupId);
+      }
       onCreateClick();
       onClose();
+    } catch (error) {
+      console.error('Greška prilikom podnošenja:', error);
     }
   }
+
+  const handleUpload = async (studyGroupId) => {
+    if (file) {
+      const formData = new FormData();
+      const email = localStorage.getItem('user_email');
+      formData.append('email', email);
+      formData.append('group_id', studyGroupId);
+      formData.append('file', file);
+      formData.append('description', 'This is a sample file');
+
+      try {
+        const response = await serverFetch('/material/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Upload failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('Učitavanje datoteke uspješno:', data);
+      } catch (error) {
+        console.error('Greška prilikom učitavanja datoteke:', error);
+      }
+    } else {
+      console.log('Niste odabrali file');
+    }
+  };
 
   async function createStudyGroup() {
     const email = localStorage.getItem('user_email');
@@ -169,6 +210,9 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
         console.log('Failed to fetch data', response.statusText);
         return null;
       }
+      const data2 = await response.json();
+      console.log('Odgovor sa servera:', data2);
+      return data2;
     } catch (error) {
       console.log(error);
       return null;
@@ -243,39 +287,35 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
             value={groupInfoForm.description}
             onChange={onChange}
           ></textarea>
+          <input id="file" type="file" onChange={handleFileChange} />
         </div>
         <div className="inputWrapper">
           <div className="inputs">
             <label className="inputLabel">Lokacija</label>
           </div>
           <div className="mapsWrapper">
-            <LoadScriptNext
-              googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API}
-              libraries={librariesHardcode}
+            <StandaloneSearchBox
+              onLoad={(ref) => (searchBoxRef.current = ref)}
+              onPlacesChanged={handlePlaceSelect}
             >
-              <StandaloneSearchBox
-                onLoad={(ref) => (searchBoxRef.current = ref)}
-                onPlacesChanged={handlePlaceSelect}
-              >
-                <input
-                  className="searchBar"
-                  placeholder="Upišite lokaciju"
-                  type="text"
-                />
-              </StandaloneSearchBox>
-              <GoogleMap
-                onLoad={(map) => (mapRef.current = map)}
-                center={location}
-                zoom={15}
-                options={{
-                  mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
-                  streetViewControl: false,
-                  mapTypeControl: false,
-                  draggableCursor: true
-                }}
-                mapContainerStyle={{ width: '100%', height: '100%' }}
-              ></GoogleMap>
-            </LoadScriptNext>
+              <input
+                className="searchBar"
+                placeholder="Upišite lokaciju"
+                type="text"
+              />
+            </StandaloneSearchBox>
+            <GoogleMap
+              onLoad={(map) => (mapRef.current = map)}
+              center={location}
+              zoom={15}
+              options={{
+                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAPID,
+                streetViewControl: false,
+                mapTypeControl: false,
+                draggableCursor: true
+              }}
+              mapContainerStyle={{ width: '100%', height: '100%' }}
+            ></GoogleMap>
           </div>
         </div>
         <div className="validationMessage">
@@ -289,6 +329,7 @@ function CreateStudyGroupForm({ onClose, onCreateClick }) {
     </div>
   );
 }
+
 CreateStudyGroupForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCreateClick: PropTypes.func.isRequired

@@ -40,13 +40,18 @@ public class StudyGroupController {
     }
 
     // Get all study groups created by one user
-    @GetMapping("/createdBy/{username}")
-    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
+    @GetMapping("/createdBy/{what}/{usernameOrEmail}")
+    public ResponseEntity<List<StudyGroupDto>> getStudyGroupsByCreator(@PathVariable("usernameOrEmail") String usernameOrEmail,
+                                                                       @PathVariable("what") String what) {
+        User user;
+        if(what.equals("email")){ user = userService.getUserByEmail(usernameOrEmail);}
+        else if (what.equals("username")) { user = userService.getUserByUsername(usernameOrEmail);}
+        else {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+
+        if (user==null) {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+
         Student creator = studentService.getStudentByUserId(user.getUserId());
-        if (creator == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (creator == null) { return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); }
 
         List<StudyGroup> studyGroups = studyGroupService.getStudyGroupsByCreator(creator);
         List<StudyGroupDto> studyGroupDtos = studyGroups.stream()
@@ -56,6 +61,7 @@ public class StudyGroupController {
         return ResponseEntity.ok(studyGroupDtos);
     }
 
+
     // Get all active studyGroups
     @GetMapping("/active")
     public ResponseEntity<List<StudyGroupDto>> getAllActiveStudyGroups() {
@@ -64,6 +70,23 @@ public class StudyGroupController {
             return ResponseEntity.noContent().build();
         }
         List<StudyGroupDto> activeStudyGroupDtos = activeStudyGroups.stream()
+                .map(studyGroupService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(activeStudyGroupDtos);
+    }
+
+    // Get all active studyGroups
+    @GetMapping("/active/{username}")
+    public ResponseEntity<List<StudyGroupDto>> getAllActiveStudyGroupsForMember(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        if (user==null) {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+
+        Student student = studentService.getStudentByUserId(user.getUserId());
+        List<StudyGroup> activeStudyGroupsForMember = studyGroupService.getActiveStudyGroupsForMember(student);
+
+        if (activeStudyGroupsForMember.isEmpty()) { return ResponseEntity.noContent().build(); }
+
+        List<StudyGroupDto> activeStudyGroupDtos = activeStudyGroupsForMember.stream()
                 .map(studyGroupService::convertToDto)
                 .toList();
         return ResponseEntity.ok(activeStudyGroupDtos);
@@ -109,7 +132,7 @@ public class StudyGroupController {
 
     // Create a new study group
     @PostMapping("/create")
-    public ResponseEntity<StudyGroup> createStudyGroup(@RequestBody StudyGroupDto dto) {
+    public ResponseEntity<StudyGroupDto> createStudyGroup(@RequestBody StudyGroupDto dto) {
         // Creating new studyGroup
         User creator = userService.getUserByEmail(dto.getEmail());
         Student creatorStudent = studentService.getStudentByUserId(creator.getUserId());
@@ -128,21 +151,29 @@ public class StudyGroupController {
 
         studyGroupService.createStudyGroup(studyGroup);
 
-        // Inserting studyGroup creator into GroupMember table
-        groupMemberService.addStudentToGroup(creatorStudent, studyGroup);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(studyGroup);
+        return ResponseEntity.status(HttpStatus.CREATED).body(studyGroupService.convertToDto(studyGroup));
     }
 
     // Add a student to a study group
-    @PostMapping("/{groupId}/add-student/{studentId}")
-    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("studentId") Long studentId) {
-        Student student = studentService.getStudentById(studentId);
-        StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
+    @PostMapping("/{groupId}/add-student/{email}")
+    public ResponseEntity<Map<String, String>> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
+        try{
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
+            if(studyGroup.getParticipants()==null){
+                groupMemberService.addStudentToGroup(student, studyGroup);
+                return ResponseEntity.ok(Map.of("message","OK"));
+            } else if (studyGroup.getParticipants().size()<studyGroup.getMaxMembers()){
+                groupMemberService.addStudentToGroup(student, studyGroup);
+                return ResponseEntity.ok(Map.of("message","OK"));
+            } else {
+                return ResponseEntity.ok(Map.of("message","GROUP_FULL"));
+            }
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
 
-        groupMemberService.addStudentToGroup(student, studyGroup);
-
-        return ResponseEntity.ok("Student added to the group successfully.");
     }
 
     // TODO - edit this functions
@@ -161,18 +192,23 @@ public class StudyGroupController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
     // Remove a student from a study group
-    @DeleteMapping("/{groupId}/remove-student/{studentId}")
-    public ResponseEntity<Void> removeStudentFromGroup(@PathVariable Long groupId, @PathVariable Long studentId) {
+    @DeleteMapping("/{groupId}/remove-student/{email}")
+    public ResponseEntity<Void> removeStudentFromGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
         try {
-            studyGroupService.removeStudentFromGroup(groupId, studentId);
+            StudyGroup studyGroup = studyGroupService.findByGroupId(groupId);
+
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            groupMemberService.deleteByGroupIdAndStudentId(groupId, student.getStudentId());
+
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-    }*/
+    }
 
 
 

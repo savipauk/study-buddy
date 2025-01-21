@@ -9,6 +9,7 @@ public class Material {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "material_id")
     private Long materialId;
 
     @ManyToOne
@@ -23,6 +24,19 @@ public class Material {
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
+    @Column(name = "file_name")
+    private String fileName;
+
+    @Column(name = "mime_type")
+    private String mimeType;
+
+    @Lob
+    @Column(name = "file_data")
+    private byte[] fileData;
+   
+    @Column(name = "file_size")
+    private Long fileSize;
+
     @Column(name = "description")
     private String description;
 
@@ -31,11 +45,15 @@ public class Material {
 
     public Material () {}
 
-    public Material(Long materialId, User user, StudyGroup group, Lesson lesson, String description, LocalDateTime uploadDate) {
+    public Material(Long materialId, User user, StudyGroup group, Lesson lesson,String fileName, String mimeType, byte[] fileData, Long fileSize, String description, LocalDateTime uploadDate) {
         this.materialId = materialId;
         this.user = user;
         this.group = group;
         this.lesson = lesson;
+        this.fileName = fileName;
+        this.mimeType = mimeType;
+        this.fileData = fileData;
+        this.fileSize = fileSize;
         this.description = description;
         this.uploadDate = uploadDate;
     }
@@ -72,6 +90,38 @@ public class Material {
         this.lesson = lesson;
     }
 
+    public byte[] getFileData(){
+        return fileData;
+    }
+
+    public void setFileData(byte[] fileData){
+        this.fileData = fileData;
+    }
+
+    public String getMimeType(){
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType){
+        this.mimeType = mimeType;
+    }
+
+    public String getFileName(){
+        return fileName;
+    }
+
+    public void setFileName(String fileName){
+        this.fileName = fileName;
+    }
+
+    public Long getFileSize() {
+    return fileSize;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -87,4 +137,5 @@ public class Material {
     public void setUploadDate(LocalDateTime uploadDate) {
         this.uploadDate = uploadDate;
     }
+    
 }
