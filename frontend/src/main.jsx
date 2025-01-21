@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './routes/Root';
+import Test from './routes/Test';
 import './index.css';
 import ErrorPage from './ErrorPage';
 import Register from './routes/Register';
@@ -17,6 +18,11 @@ import { LoadScriptNext } from '@react-google-maps/api';
 const librariesHardcode = ['places', 'marker'];
 
 const router = createBrowserRouter([
+  {
+    path: '/test',
+    element: <Test />,
+    errorElement: <ErrorPage />
+  },
   {
     path: '/',
     element: <Root />,
