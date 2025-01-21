@@ -41,10 +41,16 @@ function LoginForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-
+        console.log(data);
         const message = data.passwordCheck;
         const email = data.email;
         const role = data.studyRole;
+        if (data.status === 'DEACTIVATED') {
+          localStorage.setItem('user_email', data.email);
+          navigate('/activateProfile');
+          return;
+        }
+
         if (message === 'DOESNT_EXIST') {
           setErrorMessage('Korisnik ne postoji');
         }
@@ -156,4 +162,5 @@ function LoginForm() {
     </>
   );
 }
+
 export default LoginForm;

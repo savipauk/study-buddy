@@ -11,7 +11,13 @@ function Root() {
   useEffect(() => {
     if (!isSignedIn) {
       navigate('/');
+    } else if (localStorage.getItem('user_status') === 'DEACTIVATED') {
+      navigate('/activateProfile');
     } else {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        navigate('/');
+      }
       navigate('/users/home');
     }
   }, [isSignedIn, navigate]);

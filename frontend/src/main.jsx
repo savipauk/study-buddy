@@ -12,6 +12,7 @@ import Profile from './routes/Profile';
 import { AuthProvider } from './components/AuthContext';
 import ProfileInfo from './routes/ProfileInfo';
 import AdminPage from './routes/Admin';
+import ActivateProfile from './routes/ActivateProfile';
 import { LoadScriptNext } from '@react-google-maps/api';
 
 const librariesHardcode = ['places', 'marker'];
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
   {
     path: 'admin',
     element: <AdminPage />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/activateProfile',
+    element: <ActivateProfile />,
     errorElement: <ErrorPage />
   }
 ]);
