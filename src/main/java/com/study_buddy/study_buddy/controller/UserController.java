@@ -1,6 +1,7 @@
 package com.study_buddy.study_buddy.controller;
 
 import com.study_buddy.study_buddy.dto.ProfileUpdate;
+import com.study_buddy.study_buddy.model.Status;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,37 @@ public class UserController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(profilePicture);
+    }
+
+    // POST - deactivate profile
+    @PostMapping(value = "/profile/deactivate/{email}")
+    public ResponseEntity<String> deactivateProfile(@PathVariable("email") String email){
+        User user = userService.getUserByEmail(email);
+        if (user==null){ ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");}
+
+        try{
+            userService.deactivateUser(user);
+
+            user.setStatus(Status.DEACTIVATED);
+            userService.createUser(user);
+
+            return ResponseEntity.ok().body("user_deactivated");
+
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    // POST - deactivate profile
+    @PostMapping(value = "/profile/activate/{email}")
+    public ResponseEntity<String> activateProfile(@PathVariable("email") String email){
+        User user = userService.getUserByEmail(email);
+        if (user==null){ ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");}
+
+        user.setStatus(Status.ACTIVE);
+        userService.createUser(user);
+
+        return ResponseEntity.ok().body("user_activated");
     }
 
 

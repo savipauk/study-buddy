@@ -38,12 +38,13 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> (lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                .filter(lesson -> (lesson.getDate().isAfter(today) || (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
                         && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
+                        && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
     }
 
+    // Get all active lessons in which Student lessonParticipant is joined in
     public List<Lesson> getAllActiveLessonsForLessonParticipant(Student lessonParticipant){
         List<LessonParticipant> lessonsForParticipant = lessonParticipantRepository.findByParticipantId(lessonParticipant);
         List<Lesson> allLessons = lessonsForParticipant.stream()
@@ -54,8 +55,9 @@ public class LessonService {
         LocalTime now = LocalTime.now();
 
         return allLessons.stream()
-                .filter(lesson -> lesson.getDate().isAfter(today) ||
-                        (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now))
+                .filter(lesson ->
+                        (lesson.getDate().isAfter(today) || (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
+                                && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
 
     }
@@ -69,6 +71,7 @@ public class LessonService {
                 .filter(lesson -> (lesson.getDate().isAfter(today) ||
                         (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
                         && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
+                        && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
     }
 
@@ -81,6 +84,7 @@ public class LessonService {
                 .filter(lesson -> (lesson.getDate().isAfter(today) ||
                         (lesson.getDate().isEqual(today)&&lesson.getTime().isAfter(now)))
                         && (lesson.getStudentParticipants().size()<lesson.getMaxMembers())
+                        && (lesson.getProfessor().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
 
     }

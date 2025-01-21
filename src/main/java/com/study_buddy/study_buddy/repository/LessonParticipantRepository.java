@@ -18,4 +18,9 @@ public interface LessonParticipantRepository extends JpaRepository<LessonPartici
     @Transactional
     @Query("DELETE FROM LessonParticipant lp WHERE lp.participantId.studentId = :studentId AND lp.lessonId.lessonId = :lessonId")
     void deleteByStudentIdAndLessonId(@Param("studentId") Long studentId, @Param("lessonId") Long lessonId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM LessonParticipant lp WHERE lp.participantId.studentId = :studentId")
+    void deleteByStudentId(@Param("studentId") Long studentId);
 }
