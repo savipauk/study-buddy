@@ -156,13 +156,20 @@ public class StudyGroupController {
 
     // Add a student to a study group
     @PostMapping("/{groupId}/add-student/{email}")
-    public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
+    public ResponseEntity<Map<String, String>> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
         try{
             User user = userService.getUserByEmail(email);
             Student student = studentService.getStudentByUserId(user.getUserId());
             StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
-            groupMemberService.addStudentToGroup(student, studyGroup);
-            return ResponseEntity.ok("Student added to the group successfully.");
+            if(studyGroup.getParticipants()==null){
+                groupMemberService.addStudentToGroup(student, studyGroup);
+                return ResponseEntity.ok(Map.of("message","OK"));
+            } else if (studyGroup.getParticipants().size()<studyGroup.getMaxMembers()){
+                groupMemberService.addStudentToGroup(student, studyGroup);
+                return ResponseEntity.ok(Map.of("message","OK"));
+            } else {
+                return ResponseEntity.ok(Map.of("message","GROUP_FULL"));
+            }
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
