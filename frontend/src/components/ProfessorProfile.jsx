@@ -132,6 +132,11 @@ function ProfessorProfile({ onClose, username }) {
     return stars;
   };
 
+  const refreshData = async () => {
+    await getAverageRating(username);
+    await getAllReviewsForProfessor(username);
+  };
+
   useEffect(() => {
     getProfessorProfile(username);
     getAverageRating(username);
@@ -212,6 +217,7 @@ function ProfessorProfile({ onClose, username }) {
               onClose={handleCloseWindow}
               studentEmail={localStorage.getItem('user_email')}
               professorUsername={username}
+              onReviewSubmit={refreshData}
             />
           )}
         </div>

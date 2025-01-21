@@ -239,9 +239,14 @@
   padding: 2px;
 }
 
-.deactivateButton {
+.deactivateButton,
+.deletingButton {
   color: white;
   font-size: 1em;
+}
+
+.inputEdit {
+  resize: none;
 }
 
 .editProfileButton {

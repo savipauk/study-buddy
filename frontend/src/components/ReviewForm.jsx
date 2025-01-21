@@ -3,7 +3,12 @@ import { serverFetch } from '../hooks/serverUtils';
 import '../styles/ReviewForm.css';
 import PropTypes from 'prop-types';
 
-function ReviewForm({ onClose, studentEmail, professorUsername }) {
+function ReviewForm({
+  onClose,
+  studentEmail,
+  professorUsername,
+  onReviewSubmit
+}) {
   const [validationMessage, setValidationMessage] = useState('');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -54,6 +59,9 @@ function ReviewForm({ onClose, studentEmail, professorUsername }) {
         console.log('Odgovor servera:', response);
 
         alert('Uspješno ste ostavili recenziju');
+        if (onReviewSubmit) {
+          await onReviewSubmit();
+        }
         onClose();
         console.log(data);
       } else {
@@ -112,7 +120,8 @@ function ReviewForm({ onClose, studentEmail, professorUsername }) {
 ReviewForm.propTypes = {
   onClose: PropTypes.func.isRequired,
   studentEmail: PropTypes.string.isRequired,
-  professorUsername: PropTypes.string.isRequired
+  professorUsername: PropTypes.string.isRequired,
+  onReviewSubmit: PropTypes.func.isRequired
 };
 
 export default ReviewForm;

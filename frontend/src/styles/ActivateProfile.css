@@ -1,0 +1,31 @@
+.wholeActivePage {
+  display: flex;
+  margin-top: 40%;
+  align-items: center;
+  justify-content: center;
+  background-color: #5d9cec;
+}
+
+.activateWrapper {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  padding: 20px;
+  border: 2px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.activateWrapper button {
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

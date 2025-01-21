@@ -32,7 +32,6 @@ function UserForm() {
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
-  const [showDeactivationWindow, setShowDeactivationWindow] = useState(false);
 
   const isProfileSetupComplete = JSON.parse(
     localStorage.getItem('isProfileSetupComplete')
@@ -58,16 +57,15 @@ function UserForm() {
     setUserHash(hash);
     setShowPasswordWindow(false);
   };
-  const handleDeactivationProfile = () => {
-    setShowDeactivationWindow(true);
-  };
-  const handleCloseDeactivationWindow = () => {
-    setShowDeactivationWindow(false);
-  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       const userEmail = localStorage.getItem('user_email');
+      if (!userEmail) {
+        navigate('/');
+        return;
+      }
+
       const userData = await getUserData(userEmail);
       if (userData) {
         setUserHash(userData.password);
@@ -78,6 +76,7 @@ function UserForm() {
           Email: userData.email,
           Bio: userData.description
         });
+
         const endpoint = `/users/profile-picture/${userData.username}`;
         const options = {
           method: 'GET',
@@ -107,7 +106,7 @@ function UserForm() {
     if (isProfileSetupComplete) {
       fetchUserData();
     } else {
-      navigate('/users/home');
+      navigate('/');
     }
   }, [isProfileSetupComplete, navigate]);
 
@@ -127,7 +126,7 @@ function UserForm() {
       if (response.ok) {
         console.log('Profilna slika uspješno dodana.');
         const updatedResponse = await serverFetch(
-          `/profile-picture/${userInfoForm.Username}`,
+          `/users/profile-picture/${userInfoForm.Username}`,
           {
             method: 'GET',
             headers: {
@@ -145,28 +144,71 @@ function UserForm() {
     }
   };
 
-  const handleSubmitDeactivation = async (reason, password) => {
+  const handleDeactivationProfile = async () => {
     const userEmail = localStorage.getItem('user_email');
-    const data = { reason, password, email: userEmail };
+    if (!userEmail) {
+      console.error('User email not found in local storage.');
+      return;
+    }
 
-    const endpoint = `/users/deactivate`; //TODO: promjeni ovo s backom
+    const confirmDeactivation = window.confirm(
+      'Jeste li sigurni da želite deaktivirati profil? Ako izvršite ovu radnju biti ćete izbačeni iz svih StudyGroup-a i Instrukcija u koje ste prijavljeni.'
+    );
+
+    if (!confirmDeactivation) return;
+
+    const endpoint = `/users/profile/deactivate/${userEmail}`;
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      headers: { 'Content-Type': 'application/json' }
     };
 
     try {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
-        navigate('/users/home');
+        console.log('Profil je uspješno deaktiviran.');
+        navigate('/');
       } else {
         console.error('Greška prilikom deaktivacije.');
       }
     } catch (error) {
       console.error('Greška:', error);
-    } finally {
-      setShowDeactivationWindow(false);
+    }
+  };
+
+  const handleDeletingProfile = async () => {
+    const userEmail = localStorage.getItem('user_email');
+    if (!userEmail) {
+      console.error('User email not found in local storage.');
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      'Jeste li sigurni da želite obrisati profil? Ova radnja ne može se poništiti.'
+    );
+
+    if (!confirmDelete) return;
+
+    const endpoint = `/users/delete/${userEmail}`;
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        console.log('Profil uspješno izbrisan.');
+        localStorage.removeItem('user_email');
+        localStorage.setItem('isSignedIn', false);
+        navigate('/');
+      } else {
+        console.error('Failed to delete the profile.', response.status);
+      }
+    } catch (error) {
+      console.error('Error occurred while deleting the profile:', error);
     }
   };
 
@@ -264,6 +306,9 @@ function UserForm() {
           >
             Deaktivirajte profil!
           </button>
+          <button className="deletingButton" onClick={handleDeletingProfile}>
+            Obrišite profil!
+          </button>
         </div>
         {showEditWindow && (
           <EditWindow
@@ -278,12 +323,6 @@ function UserForm() {
             onSave={handlePasswordSave}
             onClose={handleCloseWindow}
             hash={userHash}
-          />
-        )}
-        {showDeactivationWindow && (
-          <DeactivationWindow
-            onSubmit={handleSubmitDeactivation}
-            onClose={handleCloseDeactivationWindow}
           />
         )}
       </div>
@@ -553,60 +592,6 @@ PasswordChange.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   hash: PropTypes.string.isRequired
-};
-
-function DeactivationWindow({ onSubmit, onClose }) {
-  const [reason, setReason] = useState('');
-  const [password, setPassword] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
-
-  const handleReasonChange = (e) => setReason(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-
-  const handleSubmit = () => {
-    if (!reason) {
-      setValidationMessage('Molimo unesite razlog deaktivacije.');
-      return;
-    }
-    if (!password) {
-      setValidationMessage('Molimo unesite lozinku.');
-      return;
-    }
-    onSubmit(reason, password);
-  };
-
-  return (
-    <div className="modal">
-      <div className="modalContent">
-        <h1>Deaktivirajte Profil</h1>
-        <p>Unesite razlog deaktivacije:</p>
-        <textarea
-          className="inputEdit"
-          value={reason}
-          onChange={handleReasonChange}
-        ></textarea>
-        <p>Potvrdite lozinkom:</p>
-        <input
-          className="inputEdit"
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-        <p className="errorMessage">{validationMessage}</p>
-        <button className="EditWindowButton" onClick={handleSubmit}>
-          Potvrdi
-        </button>
-        <button className="EditWindowButton" onClick={onClose}>
-          Odbaci
-        </button>
-      </div>
-    </div>
-  );
-}
-
-DeactivationWindow.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired
 };
 
 export default Profile;

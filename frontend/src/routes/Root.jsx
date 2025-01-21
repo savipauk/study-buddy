@@ -9,8 +9,17 @@ function Root() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isSignedIn) {
-      navigate('users/home');
+    if (!isSignedIn) {
+      navigate('/');
+    } else if (localStorage.getItem('user_status') === 'DEACTIVATED') {
+      navigate('/activateProfile');
+    } else {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        navigate('/');
+        return;
+      }
+      navigate('/users/home');
     }
   }, [isSignedIn, navigate]);
 
