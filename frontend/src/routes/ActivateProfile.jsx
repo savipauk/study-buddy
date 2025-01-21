@@ -9,6 +9,7 @@ function ActivateProfile() {
 
   useEffect(() => {
     const email = localStorage.getItem('user_email');
+    localStorage.setItem('isProfileSetupComplete', true);
     if (email) {
       setUserEmail(email);
     } else {

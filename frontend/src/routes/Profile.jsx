@@ -203,7 +203,8 @@ function UserForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         console.log('Profil uspješno izbrisan.');
-        localStorage.clear();
+        localStorage.removeItem('user_email');
+        localStorage.setItem('isSignedIn', false);
         navigate('/');
       } else {
         console.error('Failed to delete the profile.', response.status);
