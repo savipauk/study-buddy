@@ -17,6 +17,7 @@ function Root() {
       const token = localStorage.getItem('access_token');
       if (!token) {
         navigate('/');
+        return;
       }
       navigate('/users/home');
     }
