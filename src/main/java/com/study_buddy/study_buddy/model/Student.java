@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -46,4 +47,16 @@ public class Student{
 
     public void setStudentId(Long student_id) { this.studentId = student_id; }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(studentId, student.studentId) && Objects.equals(user, student.user) && Objects.equals(studyGroups, student.studyGroups);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentId, user, studyGroups);
+    }
 }
