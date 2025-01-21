@@ -128,6 +128,17 @@
   margin: 0.5em;
 }
 
+.currentMembers{
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	gap:0.3em;
+}
+
+.currentMembers label {
+	width: 100%;
+}
+
 .maps {
   display: flex;
   width: 95%;

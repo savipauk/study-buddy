@@ -188,6 +188,18 @@ function HomePage() {
     }
   }
 
+  const handleLeave = (id, type) => {
+    if (type === 'group') {
+      setJoinedGroups((prevGroups) =>
+        prevGroups.filter((group) => group.studyGroupId !== id)
+      );
+    } else if (type === 'lesson') {
+      setJoinedLessons((prevLessons) =>
+        prevLessons.filter((lesson) => lesson.lessonId !== id)
+      );
+    }
+  };
+
   return (
     <>
       <div
@@ -198,15 +210,15 @@ function HomePage() {
         }`}
       >
         <Header></Header>
-        <div className="newStudyGroup">
-          <button className="newStudyGroupButton" onClick={handleCreateGroup}>
+        <div className='newStudyGroup'>
+          <button className='newStudyGroupButton' onClick={handleCreateGroup}>
             {role === 'STUDENT'
               ? 'Kreirajte StudyGroup'
               : 'Kreirajte Instrukcije'}
           </button>
         </div>
-        <div className="searcBar">
-          <h1 className="someText">AKTIVNO</h1>
+        <div className='searcBar'>
+          <h1 className='someText'>AKTIVNO</h1>
           <SearchBarFilter
             onFilterChange={setCurrentFilter}
             onSearchBarEnter={setCurrentSearch}
@@ -228,25 +240,27 @@ function HomePage() {
           onCreateClick={() => setHasRefreshed(!hasRefreshed)}
         />
       )}
-      <div className="activeLessons">
+      <div className='activeLessons'>
         {filteredData.length === 0 ? (
           <p>No results found</p>
         ) : (
-          filteredData.map((item, index) => {
+          filteredData.map((item) => {
             if (item.type === 'group' && item.email !== userEmail) {
               return (
                 <ActiveGroup
-                  key={index}
+                  key={`group-${item.studyGroupId}`}
                   group={item}
                   joinedGroups={joinedGroups.map((group) => group.studyGroupId)}
+                  onLeave={handleLeave}
                 />
               );
             } else if (item.type === 'lesson' && item.email !== userEmail) {
               return (
                 <ActiveLesson
-                  key={index}
+                  key={`lesson-${item.lessonId}`}
                   lesson={item}
                   joinedGroups={joinedLessons.map((lesson) => lesson.lessonId)}
+                  onLeave={handleLeave}
                 />
               );
             }
@@ -390,57 +404,57 @@ function ProfileSetup({ finishSetup }) {
   }
 
   return (
-    <div className="setupWrapper">
-      <form className="forms" onSubmit={onSubmit}>
-        <div className="formDiv">
-          <h1 className="helloText">Dovršite profil!</h1>
-          <div className="inputDiv">
-            <div className="nameWrapper">
+    <div className='setupWrapper'>
+      <form className='forms' onSubmit={onSubmit}>
+        <div className='formDiv'>
+          <h1 className='helloText'>Dovršite profil!</h1>
+          <div className='inputDiv'>
+            <div className='nameWrapper'>
               <input
-                className="nameInfoInput"
-                placeholder="Ime"
-                type="text"
-                name="firstName"
+                className='nameInfoInput'
+                placeholder='Ime'
+                type='text'
+                name='firstName'
                 value={setupForm.firstName}
                 onChange={onChange}
               ></input>
               <input
-                className="nameInfoInput"
-                placeholder="Prezime"
-                type="text"
-                name="lastName"
+                className='nameInfoInput'
+                placeholder='Prezime'
+                type='text'
+                name='lastName'
                 value={setupForm.lastName}
                 onChange={onChange}
               ></input>
             </div>
             <input
-              className="infoInput"
-              type="text"
-              placeholder="Korisničko ime"
+              className='infoInput'
+              type='text'
+              placeholder='Korisničko ime'
               onChange={onChange}
               value={setupForm.username}
-              name="username"
+              name='username'
             ></input>
           </div>
           <input
-            className="infoInput"
-            type="text"
-            placeholder="Lokacija"
+            className='infoInput'
+            type='text'
+            placeholder='Lokacija'
             onChange={onChange}
             value={setupForm.location}
-            name="location"
+            name='location'
           ></input>
-          <div className="dateOfBirth">
-            <label className="dobTitle">Datum rođenja</label>
-            <div className="dobSelector">
-              <div className="dropdown">
+          <div className='dateOfBirth'>
+            <label className='dobTitle'>Datum rođenja</label>
+            <div className='dobSelector'>
+              <div className='dropdown'>
                 <select
-                  name="day"
-                  className="dobSelect"
+                  name='day'
+                  className='dobSelect'
                   value={day}
                   onChange={(e) => handleDOBChange('day', e.target.value)}
                 >
-                  <option value="">Dan</option>
+                  <option value=''>Dan</option>
                   {Array.from({ length: 31 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -448,14 +462,14 @@ function ProfileSetup({ finishSetup }) {
                   ))}
                 </select>
               </div>
-              <div className="dropdown">
+              <div className='dropdown'>
                 <select
-                  name="month"
-                  className="dobSelect"
+                  name='month'
+                  className='dobSelect'
                   value={month}
                   onChange={(e) => handleDOBChange('month', e.target.value)}
                 >
-                  <option value="">Mjesec</option>
+                  <option value=''>Mjesec</option>
                   {[
                     'Siječanj',
                     'Veljača',
@@ -476,14 +490,14 @@ function ProfileSetup({ finishSetup }) {
                   ))}
                 </select>
               </div>
-              <div className="dropdown">
+              <div className='dropdown'>
                 <select
-                  name="year"
-                  className="dobSelect"
+                  name='year'
+                  className='dobSelect'
                   value={year}
                   onChange={(e) => handleDOBChange('year', e.target.value)}
                 >
-                  <option value="">Year</option>
+                  <option value=''>Year</option>
                   {Array.from({ length: 100 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -496,61 +510,61 @@ function ProfileSetup({ finishSetup }) {
               </div>
             </div>
           </div>
-          <div className="genderSelection">
+          <div className='genderSelection'>
             <input
-              className="genderRadioButton"
-              type="radio"
-              name="gender"
+              className='genderRadioButton'
+              type='radio'
+              name='gender'
               value={'M'}
-              id="genderMale"
+              id='genderMale'
               checked={setupForm.gender === 'M'}
               onChange={onChange}
             ></input>
-            <label htmlFor="genderMale" className="toggleOption">
+            <label htmlFor='genderMale' className='toggleOption'>
               Muško
             </label>
             <input
-              className="genderRadioButton"
-              type="radio"
-              name="gender"
+              className='genderRadioButton'
+              type='radio'
+              name='gender'
               value={'F'}
-              id="genderFemale"
+              id='genderFemale'
               checked={setupForm.gender === 'F'}
               onChange={onChange}
             ></input>
-            <label htmlFor="genderFemale" className="toggleOption">
+            <label htmlFor='genderFemale' className='toggleOption'>
               Žensko
             </label>
           </div>
-          <div className="roleSelection">
+          <div className='roleSelection'>
             <input
-              className="roleRadioButton"
-              type="radio"
-              name="role"
+              className='roleRadioButton'
+              type='radio'
+              name='role'
               value={'Student'}
-              id="roleStudent"
+              id='roleStudent'
               checked={setupForm.role === 'Student'}
               onChange={onChange}
             ></input>
-            <label htmlFor="roleStudent" className="toggleOption">
+            <label htmlFor='roleStudent' className='toggleOption'>
               Student
             </label>
             <input
-              className="roleRadioButton"
-              type="radio"
-              name="role"
+              className='roleRadioButton'
+              type='radio'
+              name='role'
               value={'Professor'}
-              id="roleProfessor"
+              id='roleProfessor'
               checked={setupForm.role === 'Professor'}
               onChange={onChange}
             ></input>
-            <label htmlFor="roleProfessor" className="toggleOption">
+            <label htmlFor='roleProfessor' className='toggleOption'>
               Profesor
             </label>
           </div>
-          <p className="errorMessage">{errorMessage}</p>
-          <div className="buttonDiv">
-            <button className="inputButton" type="submit">
+          <p className='errorMessage'>{errorMessage}</p>
+          <div className='buttonDiv'>
+            <button className='inputButton' type='submit'>
               Predaj
             </button>
           </div>

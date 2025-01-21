@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import ProfessorProfile from './ProfessorProfile';
 import { serverFetch } from '../hooks/serverUtils';
 
-function LessonInfo({ lesson, onClose, joinedGroups }) {
+function LessonInfo({ lesson, onClose, joinedGroups, onLeave }) {
   const mapLocation = {
     lat: parseFloat(lesson.xCoordinate),
     lng: parseFloat(lesson.yCoordinate)
@@ -16,6 +16,13 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
   const [locationName, setLocationName] = useState('');
   const [materials, setMaterials] = useState([]);
   const [showProfile, setShowProfile] = useState(false);
+  const [joinedGroupsState, setJoinedGroups] = useState(joinedGroups);
+  const [joined, setJoined] = useState(
+    joinedGroupsState.includes(lesson.lessonId)
+  );
+  const [currentNumberOfMembers, setCurrentNumberOfMembers] = useState(
+    lesson.currentNumberOfMembers
+  );
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: mapLocation }, (results, status) => {
@@ -45,9 +52,7 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
     };
 
     fetchMaterials();
-  }, [lesson.lessonId]);
-
-  const joined = joinedGroups.includes(lesson.lessonId);
+  }, [lesson.lessonId, joinedGroupsState]);
 
   const handleProfileClick = () => {
     setShowProfile(true);
@@ -59,12 +64,43 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
 
   const handleJoinGroup = async () => {
     const email = localStorage.getItem('user_email');
-    await joinGroup(lesson.lessonId, email);
+    try {
+      const response = await joinGroup(lesson.lessonId, email);
+      if (response.ok) {
+        const data = response.json();
+        if (data.message === 'OK') {
+          joinedGroups.push(lesson.lessonId);
+          setJoinedGroups(joinedGroups);
+          setJoined(true);
+          setCurrentNumberOfMembers(currentNumberOfMembers + 1);
+        } else if (data.message === 'GROUP_FULL') alert('Grupa popunjena');
+      } else {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleLeaveGroup = async () => {
     const email = localStorage.getItem('user_email');
-    await leaveGroup(lesson.lessonId, email);
+    try {
+      const response = await leaveGroup(lesson.lessonId, email);
+      if (response.ok) {
+        const updatedGroups = joinedGroups.filter(
+          (id) => id !== lesson.lessonId
+        );
+        joinedGroups.splice(0, joinedGroups, ...updatedGroups);
+        setJoinedGroups(joinedGroups);
+        setJoined(false);
+        setCurrentNumberOfMembers(currentNumberOfMembers - 1);
+        onLeave(lesson.lessonId, 'lesson');
+      } else {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   async function joinGroup(id, username) {
@@ -78,9 +114,7 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
 
     try {
       const response = await serverFetch(endpoint, options);
-      if (!response.ok) {
-        console.log('Error while fetching');
-      }
+      return response;
     } catch (error) {
       console.log(error);
     }
@@ -97,9 +131,7 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
 
     try {
       const response = await serverFetch(endpoint, options);
-      if (!response.ok) {
-        console.log('Error while fetching');
-      }
+      return response;
     } catch (error) {
       console.log(error);
     }
@@ -115,7 +147,12 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
       <div className="allGroupInfoWrapper">
         <div className="infoGroup">
           <div className="groupTitle">
-            <label>{'Instrukcije'}</label>
+            <div className="currentMembers">
+              <label>{'Instrukcije'}</label>
+              <label>
+                Broj prijavljenih : {currentNumberOfMembers}/{lesson.maxMembers}
+              </label>
+            </div>
             <h2>{lesson.subject}</h2>
           </div>
         </div>
@@ -197,7 +234,7 @@ function LessonInfo({ lesson, onClose, joinedGroups }) {
           {materials.length > 0 ? (
             <ul>
               {materials.map((material) => (
-                <li key={material.id}>
+                <li key={material.materialId}>
                   <a
                     href={`data:${material.mimeType};base64,${material.fileData}`}
                     download={material.fileName}
@@ -264,10 +301,12 @@ LessonInfo.propTypes = {
     minMembers: PropTypes.number,
     price: PropTypes.string,
     subject: PropTypes.string,
-    lessonId: PropTypes.string
+    lessonId: PropTypes.number,
+    currentNumberOfMembers: PropTypes.number
   }).isRequired,
   onClose: PropTypes.func.isRequired,
-  joinedGroups: PropTypes.array.isRequired
+  joinedGroups: PropTypes.array.isRequired,
+  onLeave: PropTypes.func.isRequired
 };
 
 export default LessonInfo;

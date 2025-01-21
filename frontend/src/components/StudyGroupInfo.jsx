@@ -8,7 +8,7 @@ import StudentProfile from './StudentProfile';
 import { serverFetch } from '../hooks/serverUtils';
 import { useEffect } from 'react';
 
-function StudyGroupInfo({ group, onClose, joinedGroups }) {
+function StudyGroupInfo({ group, onClose, joinedGroups, onLeave }) {
   const [showProfile, setShowProfile] = useState(false);
   const mapLocation = {
     lat: parseFloat(group.xCoordinate),
@@ -17,7 +17,13 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
   const [locationName, setLocationName] = useState();
   const [materials, setMaterials] = useState([]);
 
-  const joined = joinedGroups.includes(group.studyGroupId);
+  const [joinedGroupsState, setJoinedGroups] = useState(joinedGroups);
+  const [joined, setJoined] = useState(
+    joinedGroupsState.includes(group.studyGroupId)
+  );
+  const [currentNumberOfMembers, setCurrentNumberOfMembers] = useState(
+    group.currentNumberOfMembers
+  );
 
   const getLocation = () => {
     const geocoder = new google.maps.Geocoder();
@@ -60,12 +66,43 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
 
   const handleJoinGroup = async () => {
     const email = localStorage.getItem('user_email');
-    await joinGroup(group.studyGroupId, email);
+    try {
+      const response = await joinGroup(group.studyGroupId, email);
+      if (response.ok) {
+        const data = response.json();
+        if (data.message === 'OK') {
+          joinedGroups.push(group.studyGroupId);
+          setJoinedGroups(joinedGroups);
+          setJoined(true);
+          setCurrentNumberOfMembers(currentNumberOfMembers + 1);
+        } else if (data.message === 'GROUP_FULL') alert('Grupa popunjena');
+      } else {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleLeaveGroup = async () => {
     const email = localStorage.getItem('user_email');
-    await leaveGroup(group.studyGroupId, email);
+    try {
+      const response = await leaveGroup(group.studyGroupId, email);
+      if (response.ok) {
+        const updatedGroups = joinedGroups.filter(
+          (id) => id !== group.studyGroupId
+        );
+        joinedGroups.splice(0, joinedGroups, ...updatedGroups);
+        setJoinedGroups(joinedGroups);
+        setJoined(false);
+        setCurrentNumberOfMembers(currentNumberOfMembers - 1);
+        onLeave(group.studyGroupId, 'group');
+      } else {
+        console.log('Error while fetching');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   async function joinGroup(id, username) {
@@ -79,9 +116,7 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
 
     try {
       const response = await serverFetch(endpoint, options);
-      if (!response.ok) {
-        console.log('Error while fetching');
-      }
+      return response;
     } catch (error) {
       console.log(error);
     }
@@ -98,71 +133,74 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
 
     try {
       const response = await serverFetch(endpoint, options);
-      if (!response.ok) {
-        console.log('Error while fetching');
-      }
+      return response;
     } catch (error) {
       console.log(error);
     }
   }
 
   return (
-    <div className="groupInfoWrapper">
-      <div className="exit">
+    <div className='groupInfoWrapper'>
+      <div className='exit'>
         <button onClick={onClose}>
-          <i className="fa-regular fa-circle-xmark"></i>
+          <i className='fa-regular fa-circle-xmark'></i>
         </button>
       </div>
-      <div className="allGroupInfoWrapper">
-        <div className="infoGroup">
-          <div className="groupTitle">
-            <label>{'StudyGroup'}</label>
+      <div className='allGroupInfoWrapper'>
+        <div className='infoGroup'>
+          <div className='groupTitle'>
+            <div className='currentMembers'>
+              <label>{'StudyGroup'}</label>
+              <label>
+                Broj prijavljenih : {currentNumberOfMembers}/{group.maxMembers}
+              </label>
+            </div>
             <h2>{group.groupName}</h2>
           </div>
         </div>
-        <div className="infoGroup">
-          <div className="lablesWrapper">
+        <div className='infoGroup'>
+          <div className='lablesWrapper'>
             <label>Organizator</label>
           </div>
-          <div className="lablesWrapperLesson">
+          <div className='lablesWrapperLesson'>
             <label>{group.username}</label>
           </div>
-          <div className="lablesWrapper">
-            <button className="profileInfo" onClick={handleProfileClick}>
-              <i className="fa-regular fa-user"></i>
+          <div className='lablesWrapper'>
+            <button className='profileInfo' onClick={handleProfileClick}>
+              <i className='fa-regular fa-user'></i>
             </button>
           </div>
         </div>
-        <div className="infoGroup">
-          <div className="lablesWrapper">
+        <div className='infoGroup'>
+          <div className='lablesWrapper'>
             <label>Datum</label>
           </div>
-          <div className="lablesWrapperLesson">
+          <div className='lablesWrapperLesson'>
             <label>{group.date}</label>
           </div>
         </div>
-        <div className="infoGroup">
-          <div className="lablesWrapper">
+        <div className='infoGroup'>
+          <div className='lablesWrapper'>
             <label>Vrijeme</label>
           </div>
-          <div className="lablesWrapperLesson">
+          <div className='lablesWrapperLesson'>
             <label>{group.time}</label>
           </div>
         </div>
-        <div className="infoGroup">
-          <div className="lablesWrapper">
+        <div className='infoGroup'>
+          <div className='lablesWrapper'>
             <label>Opis</label>
           </div>
-          <div className="aboutLableWrapper">
+          <div className='aboutLableWrapper'>
             <label>{group.description}</label>
           </div>
         </div>
-        <div className="infoGroup">
+        <div className='infoGroup'>
           <label>Priložene datoteke</label>
           {materials.length > 0 ? (
             <ul>
               {materials.map((material) => (
-                <li key={material.id}>
+                <li key={material.materialId}>
                   <a
                     href={`data:${material.mimeType};base64,${material.fileData}`}
                     download={material.fileName}
@@ -176,17 +214,17 @@ function StudyGroupInfo({ group, onClose, joinedGroups }) {
             <p>Nema priloženih datoteka.</p>
           )}
         </div>
-        <div className="joinGroupButton">
+        <div className='joinGroupButton'>
           {!joined && <button onClick={handleJoinGroup}>Pridružite se!</button>}
           {joined && <button onClick={handleLeaveGroup}>Napusti grupu!</button>}
         </div>
       </div>
-      <div className="mapsLocation">
-        <div className="locationName">
+      <div className='mapsLocation'>
+        <div className='locationName'>
           <label>Lokacija:</label>
           <label>{locationName}</label>
         </div>
-        <div className="maps">
+        <div className='maps'>
           <GoogleMap
             center={mapLocation}
             zoom={15}
@@ -227,10 +265,12 @@ StudyGroupInfo.propTypes = {
     type: PropTypes.string,
     maxMembers: PropTypes.number,
     groupName: PropTypes.string,
-    studyGroupId: PropTypes.number
+    studyGroupId: PropTypes.number,
+    currentNumberOfMembers: PropTypes.number
   }).isRequired,
   onClose: PropTypes.func.isRequired,
-  joinedGroups: PropTypes.array.isRequired
+  joinedGroups: PropTypes.array.isRequired,
+  onLeave: PropTypes.func.isRequired
 };
 
 export default StudyGroupInfo;

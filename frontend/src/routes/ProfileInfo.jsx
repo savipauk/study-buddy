@@ -130,6 +130,18 @@ function ProfileInfo() {
     }
   }
 
+  const handleLeave = (id, type) => {
+    if (type === 'group') {
+      setJoinedGroups((prevGroups) =>
+        prevGroups.filter((group) => group.studyGroupId !== id)
+      );
+    } else if (type === 'lesson') {
+      setJoinedLessons((prevLessons) =>
+        prevLessons.filter((lesson) => lesson.lessonId !== id)
+      );
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!isProfileSetupComplete) {
@@ -144,7 +156,7 @@ function ProfileInfo() {
       }
     };
     fetchData();
-  }, [isProfileSetupComplete, navigate]);
+  }, [isProfileSetupComplete, navigate, username]);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -158,7 +170,11 @@ function ProfileInfo() {
   }, [role]);
 
   useEffect(() => {
-    setUserJoinedGroups(...joinedGroups, ...joinedLessons);
+    const combined = [
+      ...joinedGroups.map((group) => ({ ...group, type: 'group' })),
+      ...joinedLessons.map((lesson) => ({ ...lesson, type: 'lesson' }))
+    ];
+    setUserJoinedGroups(combined);
   }, [joinedGroups, joinedLessons]);
 
   return (
@@ -199,22 +215,24 @@ function ProfileInfo() {
             {userGroups.length === 0 ? (
               <p>Korisnik nije kreirao niti jednu grupu</p>
             ) : (
-              userGroups.map((item, index) =>
+              userGroups.map((item) =>
                 role === 'STUDENT' ? (
                   <ActiveGroup
-                    key={index}
+                    key={`group-${item.studyGroupId}`}
                     group={item}
                     joinedGroups={joinedGroups.map(
                       (group) => group.studyGroupId
                     )}
+                    onLeave={handleLeave}
                   />
                 ) : role === 'PROFESSOR' ? (
                   <ActiveLesson
-                    key={index}
+                    key={`lesson-${item.lessonId}`}
                     lesson={item}
                     joinedGroups={joinedLessons.map(
                       (group) => group.studyGroupId
                     )}
+                    onLeave={handleLeave}
                   />
                 ) : null
               )
@@ -227,22 +245,24 @@ function ProfileInfo() {
               <p>Korisnik pridruzen niti jednoj grupi</p>
             ) : (
               <>
-                {joinedGroups.map((item, index) => (
+                {joinedGroups.map((item) => (
                   <ActiveGroup
-                    key={index}
+                    key={`group-${item.studyGroupId}`}
                     group={item}
                     joinedGroups={joinedGroups.map(
                       (group) => group.studyGroupId
                     )}
+                    onLeave={handleLeave}
                   />
                 ))}
-                {joinedLessons.map((item, index) => (
+                {joinedLessons.map((item) => (
                   <ActiveLesson
-                    key={index}
+                    key={`lesson-${item.lessonId}`}
                     lesson={item}
                     joinedGroups={joinedLessons.map(
                       (lesson) => lesson.lessonId
                     )}
+                    onLeave={handleLeave}
                   />
                 ))}
               </>
