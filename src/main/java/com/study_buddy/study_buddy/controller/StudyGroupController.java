@@ -157,13 +157,16 @@ public class StudyGroupController {
     // Add a student to a study group
     @PostMapping("/{groupId}/add-student/{email}")
     public ResponseEntity<String> addStudentToGroup(@PathVariable("groupId") Long groupId, @PathVariable("email") String email) {
-        User user = userService.getUserByEmail(email);
-        Student student = studentService.getStudentByUserId(user.getUserId());
-        StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
+        try{
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            StudyGroup studyGroup = studyGroupService.getStudyGroupById(groupId);
+            groupMemberService.addStudentToGroup(student, studyGroup);
+            return ResponseEntity.ok("Student added to the group successfully.");
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
 
-        groupMemberService.addStudentToGroup(student, studyGroup);
-
-        return ResponseEntity.ok("Student added to the group successfully.");
     }
 
     // TODO - edit this functions

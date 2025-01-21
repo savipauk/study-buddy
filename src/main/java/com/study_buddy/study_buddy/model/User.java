@@ -74,6 +74,10 @@ public class User {
     @Column(name = "city", length = 100)
     private String city;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "profile_status")
+    private Status status;
+
     // CONNECTING TABLES USERS-STUDENTS
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;
@@ -224,6 +228,10 @@ public class User {
     public String getCity() { return city; }
 
     public void setCity(String city) { this.city = city; }
+
+    public Status getStatus() { return status; }
+
+    public void setStatus(Status status) { this.status = status; }
 
     @Override
     public String toString() {
