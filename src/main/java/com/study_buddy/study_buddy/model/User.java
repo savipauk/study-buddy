@@ -50,7 +50,7 @@ public class User {
     @Column(name = "refresh_token", length = 255)
     private String refresh_Token;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private StudyRole role;
 
@@ -60,7 +60,7 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Lob // Marks this column as a Large Object (BLOB)
+    @Lob // Marks this column as a Large Object (BYTEA)
     @Column(name = "profile_picture", nullable = true)
     private byte[] profilePicture;
 
