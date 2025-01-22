@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS Reviews CASCADE;
 DROP TABLE IF EXISTS Materials CASCADE;
 
 CREATE TABLE Users (
-    user_id INT NOT NULL AUTO_INCREMENT,
+    user_id SERIAL NOT NULL,
     email VARCHAR(100),
     password VARCHAR(255),
     oauth_provider VARCHAR(50) NOT NULL,
@@ -19,40 +19,43 @@ CREATE TABLE Users (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     username VARCHAR(100) NOT NULL,
-    profile_picture BLOB,
+    profile_picture OID,
     description TEXT,
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
     date_of_birth DATE,
-    gender ENUM('M', 'F', 'NOTDEFINED'),
+    gender VARCHAR(15) CHECK (gender IN ('M', 'F', 'NOTDEFINED')),
     city VARCHAR(100),
-    role ENUM('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED') NOT NULL,
-    profile_status ENUM('ACTIVE', 'DEACTIVATED'),
+    role VARCHAR(20) CHECK (role IN ('STUDENT', 'PROFESSOR', 'ADMIN', 'UNASSIGNED')),
+    profile_status VARCHAR(20) CHECK (profile_status IN ('ACTIVE', 'DEACTIVATED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id),
-    UNIQUE (email, oauth_id)
+    CONSTRAINT unique_email_oauth UNIQUE (email, oauth_id)
 );
 
 CREATE TABLE Students (
-    student_id INT NOT NULL AUTO_INCREMENT,
+    student_id SERIAL NOT NULL,
     user_id INT NOT NULL, -- foreign key prema Users
     PRIMARY KEY (student_id),
     UNIQUE (user_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) 
+        REFERENCES Users(user_id) 
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Professors (
-    professor_id INT NOT NULL AUTO_INCREMENT,
+    professor_id SERIAL NOT NULL,
     user_id INT NOT NULL, -- foreign key prema Users
     PRIMARY KEY (professor_id),
     UNIQUE (user_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    CONSTRAINT fk_professor_user FOREIGN KEY (user_id) 
+        REFERENCES Users(user_id) 
+        ON DELETE CASCADE
 );
 
-
 CREATE TABLE StudyGroups (
-    group_id INT NOT NULL AUTO_INCREMENT,
+    group_id SERIAL NOT NULL,
     creator_id INT NOT NULL, -- foreign key prema Users
     group_name VARCHAR(255) NOT NULL,
     location VARCHAR(255),
@@ -68,26 +71,27 @@ CREATE TABLE StudyGroups (
     --FOREIGN KEY (creator_id) REFERENCES Students(student_id)
 
     --Use this if want to completely delete all studyGroup created by student with creator_id
-    FOREIGN KEY (creator_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    CONSTRAINT fk_studygroup_creator FOREIGN KEY (creator_id) 
+        REFERENCES Students(student_id) 
+        ON DELETE CASCADE
 );
 
 CREATE TABLE GroupMembers (
-    group_id BIGINT NOT NULL,
-    member_id BIGINT NOT NULL,
+    group_id INT NOT NULL,
+    member_id INT NOT NULL,
     join_date TIMESTAMP,
     PRIMARY KEY (group_id, member_id),
-    CONSTRAINT fk_group
-        FOREIGN KEY (group_id)
-        REFERENCES StudyGroups(group_id)
+    CONSTRAINT fk_group FOREIGN KEY (group_id) 
+        REFERENCES StudyGroups(group_id) 
         ON DELETE CASCADE,
-    CONSTRAINT fk_member
-        FOREIGN KEY (member_id)
-        REFERENCES Students(student_id)
+    
+    CONSTRAINT fk_member FOREIGN KEY (member_id) 
+        REFERENCES Students(student_id) 
         ON DELETE CASCADE
 );
 
 CREATE TABLE Lessons (
-    lesson_id INT NOT NULL AUTO_INCREMENT,
+    lesson_id SERIAL NOT NULL,
     professor_id INT NOT NULL, -- foreign key prema Professors
     subject VARCHAR(255),
     duration VARCHAR(255 )NOT NULL, -- trajanje u minutama
@@ -96,7 +100,7 @@ CREATE TABLE Lessons (
     x_coordinate VARCHAR(255),
     y_coordinate VARCHAR(255),
     location VARCHAR(255),
-    lesson_type ENUM('MASS', 'ONE_ON_ONE') NOT NULL,
+    lesson_type VARCHAR(20) CHECK (lesson_type IN ('MASS', 'ONE_ON_ONE')) NOT NULL, 
     price VARCHAR(255),
     date DATE NOT NULL,
     time TIME NOT NULL,
@@ -106,48 +110,64 @@ CREATE TABLE Lessons (
     --FOREIGN KEY (professor_id) REFERENCES Professors(professor_id)
 
     --Use this if we want to completely delete all lessons created by professor with professor_id
-    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
+    CONSTRAINT fk_professor FOREIGN KEY (professor_id) 
+        REFERENCES Professors(professor_id) 
+        ON DELETE CASCADE
 );
 
 CREATE TABLE LessonParticipants (
     lesson_id INT NOT NULL, -- foreign key for Lessons
     participant_id INT NOT NULL, -- foreign key for Students
     participation_date TIMESTAMP,
-    PRIMARY KEY (lesson_id, participant_id),
-    FOREIGN KEY (lesson_id) REFERENCES Lessons(lesson_id) ON DELETE CASCADE,
-    FOREIGN KEY (participant_id) REFERENCES Students(student_id) ON DELETE CASCADE
+    CONSTRAINT fk_lesson FOREIGN KEY (lesson_id) 
+        REFERENCES Lessons(lesson_id) 
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_participant FOREIGN KEY (participant_id) 
+        REFERENCES Students(student_id) 
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Reports (
-    report_id INT NOT NULL AUTO_INCREMENT,
+    report_id SERIAL NOT NULL,
     reporter_id INT NOT NULL, -- ID korisnika koji prijavljuje
     reported_user_id INT NOT NULL, -- ID korisnika koji je prijavljen
     reason VARCHAR(255) NOT NULL, -- Razlog prijave
     report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status ENUM ('OPEN', 'CLOSED', 'IN_PROGRESS', 'REJECTED'),
+    status VARCHAR(20) CHECK (status IN ('OPEN', 'CLOSED', 'IN_PROGRESS', 'REJECTED')) NOT NULL, 
     PRIMARY KEY (report_id),
-    FOREIGN KEY (reporter_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (reported_user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    CONSTRAINT fk_reporter FOREIGN KEY (reporter_id) 
+        REFERENCES Users(user_id) 
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_reported_user FOREIGN KEY (reported_user_id) 
+        REFERENCES Users(user_id) 
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Reviews (
-    review_id INT NOT NULL AUTO_INCREMENT,
+    review_id SERIAL NOT NULL,
     student_id INT NOT NULL, -- ID studenta koji daje recenziju
     professor_id INT NOT NULL, -- ID profesora kojeg se recenzira
     rating INT CHECK (rating BETWEEN 1 AND 5), -- Ocjena, npr. 1 do 5
     comment TEXT,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (review_id),
-    FOREIGN KEY (student_id) REFERENCES Students(student_id) ON DELETE CASCADE,
-    FOREIGN KEY (professor_id) REFERENCES Professors(professor_id) ON DELETE CASCADE
+    CONSTRAINT fk_student FOREIGN KEY (student_id) 
+        REFERENCES Students(student_id) 
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_professor FOREIGN KEY (professor_id) 
+        REFERENCES Professors(professor_id) 
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Materials (
-    material_id INT NOT NULL AUTO_INCREMENT,
+    material_id SERIAL NOT NULL,
     user_id INT NOT NULL, -- ID korisnika koji je postavio materijal
     group_id INT, -- Ako je materijal postavljen za grupu
     lesson_id INT, -- Ako je materijal postavljen za lekciju
-    file_data LONGBLOB,
+    file_data OID,
     file_size INT,
     file_name VARCHAR(255),
     mime_type VARCHAR(255),
@@ -159,14 +179,27 @@ CREATE TABLE Materials (
     FOREIGN KEY (lesson_id) REFERENCES Lessons(lesson_id) ON DELETE SET NULL
 );
 
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS '
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+' LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_set_timestamp
+BEFORE UPDATE ON Users
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
 -- User entries
 INSERT INTO Users (email, password, username,oauth_provider, oauth_id, first_name, last_name, description, access_token, refresh_token, role, gender, date_of_birth, city, profile_status)
 VALUES ('student1@example.com', '$2a$10$BD1piSn8s8QgTo6lqegAJurHPkI4H6psG12L1JrKUJz6KYYfiXDue', 'student1', '', '', 'Alice', 'Johnson', 'Physics enthusiast', 'accessToken1', 'refreshToken1', 'STUDENT', 'M', '2003-06-20', 'Zagreb', 'ACTIVE'),
     ('student2@example.com', '$2a$10$FFLAIEctq8RB.mp1LlXuKuZ7Un9cIUsLlVhsYY310LUVA0tBDloMm','student2', '', '', 'Bob', 'Smith', 'Aspiring physicist', 'accessToken2', 'refreshToken2', 'STUDENT', 'F', '2003-06-03', 'Zagreb', 'ACTIVE'),
-    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'Professor','M', '1974-01-15', 'Zagreb', 'ACTIVE'),
-    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'Professor','M', '1971-11-12', 'Zagreb', 'ACTIVE'),
-    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'Admin', 'F', '1965-12-02', 'Zagreb', 'ACTIVE'),
-    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'Admin', 'M', '1980-03-04', 'Zagreb', 'ACTIVE'),
+    ('professor1@example.com', '$2a$10$CJa71bFBwtMyFLwtIm/ysOlriZyoCinsBZr3WntEkRMg.l8LOO8TO','professor1', 'Google', 'oauth_prof1', 'Dr. Carol', 'Davis', 'Professor of Quantum Mechanics', 'accessToken3', 'refreshToken3', 'PROFESSOR','M', '1974-01-15', 'Zagreb', 'ACTIVE'),
+    ('professor2@example.com', '$2a$10$sA1LGAPyLVRJNGGH7n5NcuXywbDXYMe08pgfNtnPHXoYrnhNS1gVO','professor2' ,'Google', 'oauth_prof2', 'Dr. David', 'Lee', 'Professor of Theoretical Physics', 'accessToken4', 'refreshToken4', 'PROFESSOR','M', '1971-11-12', 'Zagreb', 'ACTIVE'),
+    ('admin1@example.com', '$2a$10$DNGjWLtWGf2MUejpWbZL/eJhsnzgXug9oFZaXfw5lRDaj4QhT1VsW','admin1' ,'Google', 'oauth_admin1', 'Emma', 'Thomas', 'Admin with full access', 'accessToken5', 'refreshToken5', 'ADMIN', 'F', '1965-12-02', 'Zagreb', 'ACTIVE'),
+    ('admin2@example.com', '$2a$10$UyzZZ4Mb4FYBm027NI0mo.ZyePtoh4KbGwipgnsM/XzGaMCyLHcnS','admin2' ,'Google', 'oauth_admin2', 'Frank', 'White', 'Responsible for managing users', 'accessToken6', 'refreshToken6', 'ADMIN', 'M', '1980-03-04', 'Zagreb', 'ACTIVE'),
     ('student3@example.com', '$2a$10$K.2FEUx5RNYnfs6VeO79aedlChH.uFru9lh0DdyFcXrJ9gR7hmJiO', 'student3','','','Štefica', 'Štefić','Žena, majka, kraljica', 'accessToken3', 'refreshToken3', 'STUDENT', 'F', '1970-04-01', 'Bedekovčina', 'ACTIVE');
 -- student1 password: 'password123'
 -- student2 password: 'password345'
