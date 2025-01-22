@@ -9,6 +9,7 @@ import {
 } from '../hooks/serverUtils';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 function Profile() {
   return (
@@ -17,6 +18,7 @@ function Profile() {
     </>
   );
 }
+
 function UserForm() {
   const navigate = useNavigate();
   const [userInfoForm, setUserInfoForm] = useState({
@@ -30,8 +32,11 @@ function UserForm() {
   const [userHash, setUserHash] = useState('');
   const [showEditWindow, setShowEditWindow] = useState(false);
   const [showPasswordWindow, setShowPasswordWindow] = useState(false);
-
-  const isProfileSetupComplete = localStorage.getItem('isProfileSetupComplete');
+  const [profilePictureUrl, setProfilePictureUrl] = useState('');
+  const { signOut } = useAuth();
+  const isProfileSetupComplete = JSON.parse(
+    localStorage.getItem('isProfileSetupComplete')
+  );
 
   const loggedInWithOAUTH =
     localStorage.getItem('is_logged_in_with_google') === 'true' || false;
@@ -49,7 +54,6 @@ function UserForm() {
     e.preventDefault();
     setShowPasswordWindow(true);
   };
-
   const handlePasswordSave = (hash) => {
     setUserHash(hash);
     setShowPasswordWindow(false);
@@ -58,6 +62,11 @@ function UserForm() {
   useEffect(() => {
     const fetchUserData = async () => {
       const userEmail = localStorage.getItem('user_email');
+      if (!userEmail) {
+        navigate('/');
+        return;
+      }
+
       const userData = await getUserData(userEmail);
       if (userData) {
         setUserHash(userData.password);
@@ -68,14 +77,141 @@ function UserForm() {
           Email: userData.email,
           Bio: userData.description
         });
+
+        const endpoint = `/users/profile-picture/${userData.username}`;
+        const options = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+
+        try {
+          const response = await serverFetch(endpoint, options);
+          if (response.ok) {
+            const blob = await response.blob();
+            if (blob.size > 0) {
+              setProfilePictureUrl(URL.createObjectURL(blob));
+            } else {
+              setProfilePictureUrl(
+                'https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'
+              );
+            }
+          }
+        } catch (error) {
+          console.error('Greška pri dohvaćanju profilne slike:', error);
+        }
       }
     };
+
     if (isProfileSetupComplete) {
       fetchUserData();
     } else {
-      navigate('/users/home');
+      navigate('/');
     }
   }, [isProfileSetupComplete, navigate]);
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const endpoint = `/users/profile-picture/${userInfoForm.Username}`;
+      const options = {
+        method: 'POST',
+        body: formData
+      };
+      const response = await serverFetch(endpoint, options);
+
+      if (response.ok) {
+        console.log('Profilna slika uspješno dodana.');
+        const updatedResponse = await serverFetch(
+          `/users/profile-picture/${userInfoForm.Username}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        if (updatedResponse.ok) {
+          const blob = await updatedResponse.blob();
+          setProfilePictureUrl(URL.createObjectURL(blob));
+        }
+      } else {
+        console.error('Profilna slika nije uspješno dodana', response.status);
+      }
+    }
+  };
+
+  const handleDeactivationProfile = async () => {
+    const userEmail = localStorage.getItem('user_email');
+    if (!userEmail) {
+      console.error('User email not found in local storage.');
+      return;
+    }
+
+    const confirmDeactivation = window.confirm(
+      'Jeste li sigurni da želite deaktivirati profil? Ako izvršite ovu radnju biti ćete izbačeni iz svih StudyGroup-a i Instrukcija u koje ste prijavljeni.'
+    );
+
+    if (!confirmDeactivation) return;
+
+    const endpoint = `/users/profile/deactivate/${userEmail}`;
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        console.log('Profil je uspješno deaktiviran.');
+        signOut();
+        navigate('/');
+      } else {
+        console.error('Greška prilikom deaktivacije.');
+      }
+    } catch (error) {
+      console.error('Greška:', error);
+    }
+  };
+
+  const handleDeletingProfile = async () => {
+    const userEmail = localStorage.getItem('user_email');
+    if (!userEmail) {
+      console.error('User email not found in local storage.');
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      'Jeste li sigurni da želite obrisati profil? Ova radnja ne može se poništiti.'
+    );
+
+    if (!confirmDelete) return;
+
+    const endpoint = `/users/delete/${userEmail}`;
+    const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+      const response = await serverFetch(endpoint, options);
+      if (response.ok) {
+        console.log('Profil uspješno izbrisan.');
+        signOut();
+        navigate('/');
+      } else {
+        console.error('Failed to delete the profile.', response.status);
+      }
+    } catch (error) {
+      console.error('Error occurred while deleting the profile:', error);
+    }
+  };
 
   function onChange(event) {
     const { name, value } = event.target;
@@ -89,14 +225,18 @@ function UserForm() {
         <div className="allInfoWrapper">
           <div className="profilePictureWrapper">
             <div className="profilePicture">
-              <img
-                src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
-                className="image"
-              ></img>
+              <img src={profilePictureUrl} className="image" />
               <div className="wrapper">
-                <button className="uploadButton">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="fileUpload"
+                  style={{ display: 'none' }}
+                  onChange={handleImageUpload}
+                />
+                <label htmlFor="fileUpload" className="uploadButton">
                   <i className="fa-solid fa-cloud-arrow-up"></i>
-                </button>
+                </label>
                 <p className="aboutText">Opis</p>
                 <textarea
                   readOnly
@@ -159,7 +299,16 @@ function UserForm() {
         </div>
         <div className="editWrapper">
           <button className="editButton" onClick={handleEditClick}>
-            Uredi profil!
+            Uredite profil!
+          </button>
+          <button
+            className="deactivateButton"
+            onClick={handleDeactivationProfile}
+          >
+            Deaktivirajte profil!
+          </button>
+          <button className="deletingButton" onClick={handleDeletingProfile}>
+            Obrišite profil!
           </button>
         </div>
         {showEditWindow && (

@@ -3,7 +3,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  border: 2px solid black;
+  border: 2px solid whitesmoke;
+  background-color: #5d9cec;
   border-radius: 8px;
   padding: 0.7em;
   margin: 1em;
@@ -13,6 +14,7 @@
   width: 100%;
   font-weight: bold;
   margin-bottom: auto;
+  color: #2c537e;
 }
 
 .basicInfoWrapper {
@@ -39,7 +41,7 @@
 }
 
 .infoSubject {
-  width: 20%;
+  width: 40%;
   display: flex;
   height: auto;
   font-size: 1.6em;
@@ -50,13 +52,14 @@
   width: 100%;
   display: flex;
   justify-content: right;
-  height: 60%;
+  height: 50%;
 }
 
 .joinGroup button {
   background-color: black;
-  color: white;
-  font-size: 1.2em;
+  color: whitesmoke;
+  font-size: 1em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .wrapper {
@@ -85,7 +88,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: start;
-  border: 2px solid black;
+  border: 2px solid whitesmoke;
+  background-color: #5d9cec;
   border-radius: 8px;
   padding: 0.7em;
   padding-left: 1.4em;
@@ -96,9 +100,15 @@
 .groupTitle {
   width: 100%;
 }
+
 .groupTitle h2 {
   padding: 0;
   margin: 0;
+}
+
+.groupTitle label {
+  color: #2c537e;
+  font-weight: bold;
 }
 
 .allGroupInfoWrapper {
@@ -118,13 +128,23 @@
   margin: 0.5em;
 }
 
+.currentMembers{
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	gap:0.3em;
+}
+
+.currentMembers label {
+	width: 100%;
+}
+
 .maps {
   display: flex;
-  width: 100%;
+  width: 95%;
   height: 20em;
-  border: solid black 2px;
-  border-right: 0px;
-  border-radius: 8px 0px 0px 8px;
+  border: solid whitesmoke 2px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -183,6 +203,7 @@
   position: absolute;
   top: 0;
   right: 4px;
+  background-color: #5d9cec;
 }
 
 .exit button {
@@ -205,12 +226,16 @@
   padding-right: 0.5em;
 }
 
-.goToProfileButton{
-	padding: 0;
-	background-color: transparent;
-	border: 0px;
+.profileInfo {
+  background-color: #5d9cec;
 }
 
-.goToProfileButton:hover{
-	transform: scale(1.3);
+.goToProfileButton {
+  padding: 0;
+  background-color: transparent;
+  border: 0px;
+}
+
+.goToProfileButton:hover {
+  transform: scale(1.3);
 }

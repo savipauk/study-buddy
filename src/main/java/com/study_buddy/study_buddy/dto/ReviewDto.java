@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 
 public class ReviewDto {
     private String studentUsername;
+    private String studentEmail;
     private String professorUsername;
+    private String professorEmail;
     private int rating;
     private String comment;
     private LocalDateTime reviewDateTime;
@@ -45,4 +47,12 @@ public class ReviewDto {
     public Long getReviewId() { return reviewId; }
 
     public void setReviewId(Long reviewId) { this.reviewId = reviewId; }
+
+    public String getStudentEmail() { return studentEmail; }
+
+    public void setStudentEmail(String studentEmail) { this.studentEmail = studentEmail; }
+
+    public String getProfessorEmail() { return professorEmail; }
+
+    public void setProfessorEmail(String professorEmail) { this.professorEmail = professorEmail; }
 }

@@ -87,7 +87,7 @@ function RegisterForm() {
         const role = data.studyRole;
         if (message === 'REGISTRATION_OK') {
           setErrorMessage('');
-          signIn(registerForm.email, role);
+          signIn(registerForm.email, role, 'true');
           navigate('/users/home');
         }
         if (message === 'EMAIL_EXISTS') {
@@ -126,12 +126,12 @@ function RegisterForm() {
         const role = data.studyRole;
         if (registration === 'REGISTRATION_OAUTH_OK') {
           localStorage.setItem('isProfileSetupComplete', false);
-          signInWithGoogle(credential, email, '');
+          signInWithGoogle(credential, email, role, 'false');
+          navigate('/users/home');
         } else if (registration === 'LOGIN_OAUTH_OK') {
-          localStorage.setItem('isProfileSetupComplete', true);
-          signInWithGoogle(credential, email, role);
+          signInWithGoogle(credential, email, role, 'true');
+          navigate('/users/home');
         }
-        navigate('/users/home');
       }
     } catch (error) {
       console.log(error);
@@ -192,84 +192,84 @@ function RegisterForm() {
   }
 
   return (
-    <div className='formWrapper'>
-      <form className='forms' onSubmit={onSubmit}>
-        <div className='formDiv'>
-          <h1 className='helloText'>Pozdrav!</h1>
-          <h2 className='createNewText'>Kreirajte novi račun</h2>
-          <div className='inputDiv'>
-            <div className='nameWrapper'>
+    <div className="formWrapper">
+      <form className="forms" onSubmit={onSubmit}>
+        <div className="formDiv">
+          <h1 className="helloText">Pozdrav!</h1>
+          <h2 className="createNewText">Kreirajte novi račun</h2>
+          <div className="inputDiv">
+            <div className="nameWrapper">
               <input
-                className='nameInfoInput'
-                placeholder='Ime'
-                type='text'
-                name='firstName'
+                className="nameInfoInput"
+                placeholder="Ime"
+                type="text"
+                name="firstName"
                 value={registerForm.firstName}
                 onChange={onChange}
               ></input>
               <input
-                className='nameInfoInput'
-                placeholder='Prezime'
-                type='text'
-                name='lastName'
+                className="nameInfoInput"
+                placeholder="Prezime"
+                type="text"
+                name="lastName"
                 value={registerForm.lastName}
                 onChange={onChange}
               ></input>
             </div>
             <input
-              className='infoInput'
-              type='text'
-              placeholder='Korisničko ime'
+              className="infoInput"
+              type="text"
+              placeholder="Korisničko ime"
               onChange={onChange}
               value={registerForm.username}
-              name='username'
+              name="username"
             ></input>
             <input
-              className='infoInput'
-              type='text'
-              placeholder='Email'
+              className="infoInput"
+              type="text"
+              placeholder="Email"
               onChange={onChange}
               value={registerForm.email}
-              name='email'
+              name="email"
             />
           </div>
-          <div className='passwordDiv'>
+          <div className="passwordDiv">
             <input
-              className='passwordInput'
-              type='password'
-              placeholder='Lozinka'
+              className="passwordInput"
+              type="password"
+              placeholder="Lozinka"
               onChange={onChange}
               value={registerForm.password}
-              name='password'
+              name="password"
             />
             <input
-              className='passwordInput'
-              type='password'
-              placeholder='Potvrdi lozinku'
+              className="passwordInput"
+              type="password"
+              placeholder="Potvrdi lozinku"
               onChange={onChange}
               value={registerForm.confirmPassword}
-              name='confirmPassword'
+              name="confirmPassword"
             />
           </div>
           <input
-            className='infoInput'
-            type='text'
-            placeholder='Lokacija'
+            className="infoInput"
+            type="text"
+            placeholder="Lokacija"
             onChange={onChange}
             value={registerForm.location}
-            name='location'
+            name="location"
           ></input>
-          <div className='dateOfBirth'>
-            <label className='dobTitle'>Datum rođenja</label>
-            <div className='dobSelector'>
-              <div className='dropdown'>
+          <div className="dateOfBirth">
+            <label className="dobTitle">Datum rođenja</label>
+            <div className="dobSelector">
+              <div className="dropdown">
                 <select
-                  name='day'
-                  className='dobSelect'
+                  name="day"
+                  className="dobSelect"
                   value={day}
                   onChange={(e) => handleDOBChange('day', e.target.value)}
                 >
-                  <option value=''>Dan</option>
+                  <option value="">Dan</option>
                   {Array.from({ length: 31 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
                       {i + 1}
@@ -277,14 +277,14 @@ function RegisterForm() {
                   ))}
                 </select>
               </div>
-              <div className='dropdown'>
+              <div className="dropdown">
                 <select
-                  name='month'
-                  className='dobSelect'
+                  name="month"
+                  className="dobSelect"
                   value={month}
                   onChange={(e) => handleDOBChange('month', e.target.value)}
                 >
-                  <option value=''>Mjesec</option>
+                  <option value="">Mjesec</option>
                   {[
                     'Siječanj',
                     'Veljača',
@@ -305,14 +305,14 @@ function RegisterForm() {
                   ))}
                 </select>
               </div>
-              <div className='dropdown'>
+              <div className="dropdown">
                 <select
-                  name='year'
-                  className='dobSelect'
+                  name="year"
+                  className="dobSelect"
                   value={year}
                   onChange={(e) => handleDOBChange('year', e.target.value)}
                 >
-                  <option value=''>Godina</option>
+                  <option value="">Godina</option>
                   {Array.from({ length: 100 }, (_, i) => {
                     const year = new Date().getFullYear() - i;
                     return (
@@ -325,66 +325,66 @@ function RegisterForm() {
               </div>
             </div>
           </div>
-          <div className='genderSelection'>
+          <div className="genderSelection">
             <input
-              className='genderRadioButton'
-              type='radio'
-              name='gender'
+              className="genderRadioButton"
+              type="radio"
+              name="gender"
               value={'M'}
-              id='genderMale'
+              id="genderMale"
               checked={registerForm.gender === 'M'}
               onChange={onChange}
             ></input>
-            <label htmlFor='genderMale' className='toggleOption'>
+            <label htmlFor="genderMale" className="toggleOption">
               Muško
             </label>
             <input
-              className='genderRadioButton'
-              type='radio'
-              name='gender'
+              className="genderRadioButton"
+              type="radio"
+              name="gender"
               value={'F'}
-              id='genderFemale'
+              id="genderFemale"
               checked={registerForm.gender === 'F'}
               onChange={onChange}
             ></input>
-            <label htmlFor='genderFemale' className='toggleOption'>
+            <label htmlFor="genderFemale" className="toggleOption">
               Žensko
             </label>
           </div>
-          <div className='roleSelection'>
+          <div className="roleSelection">
             <input
-              className='roleRadioButton'
-              type='radio'
-              name='role'
+              className="roleRadioButton"
+              type="radio"
+              name="role"
               value={'Student'}
-              id='roleStudent'
+              id="roleStudent"
               checked={registerForm.role === 'Student'}
               onChange={onChange}
             ></input>
-            <label htmlFor='roleStudent' className='toggleOption'>
+            <label htmlFor="roleStudent" className="toggleOption">
               Student
             </label>
             <input
-              className='roleRadioButton'
-              type='radio'
-              name='role'
+              className="roleRadioButton"
+              type="radio"
+              name="role"
               value={'Professor'}
-              id='roleProfessor'
+              id="roleProfessor"
               checked={registerForm.role === 'Professor'}
               onChange={onChange}
             ></input>
-            <label htmlFor='roleProfessor' className='toggleOption'>
+            <label htmlFor="roleProfessor" className="toggleOption">
               Profesor
             </label>
           </div>
-          <p className='errorMessage'>{errorMessage}</p>
-          <div className='buttonDiv'>
-            <button className='inputButton' type='submit'>
+          <p className="errorMessage">{errorMessage}</p>
+          <div className="buttonDiv">
+            <button className="inputButton" type="submit">
               Kreirajte račun!
             </button>
           </div>
-          <div className='oauth'>
-            <p className='signUpText'> Ili se prijavite sa... </p>
+          <div className="oauth">
+            <p className="signUpText"> Ili se prijavite sa... </p>
             <GoogleLogin
               onSuccess={loginWithGoogle}
               onError={() => {
@@ -393,9 +393,9 @@ function RegisterForm() {
             />
           </div>
         </div>
-        <div className='redirect'>
-          <p className='account'>Već imate račun?</p>
-          <a className='link' href='/users/login'>
+        <div className="redirect">
+          <p className="account">Već imate račun?</p>
+          <a className="link" href="/users/login">
             Prijavite se
           </a>
         </div>

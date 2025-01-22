@@ -3,37 +3,36 @@ import '../styles/ActiveGroups.css';
 import LessonInfo from './LessonInfo';
 import PropTypes from 'prop-types';
 
-function ActiveLesson({ lesson }) {
+function ActiveLesson({ lesson, joinedGroups, onLeave }) {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
     <>
       {!showInfo && (
-        <div className="activeGroupsWrapper">
-          <div className="rightWrapper">
-            <div className="groupType">
+        <div className='activeGroupsWrapper'>
+          <div className='rightWrapper'>
+            <div className='groupType'>
               <label>{'Instrukcije'}</label>
             </div>
-            <div className="wrapper">
-              <div className="basicInfoWrapper">
-                <div className="infoSubject">
+            <div className='wrapper'>
+              <div className='basicInfoWrapper'>
+                <div className='infoSubject'>
                   <label>{lesson.subject}</label>
                 </div>
-                <div className="info">
+                <div className='info'>
                   <label>{lesson.date}</label>
                 </div>
-                <div className="info">
+                <div className='info'>
                   <label>{lesson.username}</label>
                 </div>
               </div>
             </div>
           </div>
-          <div className="leftWrapper">
-            <div className="joinGroup">
+          <div className='leftWrapper'>
+            <div className='joinGroup'>
               <button
                 onClick={() => {
                   setShowInfo(true);
-                  console.log('kliknut');
                 }}
               >
                 Pogledaj Info
@@ -43,7 +42,12 @@ function ActiveLesson({ lesson }) {
         </div>
       )}
       {showInfo && (
-        <LessonInfo lesson={lesson} onClose={() => setShowInfo(false)} />
+        <LessonInfo
+          lesson={lesson}
+          onClose={() => setShowInfo(false)}
+          joinedGroups={joinedGroups}
+          onLeave={onLeave}
+        />
       )}
     </>
   );
@@ -54,6 +58,8 @@ ActiveLesson.propTypes = {
     subject: PropTypes.string,
     date: PropTypes.string,
     username: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  joinedGroups: PropTypes.array.isRequired,
+  onLeave: PropTypes.func.isRequired
 };
 export default ActiveLesson;

@@ -1,270 +1,330 @@
 .profileWrapper {
-    border: 1px solid black;
+  border: 2px solid whitesmoke;
+  background-color: inherit;
 }
 
 .image {
-    width: 50%;
-    border-radius: 500px;
-    margin-bottom: 1em;
+  width: 50%;
+  border-radius: 500px;
+  margin-bottom: 1em;
 }
 
 .profile {
-    width: 100vw;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-top: 5em;
-    border: 1px solid black;
+  width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 5em;
+  border: 2px solid whitesmoke;
 }
 
 .profilePictureWrapper {
-    border-radius: 10px;
-    width: 50%;
-    display: flex;
-    justify-content: right;
-    text-align: center;
-    margin-right: 5%;
+  border-radius: 10px;
+  width: 50%;
+  display: flex;
+  justify-content: right;
+  text-align: center;
+  margin-right: 5%;
 }
 
 .profilePicture {
-    padding: 0.2em;
-    width: 50%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: end;
+  padding: 0.2em;
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: end;
+  border: lightgrey;
 }
 
 .uploadButton {
-    margin: 0.2em;
-    font-size: 1.5em;
-    padding: 0;
-    background: transparent;
-    border: 0px;
-    transition: transform 0.2s ease;
+  margin: 0.2em;
+  font-size: 1.5em;
+  padding: 0;
+  background: transparent;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  transition: transform 0.2s ease;
 }
 
 .uploadButton:hover {
-    transform: scale(1.3);
+  transform: scale(1.3);
 }
 
 .infoformWrapper {
-    width: 50%;
-    display: flex;
-    justify-content: left;
-    align-content: end;
-    margin-left: 5%;
+  width: 50%;
+  display: flex;
+  justify-content: left;
+  align-content: end;
+  margin-left: 5%;
 }
 
 .personalInfo {
-    font-size: 2em;
-    color: black;
-    text-align: center;
+  font-size: 2em;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  text-align: center;
 }
 
 .personalInfoWrapper {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: space-between;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: space-between;
 }
 
 .categoryText {
-    font-size: 1em;
-    margin-left: 1em;
-    padding: 0;
-    margin-bottom: 0;
-    color: black;
+  font-size: 1em;
+  margin-left: 1em;
+  padding: 0;
+  margin-bottom: 0;
+  color: whitesmoke;
 }
 
 .input {
-    margin-left: 1em;
-    border-radius: 5px;
-    font-size: 1em;
-    border: 1px solid black;
-    padding: 0.5em;
-    cursor: pointer;
+  margin-left: 1em;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 1px solid whitesmoke;
+  padding: 0.5em;
+  cursor: pointer;
+  background-color: #5d9cec;
 }
 
 .aboutText {
-    font-size: 1em;
-    padding: 0;
-    margin-bottom: 0;
-    text-align: center;
-    color: black;
+  font-size: 1em;
+  padding: 0;
+  margin-bottom: 0;
+  text-align: center;
+  color: whitesmoke;
 }
 
 .aboutInput {
-    box-sizing: border-box;
-    width: 100%;
-    border-radius: 5px;
-    font-size: 1em;
-    border: 1px solid black;
-    height: 10em;
-    padding: 0.5em;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    resize: none;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #5d9cec;
+  border: 1px solid whitesmoke;
+  height: 10em;
+  padding: 0.5em;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  resize: none;
 }
 
 .wrapper {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .changePassword {
-    width: 100%;
-    margin-top: 1.5em;
-    padding: 0.5em;
-    margin-left: 1em;
-    background-color: black;
-    color: white;
+  width: 100%;
+  margin-top: 1.5em;
+  padding: 0.5em;
+  margin-left: 1em;
+  background-color: black;
+  color: white;
 }
 
 .editWrapper {
-    width: 95%;
-    display: flex;
-    justify-content: center;
-    margin-top: 1em;
-    padding-bottom: 10px;
-    gap: 1em; /* TODO: delete later */
+  width: 95%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+  padding-bottom: 10px;
+  gap: 1em; /* TODO: delete later */
 }
 
 .editButton {
-    font-size: 1em;
-    background-color: black;
-    color: white;
+  font-size: 1em;
+  background-color: black;
+  color: white;
 }
 
 /* TODO: delete later */
 .reportButton {
-    font-size: 1em;
-    background-color: black;
-    color: white;
+  font-size: 1em;
+  background-color: black;
+  color: white;
 }
 
 .allInfoWrapper {
-    width: 95%;
-    padding-top: 5em;
-    padding-bottom: 5em;
-    display: flex;
-    flex-wrap: nowrap;
-    background: white;
-    border: 1px black solid;
-    border-radius: 8px;
+  width: 95%;
+  padding-top: 5em;
+  padding-bottom: 5em;
+  display: flex;
+  flex-wrap: nowrap;
+  background: transparent;
+  border: none;
 }
 
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modalContent {
-    background-color: white;
-    padding: 2em;
-    border-radius: 5px;
-    border: 1px solid black;
-    width: 25%;
-    text-align: center;
+  background-color: #5d9cec;
+  padding: 2em;
+  border-radius: 5px;
+  border: 1px solid black;
+  width: 25%;
+  text-align: center;
 }
 
 .inputEdit {
-    margin-left: 1em;
-    border-radius: 5px;
-    font-size: 1em;
-    border: 1px solid black;
-    padding: 0.5em;
+  margin-left: 1em;
+  border-radius: 5px;
+  font-size: 1em;
+  border: 1px solid whitesmoke;
+  padding: 0.5em;
+  background-color: #5d9cec;
 }
 
 .EditWindowButton {
-    margin: 2em;
-    width: 30%;
-    background-color: black;
-    color: white;
+  margin: 2em;
+  width: 30%;
+  background-color: black;
+  color: white;
 }
 
 .editProfileText {
-    font-size: 2.5em;
+  font-size: 2.5em;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .profileInfoWrapper {
-    display: flex;
-    align-items: center;
-    border: 0px;
-    justify-content: center;
-    gap: 10%;
-    border-radius: 10px;
-    padding-left: 10vw;
-    padding-right: 10vw;
-    margin: 20px auto;
-    width: 80vw;
+  display: flex;
+  align-items: center;
+  border: 0px;
+  justify-content: center;
+  gap: 10%;
+  border-radius: 10px;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  margin: 20px auto;
+  width: 80vw;
 }
 
 .profilePictureInfo {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .image {
-    width: 10em;
-    height: 10em;
-    border-radius: 50%;
-    border: 1px solid black;
-    object-fit: cover;
+  width: 10em;
+  height: 10em;
+  border-radius: 50%;
+  border: 1px solid black;
+  object-fit: cover;
 }
 
 .username {
-    display: flex;
-    align-items: end;
-    font-size: 1.2em;
-    font-weight: bold;
+  display: flex;
+  align-items: end;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 2px;
+}
+
+.deactivateButton,
+.deletingButton {
+  color: white;
+  font-size: 1em;
+}
+
+.inputEdit {
+  resize: none;
 }
 
 .editProfileButton {
-    background-color: white;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: transform 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 25%;
+  background-color: inherit;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25%;
 }
 
 .editProfileButton:hover {
-    transform: scale(1.3);
+  transform: scale(1.3);
 }
 
 .groupHistory {
-    background-color: transparent;
-    border-radius: 10px;
-    width: 100%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  background-color: transparent;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .groupHistoryTitle {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    display: block;
-    margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  display: block;
+  margin-bottom: 10px;
 }
 
 .accountInfo {
-    display: flex;
-    flex-direction: wrap;
-    height: 100%;
-    width: 25%;
+  display: flex;
+  flex-direction: wrap;
+  height: 100%;
+  width: 25%;
+}
+
+.userGroups {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.groupChoice {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+}
+
+.groupChoice button {
+  border: 0px;
+  width: 20%;
+  background-color: #5d9cec;
+  padding: 1em;
+  transition: transform 0.2s ease-out;
+}
+
+.groupChoice button:hover {
+  transform: scale(1.05);
+  background-color: #3b80db;
+}
+
+.modalContent h1 {
+  font-size: 2em;
+  color: whitesmoke;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.modalContent {
+  border: 2px solid whitesmoke;
 }

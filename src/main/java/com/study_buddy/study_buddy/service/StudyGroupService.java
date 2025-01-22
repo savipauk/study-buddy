@@ -1,10 +1,8 @@
 package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.dto.StudyGroupDto;
-import com.study_buddy.study_buddy.model.Lesson;
-import com.study_buddy.study_buddy.model.Student;
-import com.study_buddy.study_buddy.model.StudyGroup;
-import com.study_buddy.study_buddy.model.User;
+import com.study_buddy.study_buddy.model.*;
+import com.study_buddy.study_buddy.repository.GroupMemberRepository;
 import com.study_buddy.study_buddy.repository.StudentRepository;
 import com.study_buddy.study_buddy.repository.StudyGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,11 @@ public class StudyGroupService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
+
+    public StudyGroup findByGroupId(Long groupId){ return studyGroupRepository.findById(groupId).get();}
+
     public StudyGroup createStudyGroup(StudyGroup studyGroup){ return studyGroupRepository.save(studyGroup);}
 
     public List<StudyGroup> getAllStudyGroups(){ return studyGroupRepository.findAll();}
@@ -37,11 +40,33 @@ public class StudyGroupService {
 
         return allStudyGroups.stream()
                 .filter(studyGroup ->
-                        studyGroup.getDate().isAfter(today) ||
-                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now))
+                        (studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
+                                && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
                 )
                 .collect(Collectors.toList());
     }
+
+    // Get all active groups in which is Student member joined in
+    public List<StudyGroup> getActiveStudyGroupsForMember(Student member) {
+        List<GroupMember> groupMembers = groupMemberRepository.findByMemberId(member);
+        List<StudyGroup> allStudyGroupsByMember = groupMembers.stream()
+                .map(GroupMember::getGroup)
+                .collect(Collectors.toList()); // Fetch all study groups
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
+        return allStudyGroupsByMember.stream()
+                .filter(studyGroup ->
+                        (studyGroup.getDate().isAfter(today) ||
+                                (studyGroup.getDate().isEqual(today) && studyGroup.getTime().isAfter(now)))
+                                        && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
+                )
+                .collect(Collectors.toList());
+    }
+
+
 
     public List<StudyGroup> getAllFilteredStudyGroups(String parameter){
         List<StudyGroup> allStudyGroups = studyGroupRepository.findByGroupNameOrLocationOrDescriptionIgnoreCase(parameter);
@@ -49,8 +74,10 @@ public class StudyGroupService {
         LocalTime now = LocalTime.now();
 
         return allStudyGroups.stream()
-                .filter(studyGroup -> studyGroup.getDate().isAfter(today) ||
-                        (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now))
+                .filter(studyGroup ->
+                        (studyGroup.getDate().isAfter(today) || (studyGroup.getDate().isEqual(today)&&studyGroup.getTime().isAfter(now)))
+                                && (studyGroup.getParticipants().size()<studyGroup.getMaxMembers())
+                                && (studyGroup.getCreator().getUser().getStatus().getValue().equals("ACTIVE"))
                 ).collect(Collectors.toList());
     }
 
@@ -83,6 +110,8 @@ public class StudyGroupService {
         dto.setDescription(studyGroup.getDescription());
         dto.setExpirationDate(studyGroup.getExpirationDate());
         dto.setUsername(studyGroup.getCreator().getUser().getUsername());
+        if (studyGroup.getParticipants()==null) {dto.setCurrentNumberOfMembers(0);}
+        else {dto.setCurrentNumberOfMembers(studyGroup.getParticipants().size());}
         return dto;
     }
 

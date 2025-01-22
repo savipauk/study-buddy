@@ -59,14 +59,13 @@ public class Lesson {
     private Professor professor;
 
     // CONNECTING TABLES STUDENT-LESSONPARTICIPANT
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     @JoinTable(
             name = "LessonParticipants",
             joinColumns = @JoinColumn(name = "lesson_id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id")
     )
-    private List<Professor> studentParticipants;
-
+    private List<Student> studentParticipants;
 
     // Constructors
     public Lesson() {
@@ -130,6 +129,10 @@ public class Lesson {
     public Professor getProfessor() { return professor; }
 
     public void setProfessor(Professor professor) { this.professor = professor; }
+
+    public List<Student> getStudentParticipants() { return studentParticipants; }
+
+    public void setStudentParticipants(List<Student> studentParticipants) { this.studentParticipants = studentParticipants; }
 
     @Override
     public String toString() {

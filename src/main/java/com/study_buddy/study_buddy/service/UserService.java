@@ -1,5 +1,7 @@
 package com.study_buddy.study_buddy.service;
 
+import com.study_buddy.study_buddy.model.LessonParticipant;
+import com.study_buddy.study_buddy.model.Student;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
 import com.study_buddy.study_buddy.dto.Profile;
@@ -7,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +37,12 @@ public class UserService {
 
     @Autowired
     private LessonService lessonService;
+
+    @Autowired
+    private GroupMemberService groupMemberService;
+
+    @Autowired
+    private LessonParticipantService lessonParticipantService;
 
     // Password Encoder
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -105,19 +115,40 @@ public class UserService {
 
         // Handle special cases for STUDENT or PROFESSOR roles
         // To completely delete all studyGroups and Lessons created by deleted student and professor comment this if
-        if (user.getRole().getValue().equals("STUDENT") ){
+        /*if (user.getRole().getValue().equals("STUDENT") ){
             // Delete all related StudyGroups
             studyGroupService.deleteAllStudyGroupsByCreator(user);
         } else if(user.getRole().getValue().equals("PROFESSOR")){
             // Delete all related Lessons
             lessonService.deleteAllLessonsByProfessor(user);
-        }
+        }*/
         userRepository.deleteById(user.getUserId());
     }
 
+    // Deactivate user
+    public void deactivateUser(User user){
+        if (user.getRole().getValue().equals("STUDENT") ){
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            groupMemberService.deleteByStudentId(student.getStudentId());
+            lessonParticipantService.deleteByStudentId(student.getStudentId());
+        }
+    }
 
+    // Save profile picture
+    public void saveProfilePicture(Long userId, MultipartFile file) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        user.setProfilePicture(file.getBytes());
+        userRepository.save(user);
+    }
 
+    public byte[] getProfilePicture(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return user.getProfilePicture();
+    }
 
     public Profile buildProfileResponse(User user) {
         Profile profile = new Profile();

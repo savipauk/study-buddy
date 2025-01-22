@@ -39,13 +39,19 @@ public class LessonController {
     }
 
     // Get all lessons created by one professor
-    @GetMapping("/createdBy/{username}")
-    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("username") String username) {
-        User user = userService.getUserByUsername(username);
+    @GetMapping("/createdBy/{what}/{usernameOrEmail}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsByProfessor(@PathVariable("usernameOrEmail") String usernameOrEmail,
+                                                                    @PathVariable("what") String what) {
+        User user;
+        if(what.equals("email")){ user = userService.getUserByEmail(usernameOrEmail);}
+        else if (what.equals("username")) { user = userService.getUserByUsername(usernameOrEmail);}
+        else {return ResponseEntity.notFound().build();}
+
+        if (user==null) {return ResponseEntity.notFound().build();}
+
         Professor professor = professorService.getProfessorByUserId(user.getUserId());
-        if (professor == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (professor == null) { return ResponseEntity.notFound().build(); }
+
         List<Lesson> lessons = lessonService.getAllLessonsByProfessor(professor);
         List<LessonDto> lessonDtos = lessons.stream()
                 .map(lessonService::convertToDto)
@@ -66,10 +72,27 @@ public class LessonController {
         return ResponseEntity.ok(lessonDtos);
     }
 
+    // Get all active studyGroups
+    @GetMapping("/active/{username}")
+    public ResponseEntity<List<LessonDto>> getAllLessonsForLessonParticipant(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        if (user==null) {return ResponseEntity.status(HttpStatus.NOT_FOUND).build();}
+
+        Student student = studentService.getStudentByUserId(user.getUserId());
+        List<Lesson> activeLessonsForLessonParticipant = lessonService.getAllActiveLessonsForLessonParticipant(student);
+
+        if (activeLessonsForLessonParticipant.isEmpty()) { return ResponseEntity.noContent().build(); }
+
+        List<LessonDto> activeLessonsForLessonParticipantDto = activeLessonsForLessonParticipant.stream()
+                .map(lessonService::convertToDto)
+                .toList();
+        return ResponseEntity.ok(activeLessonsForLessonParticipantDto);
+    }
+
     // Get all active mass or one_on_one lessons
-    @GetMapping("/active/{lessonType}")
+    @GetMapping("/active/lessonType/{lessonType}")
     public ResponseEntity<List<LessonDto>> getAllActiveMassLessons(@PathVariable("lessonType") LessonType lessonType) {
-        List<Lesson> activeLessons = lessonService.getAllActiveMassLessons(lessonType);
+        List<Lesson> activeLessons = lessonService.getAllActiveLessonsByLessonType(lessonType);
         if (activeLessons.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -122,7 +145,7 @@ public class LessonController {
 
     // Create a new study group
     @PostMapping("/create")
-    public ResponseEntity<Lesson> createLesson(@RequestBody LessonDto dto) {
+    public ResponseEntity<LessonDto> createLesson(@RequestBody LessonDto dto) {
         User creator = userService.getUserByEmail(dto.getEmail());
         Professor creatorProfessor = professorService.getProfessorByUserId(creator.getUserId());
         // Create lesson and store it into database
@@ -143,18 +166,45 @@ public class LessonController {
 
         lessonService.createLesson(lesson);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(lesson);
+        return ResponseEntity.status(HttpStatus.CREATED).body(lessonService.convertToDto(lesson));
     }
 
     // Add a student to a lesson
-    @PostMapping("/{lessonId}/add-student/{studentId}")
-    public ResponseEntity<String> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("studentId") Long studentId) {
-        Student student = studentService.getStudentById(studentId);
-        Lesson lesson = lessonService.getLessonById(lessonId);
+    @PostMapping("/{lessonId}/add-student/{email}")
+    public ResponseEntity<Map<String, String>> addStudentToLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("email") String email) {
+        try{
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            Lesson lesson = lessonService.getLessonById(lessonId);
 
-        lessonParticipantService.addStudentToLesson(student, lesson);
+            if(lesson.getStudentParticipants()==null){
+                lessonParticipantService.addStudentToLesson(student, lesson);
+                return ResponseEntity.ok(Map.of("message", "OK"));
+            } else if (lesson.getStudentParticipants().size()<lesson.getMaxMembers()) {
+                lessonParticipantService.addStudentToLesson(student, lesson);
+                return ResponseEntity.ok(Map.of("message", "OK"));
+            } else {
+                lessonParticipantService.addStudentToLesson(student, lesson);
+                return ResponseEntity.ok(Map.of("message", "GROUP_FULL"));
+            }
 
-        return ResponseEntity.ok("Student added to the group successfully.");
+
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @DeleteMapping("/{lessonId}/remove-student/{email}")
+    public ResponseEntity<Void> removeStudentFromLesson(@PathVariable("lessonId") Long lessonId, @PathVariable("email") String email) {
+        try {
+            Lesson lesson = lessonService.findByLessonId(lessonId);
+            User user = userService.getUserByEmail(email);
+            Student student = studentService.getStudentByUserId(user.getUserId());
+            lessonParticipantService.deleteByLessonIdAndStudentId(lessonId, student.getStudentId());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
 }

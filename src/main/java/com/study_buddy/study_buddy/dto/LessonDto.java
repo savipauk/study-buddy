@@ -21,6 +21,7 @@ public class LessonDto {
     private LocalDate date;
     private LocalTime time;
     private String username;
+    private int currentNumberOfMembers;
 
     //private String description;
     private LocalDate registrationDeadLine;
@@ -89,6 +90,10 @@ public class LessonDto {
     public String getUsername() { return username; }
 
     public void setUsername(String username) { this.username = username; }
+
+    public int getCurrentNumberOfMembers() { return currentNumberOfMembers; }
+
+    public void setCurrentNumberOfMembers(int currentNumberOfMembers) { this.currentNumberOfMembers = currentNumberOfMembers; }
 
     @Override
     public String toString() {

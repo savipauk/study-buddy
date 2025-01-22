@@ -41,10 +41,16 @@ function LoginForm() {
       const response = await serverFetch(endpoint, options);
       if (response.ok) {
         const data = await response.json();
-
+        console.log(data);
         const message = data.passwordCheck;
         const email = data.email;
         const role = data.studyRole;
+        if (data.status === 'DEACTIVATED') {
+          localStorage.setItem('user_email', data.email);
+          navigate('/activateProfile');
+          return;
+        }
+
         if (message === 'DOESNT_EXIST') {
           setErrorMessage('Korisnik ne postoji');
         }
@@ -53,11 +59,10 @@ function LoginForm() {
         }
         if (message === 'OK') {
           setErrorMessage('');
-          signIn(email, role);
+          signIn(email, role, 'true');
           if (role === 'ADMIN') {
             navigate('/admin');
           } else {
-            console.log('krivi', role);
             navigate('/users/home');
           }
         }
@@ -94,13 +99,17 @@ function LoginForm() {
         const registration = data.registration;
         const email = data.email;
         const role = data.studyRole;
-        if (registration === 'REGISTRATION_OAUTH_OK') {
-          localStorage.setItem('isProfileSetupComplete', false);
+        if (data.status === 'DEACTIVATED') {
+          localStorage.setItem('user_email', data.email);
+          navigate('/activateProfile');
+          return;
+        } else if (registration === 'REGISTRATION_OAUTH_OK') {
+          signInWithGoogle(credential, email, role, 'false');
+          navigate('/users/home');
         } else if (registration === 'LOGIN_OAUTH_OK') {
-          localStorage.setItem('isProfileSetupComplete', true);
+          signInWithGoogle(credential, email, role, 'true');
+          navigate('/users/home');
         }
-        signInWithGoogle(credential, email, role);
-        navigate('/users/home');
       }
     } catch (error) {
       console.log(error);
@@ -157,4 +166,5 @@ function LoginForm() {
     </>
   );
 }
+
 export default LoginForm;
