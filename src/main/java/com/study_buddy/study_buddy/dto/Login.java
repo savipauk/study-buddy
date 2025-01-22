@@ -4,6 +4,9 @@ public class Login {
 	private String email;
 	private String password;
 	private String username;
+
+	public Login() {}
+
 	public String getUsername() {
 		return username;
 	}
