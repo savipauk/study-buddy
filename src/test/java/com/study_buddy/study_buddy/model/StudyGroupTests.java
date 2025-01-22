@@ -46,6 +46,7 @@ public class StudyGroupTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
 
         student = new Student();
         student.setUser(user);

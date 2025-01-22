@@ -40,6 +40,8 @@ public class EnumTests {
         assertEquals("CLOSED", Status.CLOSED.getValue());
         assertEquals("IN_PROGRESS", Status.IN_PROGRESS.getValue());
         assertEquals("REJECTED", Status.REJECTED.getValue());
+        assertEquals("ACTIVE", Status.ACTIVE.getValue());
+        assertEquals("DEACTIVATED", Status.DEACTIVATED.getValue());
     }
 
     @Test
@@ -48,6 +50,8 @@ public class EnumTests {
         assertEquals("CLOSED", Status.CLOSED.toString());
         assertEquals("IN_PROGRESS", Status.IN_PROGRESS.toString());
         assertEquals("REJECTED", Status.REJECTED.toString());
+        assertEquals("ACTIVE", Status.ACTIVE.toString());
+        assertEquals("DEACTIVATED", Status.DEACTIVATED.toString());
     }
 
     @Test

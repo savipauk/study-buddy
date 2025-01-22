@@ -3,6 +3,7 @@ package com.study_buddy.study_buddy.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study_buddy.study_buddy.dto.Login;
 import com.study_buddy.study_buddy.model.Gender;
+import com.study_buddy.study_buddy.model.Status;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.service.OAuthService;
@@ -74,6 +75,7 @@ public class LoginControllerTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
 
         login = new Login();
         login.setUsername("janedoe");

@@ -48,6 +48,7 @@ public class LessonTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
 
         professor = new Professor();
         professor.setUser(user);

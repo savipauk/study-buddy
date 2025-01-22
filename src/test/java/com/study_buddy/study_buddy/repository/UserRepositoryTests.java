@@ -1,6 +1,7 @@
 package com.study_buddy.study_buddy.repository;
 
 import com.study_buddy.study_buddy.model.Gender;
+import com.study_buddy.study_buddy.model.Status;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import org.assertj.core.api.Assertions;
@@ -44,6 +45,7 @@ public class UserRepositoryTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
     }
 
     @Test

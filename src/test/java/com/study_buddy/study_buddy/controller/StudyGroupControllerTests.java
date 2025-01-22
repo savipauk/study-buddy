@@ -67,6 +67,7 @@ public class StudyGroupControllerTests {
         user.setLastName("Doe");
         user.setDescription("Math lover!");
         user.setRole(StudyRole.STUDENT);
+        user.setStatus(Status.ACTIVE);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         user.setDateOfBirth(LocalDate.of(2003,1,1));

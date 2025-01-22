@@ -43,6 +43,7 @@ public class UserTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
     }
 
     @Test

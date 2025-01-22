@@ -1,6 +1,7 @@
 package com.study_buddy.study_buddy.service;
 
 import com.study_buddy.study_buddy.model.Gender;
+import com.study_buddy.study_buddy.model.Status;
 import com.study_buddy.study_buddy.model.StudyRole;
 import com.study_buddy.study_buddy.model.User;
 import com.study_buddy.study_buddy.repository.UserRepository;
@@ -49,6 +50,7 @@ public class UserServiceTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
     }
 
 

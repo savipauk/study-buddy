@@ -46,6 +46,7 @@ public class ReportTests {
         user.setCity("New York");
         user.setOauthProvider("");
         user.setOauthId("");
+        user.setStatus(Status.ACTIVE);
 
         newUser = new User();
         newUser.setEmail("exampleuser@example.com");
@@ -62,6 +63,7 @@ public class ReportTests {
         newUser.setCity("San Francisco");
         newUser.setOauthProvider("Google");
         newUser.setOauthId("12345-google-oauth");
+        newUser.setStatus(Status.ACTIVE);
 
         report = new Report();
         report.setStatus(Status.OPEN);

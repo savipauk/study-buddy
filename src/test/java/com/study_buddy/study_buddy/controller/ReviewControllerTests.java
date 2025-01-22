@@ -56,7 +56,6 @@ public class ReviewControllerTests {
     private Student student;
     private Professor professor;
     private ReviewDto reviewDto;
-    private User user;
 
     /*reviewDto.setStudentUsername(user.getUsername());
         reviewDto.setProfessorUsername(user.getUsername());*/
