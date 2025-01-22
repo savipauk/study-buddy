@@ -38,20 +38,17 @@ public class Professor {
     public void setUser(User user) { this.user = user; }
 
 
-    public List<Lesson> getLessons() { return lessons; }
-
-    public void setLessons(List<Lesson> lessons) { this.lessons = lessons; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Professor professor = (Professor) o;
-        return Objects.equals(professorId, professor.professorId) && Objects.equals(user, professor.user) && Objects.equals(lessons, professor.lessons);
+        return Objects.equals(professorId, professor.professorId) && Objects.equals(user, professor.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(professorId, user, lessons);
+        return Objects.hash(professorId, user);
     }
 }
