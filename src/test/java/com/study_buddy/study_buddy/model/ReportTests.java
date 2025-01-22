@@ -76,5 +76,6 @@ public class ReportTests {
         assertNotNull(report);
         assertEquals(Status.OPEN, report.getStatus());
         assertEquals(user, report.getReporter());
+        assertEquals(newUser,report.getReportedUser());
     }
 }
