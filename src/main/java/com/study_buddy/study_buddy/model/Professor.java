@@ -3,6 +3,7 @@ package com.study_buddy.study_buddy.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Professors")
@@ -36,4 +37,18 @@ public class Professor {
 
     public void setUser(User user) { this.user = user; }
 
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Professor professor = (Professor) o;
+        return Objects.equals(professorId, professor.professorId) && Objects.equals(user, professor.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(professorId, user);
+    }
 }

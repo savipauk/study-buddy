@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Users")
@@ -255,5 +256,18 @@ public class User {
                 ", gender=" + gender +
                 ", city='" + city + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(username, user.username) && Objects.equals(oauthProvider, user.oauthProvider) && Objects.equals(oauthId, user.oauthId) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(description, user.description) && Objects.equals(access_Token, user.access_Token) && Objects.equals(refresh_Token, user.refresh_Token) && role == user.role && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt) && Objects.equals(profilePicture, user.profilePicture) && Objects.equals(dateOfBirth, user.dateOfBirth) && gender == user.gender && Objects.equals(city, user.city) && Objects.equals(student, user.student) && Objects.equals(professor, user.professor) && Objects.equals(reportsSubmitted, user.reportsSubmitted) && Objects.equals(reportsReceived, user.reportsReceived);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, username, oauthProvider, oauthId, firstName, lastName, description, access_Token, refresh_Token, role, createdAt, updatedAt, profilePicture, dateOfBirth, gender, city, student, professor, reportsSubmitted, reportsReceived);
     }
 }

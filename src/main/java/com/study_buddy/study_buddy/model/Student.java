@@ -74,11 +74,14 @@ public class Student{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(studentId, student.studentId) && Objects.equals(user, student.user);
+
+        return Objects.equals(studentId, student.studentId) && Objects.equals(user, student.user) && Objects.equals(studyGroups, student.studyGroups);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(studentId, user);
+
+        return Objects.hash(studentId, user, studyGroups);
     }
 }
