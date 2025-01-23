@@ -10,6 +10,7 @@ import {
 import ActiveLesson from '../components/AcitveLesson';
 import ActiveGroup from '../components/ActiveGroup';
 import { useParams } from 'react-router-dom';
+import ChatWidget from '../components/ChatWidget';
 
 function ProfileInfo() {
   const [userGroups, setUserGroups] = useState([]);
@@ -31,7 +32,8 @@ function ProfileInfo() {
   const [userInfoForm, setUserInfoForm] = useState({
     FirstName: '',
     LastName: '',
-    username: ''
+    username: '',
+    email: ''
   });
 
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
@@ -49,7 +51,8 @@ function ProfileInfo() {
       setUserInfoForm({
         FirstName: userData.firstName,
         LastName: userData.lastName,
-        username: userData.username
+        username: userData.username,
+        email: userData.email
       });
       setRole(userData.studyRole);
 
@@ -180,6 +183,14 @@ function ProfileInfo() {
   return (
     <div>
       <Header />
+      {!ownProfile && (
+        <ChatWidget
+          text={`Posalji poruku @${username}`}
+          number={''}
+          email={userInfoForm.email}
+          image={profilePictureUrl}
+        />
+      )}
       <div className="profileWrapper">
         <div className="profileInfoWrapper">
           <div className="profilePictureInfo">

@@ -20,7 +20,8 @@ function RegisterForm() {
     role: '',
     gender: '',
     location: '',
-    dob: ''
+    dob: '',
+    phoneNumber: ''
   });
 
   const [day, setDay] = useState('');
@@ -68,7 +69,8 @@ function RegisterForm() {
       role: registerForm.role.toUpperCase(),
       gender: registerForm.gender,
       city: registerForm.location,
-      dateOfBirth: registerForm.dob
+      dateOfBirth: registerForm.dob,
+      phoneNumber: registerForm.phoneNumber
     };
     const endpoint = '/login/register';
     const options = {
@@ -251,6 +253,14 @@ function RegisterForm() {
               name="confirmPassword"
             />
           </div>
+          <input
+            className="infoInput"
+            type="text"
+            placeholder="Broj mobitela"
+            onChange={onChange}
+            value={registerForm.phoneNumber}
+            name="phoneNumber"
+          ></input>
           <input
             className="infoInput"
             type="text"
