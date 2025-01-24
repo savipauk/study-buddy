@@ -20,6 +20,7 @@ public class Profile {
     private LocalDate dateOfBirth;
     private String city;
     private Gender gender;
+    private String phoneNumber;
 
     public Map<String,String> profileResponse (String message){
         Map<String, String> response;
@@ -36,7 +37,8 @@ public class Profile {
                     Map.entry("gender", this.getGender().toString()),
                     Map.entry("city", this.getCity()),
                     Map.entry("dateOfBirth", this.getDateOfBirth().toString()),
-                    Map.entry("message", message)
+                    Map.entry("message", message),
+                    Map.entry("phoneNumber", this.getPhoneNumber())
             );
         } else {
             response = Map.ofEntries(
@@ -50,7 +52,8 @@ public class Profile {
                     Map.entry("message", message),
                     Map.entry("gender", ""),
                     Map.entry("city", ""),
-                    Map.entry("dateOfBirth","")
+                    Map.entry("dateOfBirth",""),
+                    Map.entry("phoneNumber", this.getPhoneNumber())
             );
         }
 
@@ -113,15 +116,15 @@ public class Profile {
 
     public void setUsername(String Username) { this.username = Username; }
 
-    public String getProfilePicture() {
-        return profilePicture;
-    }
+    public String getProfilePicture() { return profilePicture; }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture;}
 
     public String getPassword() { return password; }
 
     public void setPassword(String password) { this.password = password; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 }

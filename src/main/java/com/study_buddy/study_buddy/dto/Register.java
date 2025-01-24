@@ -19,6 +19,7 @@ public class Register {
 	private LocalDate dateOfBirth;
 	private String city;
 	private Gender gender;
+	private String phoneNumber;
 
 	public Map<String,String> responseRegister(String message){
 		Map<String, String> response;
@@ -28,6 +29,7 @@ public class Register {
 				"email", this.getEmail(),
 				"studyRole", this.getRole().toString(),
 				"username", this.getUsername(),
+				"phoneNumber", this.getPhoneNumber(),
 				"registration", message
 		);
 		return response;
@@ -94,4 +96,8 @@ public class Register {
 	public Gender getGender() { return gender; }
 
 	public void setGender(Gender gender) { this.gender = gender; }
+
+	public String getPhoneNumber() { return phoneNumber; }
+
+	public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 }

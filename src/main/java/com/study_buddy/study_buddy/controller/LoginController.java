@@ -99,6 +99,7 @@ public class LoginController {
         String hashedPassword = data.getPassword();
         StudyRole studyRole = data.getRole();
         String username = data.getUsername();
+        String phoneNumber = data.getPhoneNumber();
 
         JwtService jwtService = new JwtService();
         String token = jwtService.generateToken(data.getEmail(), data.getUsername());
@@ -124,6 +125,7 @@ public class LoginController {
         user.setDateOfBirth(data.getDateOfBirth());
         user.setCity(data.getCity());
         user.setStatus(Status.ACTIVE);
+        user.setPhoneNumber(phoneNumber);
         userService.createUser(user);
 
         // Create Authentication object
