@@ -10,6 +10,7 @@ import ActiveLesson from '../components/AcitveLesson';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SearchBarFilter from '../components/SearchbarFilter';
+import ChatWidget from '../components/ChatWidget';
 
 function HomePage() {
   const [createClicked, setCreateClicked] = useState(false);
@@ -271,6 +272,14 @@ function HomePage() {
           })
         )}
       </div>
+      <ChatWidget
+        text={'Kontaktirajte nas!'}
+        number={'+38512345678'}
+        email={'studyBuddy@progi.fer.hr'}
+        image={
+          'https://cdn.pixabay.com/photo/2016/09/16/09/20/books-1673578_1280.png'
+        }
+      />
     </>
   );
 }
@@ -286,7 +295,8 @@ function ProfileSetup({ finishSetup }) {
     role: '',
     gender: '',
     location: '',
-    dob: ''
+    dob: '',
+    phoneNumber: ''
   });
 
   const [day, setDay] = useState('');
@@ -333,7 +343,8 @@ function ProfileSetup({ finishSetup }) {
       role: setupForm.role.toUpperCase(),
       gender: setupForm.gender,
       city: setupForm.location,
-      dateOfBirth: setupForm.dob
+      dateOfBirth: setupForm.dob,
+      phoneNumber: setupForm.phoneNumber
     };
     const endpoint = `/users/profile/update/${userEmail}`;
     const options = {
@@ -439,6 +450,14 @@ function ProfileSetup({ finishSetup }) {
               name="username"
             ></input>
           </div>
+          <input
+            className="infoInput"
+            type="text"
+            placeholder="Broj mobitela"
+            onChange={onChange}
+            value={setupForm.phoneNumber}
+            name="phoneNumber"
+          ></input>
           <input
             className="infoInput"
             type="text"
