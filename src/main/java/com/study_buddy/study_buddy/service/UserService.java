@@ -160,6 +160,7 @@ public class UserService {
         profile.setGender(user.getGender());
         profile.setCity(user.getCity());
         profile.setDateOfBirth(user.getDateOfBirth());
+        profile.setPhoneNumber(user.getPhoneNumber());
 
         return profile;
     }
