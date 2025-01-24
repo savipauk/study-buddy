@@ -179,7 +179,7 @@
   padding: 2em;
   border-radius: 5px;
   border: 1px solid black;
-  width: 25%;
+  width: 50%;
   text-align: center;
 }
 
@@ -190,6 +190,15 @@
   border: 1px solid whitesmoke;
   padding: 0.5em;
   background-color: #5d9cec;
+}
+
+
+.EditProfileButtonDiv {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .EditWindowButton {
