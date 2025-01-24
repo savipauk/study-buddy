@@ -457,12 +457,14 @@ function EditWindow({ userInfo, onSave, onClose, oauth }) {
         ></textarea>
 
         <p className="errorMessage">{validationMessage}</p>
-        <button className="EditWindowButton" onClick={handleSaveClick}>
-          Primijeni
-        </button>
-        <button className="EditWindowButton" onClick={onClose}>
-          Odbaci
-        </button>
+        <div className="EditProfileButtonDiv">
+          <button className="EditWindowButton" onClick={handleSaveClick}>
+            Primijeni
+          </button>
+          <button className="EditWindowButton" onClick={onClose}>
+            Odbaci
+          </button>
+        </div>
       </div>
     </div>
   );
