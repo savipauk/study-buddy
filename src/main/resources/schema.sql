@@ -21,6 +21,7 @@ CREATE TABLE Users (
     username VARCHAR(100) NOT NULL,
     profile_picture BYTEA,
     description TEXT,
+    phone_number VARCHAR(20),
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
     date_of_birth DATE,
