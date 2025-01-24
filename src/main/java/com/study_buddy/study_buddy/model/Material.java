@@ -30,7 +30,6 @@ public class Material {
     @Column(name = "mime_type")
     private String mimeType;
 
-    @Lob
     @Column(name = "file_data")
     private byte[] fileData;
    
