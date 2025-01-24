@@ -88,7 +88,7 @@ function ChatWidget({ text, number, email, image }) {
 
       setIsWidgetLoaded(false);
     };
-  }, [text, number, email]);
+  }, [text, number, email, image]);
 
   useEffect(() => {
     if (isWidgetLoaded) {
