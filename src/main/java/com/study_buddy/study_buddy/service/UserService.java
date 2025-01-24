@@ -186,6 +186,7 @@ public class UserService {
         if (new_user.getGender() !=null) { old_user.setGender(new_user.getGender());}
         if (new_user.getCity() != null) { old_user.setCity(new_user.getCity());}
         if (new_user.getDateOfBirth() != null) { old_user.setDateOfBirth(new_user.getDateOfBirth());}
+        if (new_user.getPhoneNumber() != null) { old_user.setPhoneNumber(new_user.getPhoneNumber());}
 
         // updated_at is current date and time
         old_user.setUpdatedAt(LocalDateTime.now());

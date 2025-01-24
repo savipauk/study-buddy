@@ -78,6 +78,9 @@ public class User {
     @Column(name = "profile_status")
     private Status status;
 
+    @Column(name = "phone_number", length = 100)
+    private String phoneNumber;
+
     // CONNECTING TABLES USERS-STUDENTS
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;
@@ -232,6 +235,10 @@ public class User {
     public Status getStatus() { return status; }
 
     public void setStatus(Status status) { this.status = status; }
+
+    public String getPhoneNumber() { return phoneNumber; }
+
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
     @Override
     public String toString() {
