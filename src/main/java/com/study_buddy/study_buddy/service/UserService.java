@@ -144,10 +144,7 @@ public class UserService {
     }
 
     public byte[] getProfilePicture(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return user.getProfilePicture();
+        return userRepository.getProfilePicture(userId);
     }
 
     public Profile buildProfileResponse(User user) {

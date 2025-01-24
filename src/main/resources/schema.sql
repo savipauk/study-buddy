@@ -19,7 +19,7 @@ CREATE TABLE Users (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     username VARCHAR(100) NOT NULL,
-    profile_picture OID,
+    profile_picture BYTEA,
     description TEXT,
     access_token VARCHAR(255),
     refresh_token VARCHAR(255),
@@ -167,7 +167,7 @@ CREATE TABLE Materials (
     user_id INT NOT NULL, -- ID korisnika koji je postavio materijal
     group_id INT, -- Ako je materijal postavljen za grupu
     lesson_id INT, -- Ako je materijal postavljen za lekciju
-    file_data OID,
+    file_data BYTEA,
     file_size INT,
     file_name VARCHAR(255),
     mime_type VARCHAR(255),

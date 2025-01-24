@@ -61,7 +61,6 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Lob // Marks this column as a Large Object (BYTEA)
     @Column(name = "profile_picture", nullable = true)
     private byte[] profilePicture;
 
