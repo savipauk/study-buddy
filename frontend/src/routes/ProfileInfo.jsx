@@ -33,7 +33,8 @@ function ProfileInfo() {
     FirstName: '',
     LastName: '',
     username: '',
-    email: ''
+    email: '',
+    phoneNumber: ''
   });
 
   const [profilePictureUrl, setProfilePictureUrl] = useState('');
@@ -52,7 +53,8 @@ function ProfileInfo() {
         FirstName: userData.firstName,
         LastName: userData.lastName,
         username: userData.username,
-        email: userData.email
+        email: userData.email,
+        phoneNumber: userData.phoneNumber
       });
       setRole(userData.studyRole);
 
@@ -186,7 +188,7 @@ function ProfileInfo() {
       {!ownProfile && (
         <ChatWidget
           text={`Posalji poruku @${username}`}
-          number={''}
+          number={userInfoForm.phoneNumber}
           email={userInfoForm.email}
           image={profilePictureUrl}
         />
